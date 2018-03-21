@@ -8,28 +8,6 @@ CREATE TABLE address (
   zip INT,
   country VARCHAR(50));
 //
-CREATE TABLE account (
-  id INT PRIMARY KEY,
-  type VARCHAR(1),
-  name VARCHAR(50),
-  phone VARCHAR(15),
-  credit_card_id INT,
-  FOREIGN KEY (credit_card_id) REFERENCES credit_card,
-  billing_address_id INT,
-  FOREIGN KEY (billing_address_id) REFERENCES address);
-//
-CREATE TABLE manifestItem (
-  tracking_id INT,
-  FOREIGN KEY (tracking_id) REFERENCES package);
-//
-CREATE TABLE trackingEvents (
-  tracking_id INT,
-  FOREIGN KEY (tracking_id) REFERENCES package,
-  location_id INT,
-  FOREIGN KEY (location_id) REFERENCES location,
-  date TIMESTAMP,
-  status VARCHAR(20));
-//
 CREATE TABLE credit_card (
   name VARCHAR(50),
   number VARCHAR(16) PRIMARY KEY,
@@ -42,6 +20,21 @@ CREATE TABLE location (
   name VARCHAR(50),
   type VARCHAR(1)
 );
+//
+CREATE TABLE shippingCostMultipliers (
+  multiplier VARCHAR(30) PRIMARY KEY,
+  value DOUBLE,
+);
+//
+CREATE TABLE account (
+  id INT PRIMARY KEY,
+  type VARCHAR(1),
+  name VARCHAR(50),
+  phone VARCHAR(15),
+  credit_card_id INT,
+  FOREIGN KEY (credit_card_id) REFERENCES credit_card,
+  billing_address_id INT,
+  FOREIGN KEY (billing_address_id) REFERENCES address);
 //
 CREATE TABLE package (
   tracking_id INT PRIMARY KEY,
@@ -57,7 +50,19 @@ CREATE TABLE package (
   FOREIGN KEY (source_addr_id) REFERENCES address,
 ) ;
 //
-CREATE TABLE order (
+CREATE TABLE manifestItem (
+  tracking_id INT,
+  FOREIGN KEY (tracking_id) REFERENCES package);
+//
+CREATE TABLE trackingEvents (
+  tracking_id INT,
+  FOREIGN KEY (tracking_id) REFERENCES package,
+  location_id INT,
+  FOREIGN KEY (location_id) REFERENCES location,
+  date TIMESTAMP,
+  status VARCHAR(20));
+//
+CREATE TABLE shipping_order (
   order_id INT PRIMARY KEY,
   tracking_id INT,
   account_id INT,
@@ -67,7 +72,3 @@ CREATE TABLE order (
   FOREIGN KEY (account_id) REFERENCES  account
 );
 //
-CREATE TABLE shippingCostMultipliers (
-  multiplier VARCHAR(30) PRIMARY KEY,
-  value DOUBLE,
-);
