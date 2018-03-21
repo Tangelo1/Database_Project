@@ -67,12 +67,6 @@ CREATE TABLE order (
   FOREIGN KEY (account_id) REFERENCES  account
 );
 //
-CREATE TABLE location (
-  location_id INT PRIMARY KEY,
-  name VARCHAR(20),
-  type VARCHAR(10)
-);
-//
 CREATE TABLE shippingCostMultipliers (
   multiplier VARCHAR(30) PRIMARY KEY,
   value DOUBLE,
