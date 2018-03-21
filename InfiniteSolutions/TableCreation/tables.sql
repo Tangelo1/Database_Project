@@ -36,3 +36,9 @@ CREATE TABLE credit_card (
   exp_date DATE,
   cvv VARCHAR(4)
 );
+//
+CREATE TABLE location (
+  location_id int PRIMARY KEY,
+  name VARCHAR(50),
+  type VARCHAR(1)
+);
