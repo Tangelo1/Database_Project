@@ -1,21 +1,21 @@
 CREATE TABLE address (
-  id INT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   street VARCHAR(50),
   city VARCHAR(50),
   state VARCHAR(50),
-  zip INT,
+  postal VARCHAR(8),
   country VARCHAR(50));
 
 CREATE TABLE creditCard (
-  id INT,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(50),
-  number VARCHAR(16) PRIMARY KEY,
+  number VARCHAR(16),
   exp_date DATE,
   cvv VARCHAR(4)
 );
 
 CREATE TABLE location (
-  location_id int PRIMARY KEY,
+  location_id int AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(50),
   type VARCHAR(1)
 );
@@ -26,7 +26,7 @@ CREATE TABLE shippingCostMultipliers (
 );
 
 CREATE TABLE account (
-  id INT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   type VARCHAR(1),
   name VARCHAR(50),
   phone VARCHAR(15),
@@ -36,7 +36,7 @@ CREATE TABLE account (
   FOREIGN KEY (billing_address_id) REFERENCES address);
 
 CREATE TABLE package (
-  tracking_id INT PRIMARY KEY,
+  tracking_id INT AUTO_INCREMENT PRIMARY KEY,
   weight DOUBLE,
   type VARCHAR(10),
   speed VARCHAR(10),
@@ -52,7 +52,7 @@ CREATE TABLE package (
 CREATE TABLE manifestItem (
   tracking_id INT PRIMARY KEY,
   FOREIGN KEY (tracking_id) REFERENCES package);
-//
+
 CREATE TABLE trackingEvents (
   tracking_id INT,
   FOREIGN KEY (tracking_id) REFERENCES package,
@@ -62,7 +62,7 @@ CREATE TABLE trackingEvents (
   status VARCHAR(20));
 
 CREATE TABLE shippingOrder (
-  order_id INT PRIMARY KEY,
+  order_id INT AUTO_INCREMENT PRIMARY KEY,
   tracking_id INT,
   account_id INT,
   date TIMESTAMP,
