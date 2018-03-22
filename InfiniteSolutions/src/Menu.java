@@ -1,3 +1,5 @@
+import DataModels.*;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -29,8 +31,15 @@ public class Menu {
         }
 
         else if(selectionFlag == 3){
-            System.out.println("Enter your ");
+
         }
 
     }
+
+    private static Account newAccount(){
+        System.out.println("Enter 1 for personal account or 2 for corporate account");
+        Account newACc = new Account(null,)
+
+    }
+
 }
