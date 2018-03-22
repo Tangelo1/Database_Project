@@ -48,14 +48,10 @@ public class Main {
 
         createConnection(location, user, password);
 
-
         CostConstants costs = new CostConstants(conn);
 
         ArrayList<Address> address = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/Addresses.csv", address, "address");
-
-        ArrayList<Account> account = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/Account.csv", account, "account");
+        loadCSV("./InfiniteSolutions/db/data/Address.csv", address, "address");
 
         ArrayList<CreditCard> creditCards = new ArrayList<>();
         loadCSV("./InfiniteSolutions/db/data/CreditCard.csv", creditCards, "creditcard");
@@ -63,11 +59,14 @@ public class Main {
         ArrayList<Location> locations = new ArrayList<>();
         loadCSV("./InfiniteSolutions/db/data/Location.csv", locations, "location");
 
-        ArrayList<ManifestItem> manifestItems = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/ManifestItem.csv", manifestItems, "manifestitem");
+        ArrayList<Account> account = new ArrayList<>();
+        loadCSV("./InfiniteSolutions/db/data/Account.csv", account, "account");
 
         ArrayList<Package> packages = new ArrayList<>();
         loadCSV("./InfiniteSolutions/db/data/Package.csv", packages, "package");
+
+        ArrayList<ManifestItem> manifestItems = new ArrayList<>();
+        loadCSV("./InfiniteSolutions/db/data/ManifestItem.csv", manifestItems, "manifestitem");
 
         ArrayList<ShippingOrder> shippingOrders = new ArrayList<>();
         loadCSV("./InfiniteSolutions/db/data/ShippingOrder.csv", shippingOrders, "shippingorder");
@@ -79,8 +78,6 @@ public class Main {
     }
 
     private static void loadCSV (String filename, ArrayList list, String type) {
-
-        System.out.println(list.getClass().toString());
 
         File file = new File(filename);
         BufferedReader reader = null;
