@@ -1,10 +1,13 @@
 package DataModels;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class Package extends DataModel {
 
+    private int trackingId;
     private double weight;
     private String type;
     private String speed;
@@ -12,13 +15,15 @@ public class Package extends DataModel {
     private boolean isHazard;
     private boolean isInternational;
 
-    public Package(double w, String t, String s, double v, boolean h, boolean i) {
-        this.weight = w;
-        this.type = t;
-        this.speed = s;
-        this.value = v;
-        this.isHazard = h;
-        this.isInternational = i;
+    public Package(int trackingId, double weight, String type,
+                   String speed, double value, boolean isHazard, boolean isInternational) {
+        this.trackingId = trackingId;
+        this.weight = weight;
+        this.type = type;
+        this.speed = speed;
+        this.value = value;
+        this.isHazard = isHazard;
+        this.isInternational = isInternational;
     }
 
     public Address getDestination() {
@@ -48,7 +53,16 @@ public class Package extends DataModel {
 
     @Override
     public void saveToDB(Connection conn) {
+        String query = String.format("INSERT INTO public.location " +
+                        "VALUES (%d, %f, \'%s\', \'%s\', %f, %b, %b);",
+                trackingId, weight, type, speed, value, isHazard, isHazard);
 
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
