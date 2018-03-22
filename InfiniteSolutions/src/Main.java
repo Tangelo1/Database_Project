@@ -1,15 +1,10 @@
 /**
  * Created by Tyler on 1/31/2018.
  */
-import DataModels.Account;
-import DataModels.Address;
-import DataModels.CreditCard;
-import org.w3c.dom.css.CSSStyleRule;
+import DataModels.*;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 
 public class Main {
@@ -64,6 +59,11 @@ public class Main {
                 new java.sql.Date(2001, 1, 10), 123);
 
         c.saveToDB(conn);
+
+        Location l = new Location(1, "Test", "Plane");
+        l.saveToDB(conn);
+
+
 
 
     }

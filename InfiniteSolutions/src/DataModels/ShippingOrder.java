@@ -1,10 +1,13 @@
 package DataModels;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 
 public class ShippingOrder extends DataModel {
 
+    private int id;
     private double cost;
     private Timestamp dateCreated;
 
@@ -20,7 +23,16 @@ public class ShippingOrder extends DataModel {
 
     @Override
     public void saveToDB(Connection conn) {
+        String query = String.format("INSERT INTO public.location " +
+                        "VALUES (%d, %f, \'%s\');",
+                id, cost, dateCreated);
 
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

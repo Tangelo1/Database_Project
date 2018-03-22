@@ -1,6 +1,8 @@
 package DataModels;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Location extends DataModel {
 
@@ -21,7 +23,16 @@ public class Location extends DataModel {
 
     @Override
     public void saveToDB(Connection conn) {
+        String query = String.format("INSERT INTO public.location " +
+                        "VALUES (%d, \'%s\', \'%s\');",
+                locationId, name, type);
 
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getName() {
