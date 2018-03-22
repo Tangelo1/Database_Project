@@ -1,3 +1,0 @@
-2018-03-21 20:56:59 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLException: Table "ADDRESS" not found; SQL statement:
-INSERT INTO public.address VALUES (1, '621 Freedom Plains Rd', 'Poughkeepsie', 'New York', 12603, 'USA'); [42102-196]
