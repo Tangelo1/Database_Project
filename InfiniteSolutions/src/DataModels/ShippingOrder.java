@@ -23,7 +23,7 @@ public class ShippingOrder extends DataModel {
 
     @Override
     public void saveToDB(Connection conn) {
-        String query = String.format("INSERT INTO public.location " +
+        String query = String.format("INSERT INTO public.s " +
                         "VALUES (%d, %f, \'%s\');",
                 id, cost, dateCreated);
 

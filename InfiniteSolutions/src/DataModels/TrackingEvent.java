@@ -8,11 +8,13 @@ import java.sql.Timestamp;
 public class TrackingEvent extends DataModel {
 
     private int trackingId;
+    private int locationId;
     private Timestamp time;
     private String status;
 
-    public TrackingEvent(int trackingId, Timestamp time, String status) {
+    public TrackingEvent(int trackingId, int locationId,Timestamp time, String status) {
         this.trackingId = trackingId;
+        this.locationId = locationId;
         this.time = time;
         this.status = status;
     }
@@ -26,8 +28,8 @@ public class TrackingEvent extends DataModel {
     @Override
     public void saveToDB(Connection conn) {
         String query = String.format("INSERT INTO public.location " +
-                        "VALUES (%d, \'%s\', \'%s\');",
-                trackingId, time, status);
+                        "VALUES (%d, %d, \'%s\', \'%s\');",
+                trackingId, locationId, time, status);
 
         try {
             Statement stmt = conn.createStatement();
