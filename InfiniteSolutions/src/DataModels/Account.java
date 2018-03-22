@@ -29,7 +29,6 @@ public class Account extends DataModel {
                 id, type, name, phone, creditCardId, billingAddressId);
 
         try {
-
             Statement stmt = conn.createStatement();
             stmt.execute(query);
         } catch (SQLException e) {
