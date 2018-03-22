@@ -1,8 +1,10 @@
 /**
  * Created by Tyler on 1/31/2018.
  */
+import DataModels.Account;
 import DataModels.Address;
 import DataModels.CreditCard;
+import org.w3c.dom.css.CSSStyleRule;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -39,7 +41,6 @@ public class Main {
     }
 
 
-
     public static void main(String[] args) {
         String location = "./InfiniteSolutions/db/db";
         String user = "";
@@ -49,13 +50,16 @@ public class Main {
 
         ArrayList<Address> addresses = new ArrayList<>();
 
+        Account acc = new Account(1, 'P', "Tyler", "845.416.5883", 1, 1);
+        acc.saveToDB(conn);
+
         Address a = new Address(1, "621 Freedom Plains Rd",
                 "Poughkeepsie", "New York", 12603, "USA");
 
-        //a.saveToDB(conn);
+        a.saveToDB(conn);
 
         CreditCard c = new CreditCard(1, "Tyler Angelo",
-                "123456768435623456969696",
+                "12345676843123",
                 new java.sql.Date(2001, 1, 10), 123);
 
         c.saveToDB(conn);
