@@ -59,7 +59,7 @@ public class Package extends DataModel {
 
     @Override
     public void saveToDB(Connection conn) {
-        String query = String.format("INSERT INTO public.location " +
+        String query = String.format("INSERT INTO public.package " +
                         "VALUES (%d, %f, \'%s\', \'%s\', %f, %d, %d, %b, %b);",
                 trackingId, weight, type, speed, value, destAddrId, srcAddrId, isHazard, isHazard);
 

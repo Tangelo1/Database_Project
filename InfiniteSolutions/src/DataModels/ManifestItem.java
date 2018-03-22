@@ -25,7 +25,7 @@ public class ManifestItem extends DataModel {
 
     @Override
     public void saveToDB(Connection conn) {
-        String query = String.format("INSERT INTO public.location " +
+        String query = String.format("INSERT INTO public.manifestitem " +
                         "VALUES (%d, \'%s\');",
                 trackingId, name);
 

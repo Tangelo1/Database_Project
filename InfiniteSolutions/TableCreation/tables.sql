@@ -25,6 +25,12 @@ CREATE TABLE shippingCostMultipliers (
   value DOUBLE
 );
 
+INSERT INTO shippingCostMultipliers VALUES ('Overnight', 2);
+INSERT INTO shippingCostMultipliers VALUES ('Expedited', 1.75);
+INSERT INTO shippingCostMultipliers VALUES ('Standard', 1);
+INSERT INTO shippingCostMultipliers VALUES ('NoRush', .85);
+INSERT INTO shippingCostMultipliers VALUES ('PerPound', 1);
+
 CREATE TABLE account (
   id INT AUTO_INCREMENT PRIMARY KEY,
   type VARCHAR(1),
@@ -33,7 +39,8 @@ CREATE TABLE account (
   credit_card_id INT,
   FOREIGN KEY (credit_card_id) REFERENCES creditCard,
   billing_address_id INT,
-  FOREIGN KEY (billing_address_id) REFERENCES address);
+  FOREIGN KEY (billing_address_id) REFERENCES address
+);
 
 CREATE TABLE package (
   tracking_id INT PRIMARY KEY,
@@ -51,7 +58,9 @@ CREATE TABLE package (
 
 CREATE TABLE manifestItem (
   tracking_id INT PRIMARY KEY,
-  FOREIGN KEY (tracking_id) REFERENCES package);
+  FOREIGN KEY (tracking_id) REFERENCES package,
+  name VARCHAR(25)
+);
 
 CREATE TABLE trackingEvents (
   tracking_id INT,

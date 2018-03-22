@@ -11,7 +11,8 @@ public class ShippingOrder extends DataModel {
     private double cost;
     private Timestamp dateCreated;
 
-    public ShippingOrder(double c, Timestamp d) {
+    public ShippingOrder(int id, double c, Timestamp d) {
+        this.id = id;
         this.cost = c;
         this.dateCreated = d;
     }
@@ -23,7 +24,7 @@ public class ShippingOrder extends DataModel {
 
     @Override
     public void saveToDB(Connection conn) {
-        String query = String.format("INSERT INTO public.s " +
+        String query = String.format("INSERT INTO public.shippingorder " +
                         "VALUES (%d, %f, \'%s\');",
                 id, cost, dateCreated);
 
@@ -50,5 +51,13 @@ public class ShippingOrder extends DataModel {
 
     public void setCost(double cost) {
         this.cost = cost;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 }
