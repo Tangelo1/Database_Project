@@ -1,12 +1,19 @@
 package DataModels;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public abstract class DataModel {
 
-    private int primaryKey;
-
-    public abstract void loadFromDB(String query);
+    public void loadFromDB(Connection conn, String query) {
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public abstract void saveToDB(Connection conn);
 
 }

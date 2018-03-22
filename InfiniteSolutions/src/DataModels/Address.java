@@ -10,13 +10,13 @@ public class Address extends DataModel{
     private int zip;
     private String country;
 
-    public Address(int i, String s, String c, String st, int z, String co) {
-        this.id = i;
-        this.street = s;
-        this.city = c;
-        this.state = st;
-        this.zip = z;
-        this.country = co;
+    public Address(int id, String street, String city, String state, int zip, String country) {
+        this.id = id;
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+        this.country = country;
     }
 
     public String getStreet() {
@@ -68,8 +68,8 @@ public class Address extends DataModel{
     }
 
     @Override
-    public void loadFromDB(String query) {
-
+    public void loadFromDB(Connection conn, String query) {
+        super.loadFromDB(conn, query);
     }
 
     @Override

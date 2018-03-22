@@ -42,8 +42,8 @@ public class Package extends DataModel {
     }
 
     @Override
-    public void loadFromDB(String query) {
-
+    public void loadFromDB(Connection conn, String query) {
+        super.loadFromDB(conn, query);
     }
 
     @Override

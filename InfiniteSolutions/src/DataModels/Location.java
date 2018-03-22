@@ -4,17 +4,19 @@ import java.sql.Connection;
 
 public class Location extends DataModel {
 
+    private int locationId;
     private String name;
     private String type;
 
-    public Location(String n, String t) {
-        this.name = n;
-        this.type = t;
+    public Location(int locaionId, String name, String type) {
+        this.locationId = locaionId;
+        this.name = name;
+        this.type = type;
     }
 
     @Override
-    public void loadFromDB(String query) {
-
+    public void loadFromDB(Connection conn, String query) {
+        super.loadFromDB(conn, query);
     }
 
     @Override
@@ -44,6 +46,14 @@ public class Location extends DataModel {
 
     public Package getPackage() {
         return null;
+    }
+
+    public int getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(int locationId) {
+        this.locationId = locationId;
     }
 }
 

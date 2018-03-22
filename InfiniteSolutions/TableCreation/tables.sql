@@ -7,6 +7,7 @@ CREATE TABLE address (
   country VARCHAR(50));
 
 CREATE TABLE creditCard (
+  id INT,
   name VARCHAR(50),
   number VARCHAR(16) PRIMARY KEY,
   exp_date DATE,
@@ -49,7 +50,7 @@ CREATE TABLE package (
 ) ;
 
 CREATE TABLE manifestItem (
-  tracking_id INT,
+  tracking_id INT PRIMARY KEY,
   FOREIGN KEY (tracking_id) REFERENCES package);
 //
 CREATE TABLE trackingEvents (

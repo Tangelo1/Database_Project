@@ -2,9 +2,12 @@
  * Created by Tyler on 1/31/2018.
  */
 import DataModels.Address;
+import DataModels.CreditCard;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class Main {
@@ -49,8 +52,13 @@ public class Main {
         Address a = new Address(1, "621 Freedom Plains Rd",
                 "Poughkeepsie", "New York", 12603, "USA");
 
-        a.saveToDB(conn);
+        //a.saveToDB(conn);
 
+        CreditCard c = new CreditCard(1, "Tyler Angelo",
+                "123456768435623456969696",
+                new java.sql.Date(2001, 1, 10), 123);
+
+        c.saveToDB(conn);
 
 
     }
