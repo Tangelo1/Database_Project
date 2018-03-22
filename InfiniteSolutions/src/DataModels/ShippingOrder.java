@@ -7,12 +7,16 @@ import java.sql.Timestamp;
 
 public class ShippingOrder extends DataModel {
 
-    private int id;
+    private int orderId;
+    private int trackingId;
+    private int accountId;
     private double cost;
     private Timestamp dateCreated;
 
-    public ShippingOrder(int id, double c, Timestamp d) {
-        this.id = id;
+    public ShippingOrder(int orderId, int trackingId, int accountId, Timestamp d, double c) {
+        this.orderId = orderId;
+        this.trackingId = trackingId;
+        this.accountId = accountId;
         this.cost = c;
         this.dateCreated = d;
     }
@@ -25,8 +29,8 @@ public class ShippingOrder extends DataModel {
     @Override
     public void saveToDB(Connection conn) {
         String query = String.format("INSERT INTO public.shippingorder " +
-                        "VALUES (%d, %f, \'%s\');",
-                id, cost, dateCreated);
+                        "VALUES (%d, %d, %d, \'%s\', %f);",
+                orderId, trackingId, accountId, dateCreated, cost);
 
         try {
             Statement stmt = conn.createStatement();
@@ -53,11 +57,28 @@ public class ShippingOrder extends DataModel {
         this.cost = cost;
     }
 
-    public void setId(int id) {
-        this.id = id;
+
+    public int getOrderId() {
+        return orderId;
     }
 
-    public int getId() {
-        return id;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public int getTrackingId() {
+        return trackingId;
+    }
+
+    public void setTrackingId(int trackingId) {
+        this.trackingId = trackingId;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 }

@@ -6,6 +6,8 @@ import DataModels.Package;
 
 import java.io.*;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
@@ -49,18 +51,34 @@ public class Main {
 
         CostConstants costs = new CostConstants(conn);
 
+        ArrayList<Address> address = new ArrayList<>();
+        loadCSV("./InfiniteSolutions/db/data/Addresses.csv", address, "address");
 
-        ArrayList<Address> addresses = new ArrayList<>();
-        readFile("./InfiniteSolutions/db/data/Account.csv", addresses, "account");
+        ArrayList<Account> account = new ArrayList<>();
+        loadCSV("./InfiniteSolutions/db/data/Account.csv", account, "account");
 
+        ArrayList<CreditCard> creditCards = new ArrayList<>();
+        loadCSV("./InfiniteSolutions/db/data/CreditCard.csv", creditCards, "creditcard");
 
+        ArrayList<Location> locations = new ArrayList<>();
+        loadCSV("./InfiniteSolutions/db/data/Location.csv", locations, "location");
 
+        ArrayList<ManifestItem> manifestItems = new ArrayList<>();
+        loadCSV("./InfiniteSolutions/db/data/ManifestItem.csv", manifestItems, "manifestitem");
 
+        ArrayList<Package> packages = new ArrayList<>();
+        loadCSV("./InfiniteSolutions/db/data/Package.csv", packages, "package");
+
+        ArrayList<ShippingOrder> shippingOrders = new ArrayList<>();
+        loadCSV("./InfiniteSolutions/db/data/ShippingOrder.csv", shippingOrders, "shippingorder");
+
+        ArrayList<TrackingEvent> trackingEvents = new ArrayList<>();
+        loadCSV("./InfiniteSolutions/db/data/TrackingEvents.csv", trackingEvents, "trackingevents");
 
 
     }
 
-    private static void readFile(String filename, ArrayList list, String type) {
+    private static void loadCSV (String filename, ArrayList list, String type) {
 
         System.out.println(list.getClass().toString());
 
@@ -69,7 +87,7 @@ public class Main {
 
         try {
             reader = new BufferedReader(new FileReader(file));
-            String line = null;
+            String line;
 
             reader.readLine();
 
@@ -81,30 +99,65 @@ public class Main {
                 String[] args = line.split(",");
 
                 switch (type) {
+
                     case "account":
                         m = new Account(Integer.parseInt(args[0]), args[1].charAt(0), args[2], args[3],
                                 Integer.parseInt(args[4]), Integer.parseInt(args[5]));
                         break;
+
                     case "address":
-                        m = new Address(Integer.parseInt(args[0]),);
+                        m = new Address(Integer.parseInt(args[0]), args[1], args[2], args[3],
+                                Integer.parseInt(args[4]), args[5]);
                         break;
+
                     case "creditcard":
-                        m = new CreditCard(Integer.parseInt(args[0]),);
+                        String[] dateStr = args[3].split("/");
+                        java.sql.Date date = new java.sql.Date(
+                                Integer.parseInt(dateStr[0]), Integer.parseInt(dateStr[1]), Integer.parseInt(dateStr[3]));
+                        m = new CreditCard(Integer.parseInt(args[0]), args[1], args[2], date, Integer.parseInt(args[4]));
                         break;
+
                     case "location":
-                        m = new Location(Integer.parseInt(args[0]),);
+                        m = new Location(Integer.parseInt(args[0]), args[1], args[2]);
                         break;
+
                     case "manifestitem":
-                        m = new ManifestItem(Integer.parseInt(args[0]),);
+                        m = new ManifestItem(Integer.parseInt(args[0]), args[1]);
                         break;
+
                     case "package":
-                        m = new Package(Integer.parseInt(args[0]),);
+                        m = new Package(Integer.parseInt(args[0]), Double.parseDouble(args[1]),
+                                args[2], args[3], Double.parseDouble(args[4]), Integer.parseInt(args[5]),
+                                Integer.parseInt(args[6]), Boolean.valueOf(args[7]), Boolean.valueOf(args[8]));
                         break;
+
                     case "shippingorder":
-                        m = new ShippingOrder(Integer.parseInt(args[0]),);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.SSS");
+                        java.util.Date parsedDate = null;
+                        try {
+                            parsedDate = dateFormat.parse(args[3]);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        Timestamp ts = new java.sql.Timestamp(parsedDate.getTime());
+                        m = new ShippingOrder(
+                                Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]),
+                                ts, Double.parseDouble(args[4])
+                                );
                         break;
+
                     case "trackingevent":
-                        m = new TrackingEvent(Integer.parseInt(args[0]),);
+                        //This may cause an issue if tracking events is called after shipping order
+                        dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.SSS");
+                        parsedDate = null;
+                        try {
+                            parsedDate = dateFormat.parse(args[2]);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        //This as well
+                        ts = new java.sql.Timestamp(parsedDate.getTime());
+                        m = new TrackingEvent(Integer.parseInt(args[0]), Integer.parseInt(args[1]), ts, args[3]);
                         break;
 
                     default:
