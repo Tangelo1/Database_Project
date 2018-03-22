@@ -36,7 +36,7 @@ CREATE TABLE account (
   FOREIGN KEY (billing_address_id) REFERENCES address);
 
 CREATE TABLE package (
-  tracking_id INT AUTO_INCREMENT PRIMARY KEY,
+  tracking_id INT PRIMARY KEY,
   weight DOUBLE,
   type VARCHAR(10),
   speed VARCHAR(10),

@@ -7,15 +7,15 @@ public class Address extends DataModel{
     private String street;
     private String city;
     private String state;
-    private int zip;
+    private int postal;
     private String country;
 
-    public Address(int id, String street, String city, String state, int zip, String country) {
+    public Address(int id, String street, String city, String state, int postal, String country) {
         this.id = id;
         this.street = street;
         this.city = city;
         this.state = state;
-        this.zip = zip;
+        this.postal = postal;
         this.country = country;
     }
 
@@ -43,12 +43,12 @@ public class Address extends DataModel{
         this.state = state;
     }
 
-    public int getZip() {
-        return zip;
+    public int getPostal() {
+        return postal;
     }
 
-    public void setZip(int zip) {
-        this.zip = zip;
+    public void setPostal(int postal) {
+        this.postal = postal;
     }
 
     public int getId() {
@@ -76,7 +76,7 @@ public class Address extends DataModel{
     public void saveToDB(Connection conn) {
         String query = String.format("INSERT INTO public.address " +
                 "VALUES (%d, \'%s\', \'%s\', \'%s\', %d, \'%s\');",
-                id, street, city, state, zip, country);
+                id, street, city, state, postal, country);
 
         try {
             Statement stmt = conn.createStatement();
