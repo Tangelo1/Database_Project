@@ -3,6 +3,7 @@
  */
 import DataModels.*;
 import DataModels.Package;
+import com.sun.org.apache.xpath.internal.SourceTree;
 
 import java.io.*;
 import java.sql.*;
@@ -166,7 +167,7 @@ public class Main {
 
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Cannot find: " + filename);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

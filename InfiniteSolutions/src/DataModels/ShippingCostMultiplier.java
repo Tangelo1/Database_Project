@@ -38,11 +38,6 @@ public class ShippingCostMultiplier extends DataModel{
                         "VALUES (\'%s\', %f);",
                 multiplier, value);
 
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        super.executeQuery(conn, query);
     }
 }

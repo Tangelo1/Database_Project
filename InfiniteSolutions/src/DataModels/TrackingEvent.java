@@ -1,8 +1,6 @@
 package DataModels;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 
 public class TrackingEvent extends DataModel {
@@ -31,12 +29,7 @@ public class TrackingEvent extends DataModel {
                         "VALUES (%d, %d, \'%s\', \'%s\');",
                 trackingId, locationId, time, status);
 
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        super.executeQuery(conn, query);
     }
 
     public Timestamp getTime() {

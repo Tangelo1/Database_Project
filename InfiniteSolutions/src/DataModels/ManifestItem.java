@@ -29,11 +29,6 @@ public class ManifestItem extends DataModel {
                         "VALUES (%d, \'%s\');",
                 trackingId, name);
 
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        super.executeQuery(conn, query);
     }
 }

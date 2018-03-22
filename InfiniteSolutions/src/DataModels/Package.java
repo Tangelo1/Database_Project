@@ -63,12 +63,7 @@ public class Package extends DataModel {
                         "VALUES (%d, %f, \'%s\', \'%s\', %f, %d, %d, %b, %b);",
                 trackingId, weight, type, speed, value, destAddrId, srcAddrId, isHazard, isHazard);
 
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        super.executeQuery(conn, query);
     }
 
 

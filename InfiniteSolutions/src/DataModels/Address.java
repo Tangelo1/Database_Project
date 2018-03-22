@@ -78,12 +78,7 @@ public class Address extends DataModel{
                 "VALUES (%d, \'%s\', \'%s\', \'%s\', %d, \'%s\');",
                 id, street, city, state, postal, country);
 
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        super.executeQuery(conn, query);
     }
 
 

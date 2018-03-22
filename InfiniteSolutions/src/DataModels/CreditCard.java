@@ -32,12 +32,7 @@ public class CreditCard extends DataModel {
                         "VALUES (%d, \'%s\', \'%s\', \'%s\', %d);",
                 id, name, number, expDate, cvv);
 
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        super.executeQuery(conn, query);
     }
 
 

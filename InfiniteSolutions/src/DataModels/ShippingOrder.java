@@ -32,12 +32,7 @@ public class ShippingOrder extends DataModel {
                         "VALUES (%d, %d, %d, \'%s\', %f);",
                 orderId, trackingId, accountId, dateCreated, cost);
 
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        super.executeQuery(conn, query);
     }
 
 

@@ -27,12 +27,7 @@ public class Location extends DataModel {
                         "VALUES (%d, \'%s\', \'%s\');",
                 locationId, name, type);
 
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        super.executeQuery(conn, query);
     }
 
     public String getName() {

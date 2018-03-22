@@ -28,12 +28,7 @@ public class Account extends DataModel {
                         "VALUES (%d, \'%s\', \'%s\', \'%s\', %d, %d);",
                 id, type, name, phone, creditCardId, billingAddressId);
 
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        super.executeQuery(conn, query);
 
     }
 
