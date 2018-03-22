@@ -1,5 +1,6 @@
 package DataModels;
 
+import java.sql.Connection;
 import java.util.Date;
 
 public class CreditCard extends DataModel {
@@ -22,7 +23,7 @@ public class CreditCard extends DataModel {
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB(Connection conn) {
 
     }
 

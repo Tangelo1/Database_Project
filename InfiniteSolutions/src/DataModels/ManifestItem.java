@@ -1,5 +1,7 @@
 package DataModels;
 
+import java.sql.Connection;
+
 public class ManifestItem extends DataModel {
 
     private String name;
@@ -18,7 +20,7 @@ public class ManifestItem extends DataModel {
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB(Connection conn) {
 
     }
 }

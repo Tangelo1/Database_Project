@@ -1,5 +1,7 @@
 package DataModels;
 
+import java.sql.Connection;
+
 public class Location extends DataModel {
 
     private String name;
@@ -16,7 +18,7 @@ public class Location extends DataModel {
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB(Connection conn) {
 
     }
 

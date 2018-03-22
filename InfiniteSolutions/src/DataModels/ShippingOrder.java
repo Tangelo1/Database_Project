@@ -1,5 +1,6 @@
 package DataModels;
 
+import java.sql.Connection;
 import java.sql.Timestamp;
 
 public class ShippingOrder extends DataModel {
@@ -18,9 +19,10 @@ public class ShippingOrder extends DataModel {
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB(Connection conn) {
 
     }
+
 
     public Timestamp getDateCreated() {
         return dateCreated;

@@ -1,5 +1,6 @@
 package DataModels;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 
 public class Package extends DataModel {
@@ -46,9 +47,10 @@ public class Package extends DataModel {
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB(Connection conn) {
 
     }
+
 
     public double getWeight() {
         return weight;

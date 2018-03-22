@@ -1,5 +1,6 @@
 package DataModels;
 
+import java.sql.Connection;
 import java.sql.Timestamp;
 
 public class TrackingEvent extends DataModel {
@@ -19,7 +20,7 @@ public class TrackingEvent extends DataModel {
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB(Connection conn) {
 
     }
 
