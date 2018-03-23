@@ -3,7 +3,7 @@ package Menus;
 import java.util.Scanner;
 
 /**
- * Class designed to make it easy to ready input.
+ * Class designed to make it easy to read input.
  */
 public class Input
 {
