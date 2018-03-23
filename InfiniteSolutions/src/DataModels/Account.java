@@ -32,6 +32,10 @@ public class Account extends DataModel {
 
     }
 
+
+    //TODO need this for menu. return null if it does not exist
+    public static Account getAccount(int ID){return null;};
+
     public char getType() {
         return type;
     }

@@ -77,7 +77,24 @@ public class Menu {
      * Called when the user selects to login. Will attempt to log the user in
      */
     private static void login() {
-        // TODO
+        int ID = 0;
+        System.out.print("Please enter your account ID, or -1 to go back to the menu\n");
+        try {
+            ID = Input.readInt();
+        } catch (Input.InputException e) {
+            e.printStackTrace();
+        }
+
+        //Get account
+        Account userAccount = Account.getAccount(ID);
+
+        if(userAccount == null){
+
+            enterMainMenu();
+        }
+
+        CustomerMenu.setAccount(userAccount);
+
     }
 
     /**
