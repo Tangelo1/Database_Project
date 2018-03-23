@@ -3,7 +3,6 @@
  */
 import DataModels.*;
 import DataModels.Package;
-import com.sun.org.apache.xpath.internal.SourceTree;
 
 import java.io.*;
 import java.sql.*;
@@ -67,13 +66,13 @@ public class Main {
         loadCSV("./InfiniteSolutions/db/data/Package.csv", packages, "package");
 
         ArrayList<ManifestItem> manifestItems = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/ManifestItem.csv", manifestItems, "manifestitem");
+        //loadCSV("./InfiniteSolutions/db/data/ManifestItem.csv", manifestItems, "manifestitem");
 
         ArrayList<ShippingOrder> shippingOrders = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/ShippingOrder.csv", shippingOrders, "shippingorder");
+        //loadCSV("./InfiniteSolutions/db/data/ShippingOrder.csv", shippingOrders, "shippingorder");
 
         ArrayList<TrackingEvent> trackingEvents = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/TrackingEvents.csv", trackingEvents, "trackingevents");
+        //loadCSV("./InfiniteSolutions/db/data/TrackingEvents.csv", trackingEvents, "trackingevents");
 
 
     }
@@ -105,13 +104,13 @@ public class Main {
 
                     case "address":
                         m = new Address(Integer.parseInt(args[0]), args[1], args[2], args[3],
-                                Integer.parseInt(args[4]), args[5]);
+                                args[4], args[5]);
                         break;
 
                     case "creditcard":
                         String[] dateStr = args[3].split("/");
                         java.sql.Date date = new java.sql.Date(
-                                Integer.parseInt(dateStr[0]), Integer.parseInt(dateStr[1]), Integer.parseInt(dateStr[3]));
+                                Integer.parseInt(dateStr[0]), Integer.parseInt(dateStr[1]), Integer.parseInt(dateStr[2]));
                         m = new CreditCard(Integer.parseInt(args[0]), args[1], args[2], date, Integer.parseInt(args[4]));
                         break;
 
