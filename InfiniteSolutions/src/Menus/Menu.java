@@ -12,9 +12,6 @@ import java.util.Scanner;
  */
 public class Menu {
 
-    int accountID;
-    int trackingID;
-
     /**
      * Main entry point for the menu system.
      * @param args unused command line args.
@@ -36,41 +33,66 @@ public class Menu {
     }
 
     /**
-     *
+     * Displays the first main menu for the application. Presents the user with options to
+     * login, track a package, or create an account.
      */
     private static void enterMainMenu() {
 
-        int selectionFlag;
-        int accountID = 0;
-        int trackingID = 0;
+        int selectionFlag = -1;
 
-        Scanner reader = new Scanner(System.in);
+        System.out.print("Main menu:\n\t1: Log in\n\t2: Create Account\n\t3: Track Package\n\t4: Exit\n");
 
-        System.out.print("Main menu:\n\t1: Log in\n\t2: Track Package\n\t3: Create Personal Account\n> ");
+        // Read user selection, sanitizing input values to numbers 1 2 3 or 4.
+        do {
+            try {
+                selectionFlag = Input.readInt();
+            } catch (Input.InputException ie) {
+                selectionFlag = -1;
+            } finally {
+                if (selectionFlag > 4 || selectionFlag < 1) {
+                    System.out.print("Error: Selection must be 1, 2, 3 or 4.");
+                }
+            }
+        } while (selectionFlag > 4 || selectionFlag < 1);
 
-        selectionFlag = reader.nextInt();
-
-        if(selectionFlag == 1){
-            System.out.println("Enter your account ID, -1 if you are an admin");
-            accountID = reader.nextInt();
+        // Selection choice of 1 should have the user log in
+        switch(selectionFlag) {
+            case 1:
+                login();
+                break;
+            case 2:
+                createAccount();
+                break;
+            case 3:
+                trackPackage();
+                break;
+            case 4:
+                System.out.println("Goodbye.");
+                System.exit(0);
+                break;
         }
-
-        else if(selectionFlag == 2){
-            System.out.println("Enter your tracking ID");
-            trackingID = reader.nextInt();
-        }
-
-        else if(selectionFlag == 3){
-
-        }
-
     }
 
-    private static Account newAccount(){
-        System.out.println("Enter 1 for personal account or 2 for corporate account");
-        //Account newACc = new Account(null,)
-
-        return null;
+    /**
+     * Called when the user selects to login. Will attempt to log the user in
+     */
+    private static void login() {
+        // TODO
     }
 
+    /**
+     * Called when the user selects to go down the account creation path.
+     * This guides the user through creating a personal account, as only the adminstrators
+     * have permission to create corporate accounts.
+     */
+    private static void createAccount() {
+        // TODO
+    }
+
+    /**
+     * Displays the package tracking menu to the user.
+     */
+    private static void trackPackage() {
+        // TODO
+    }
 }
