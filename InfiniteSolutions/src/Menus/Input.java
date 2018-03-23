@@ -26,6 +26,17 @@ public class Input
     }
 
     /**
+     * Reads an string from stdin
+     * @return the string read
+     */
+    public static String readStr() throws InputException{
+        System.out.print("> ");
+        String line = stdin.nextLine().trim();
+
+        return line;
+    }
+
+    /**
      * An exception class for input errors.
      */
     public static class InputException extends Exception
