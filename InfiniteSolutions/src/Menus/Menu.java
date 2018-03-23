@@ -71,7 +71,6 @@ public class Menu {
                 System.exit(0);
                 break;
         }
-
     }
 
     /**
