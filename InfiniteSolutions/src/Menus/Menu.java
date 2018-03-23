@@ -159,7 +159,7 @@ public class Menu {
                 e.printStackTrace();
             }
 
-            creditCardId = creditCardId.replace(creditCardId,"\\s+");
+            creditCardId = creditCardId.replaceAll("\\s+", "");
 
             if(creditCardId.length() > 50){
                 System.out.println("Your name is too long, enter a shorter form\n");
