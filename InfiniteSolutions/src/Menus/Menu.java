@@ -9,6 +9,7 @@ import DataModels.*;
  */
 public class Menu {
 
+    public static final int NULL = 0;
     /**
      * Main entry point for the menu system.
      * @param args unused command line args.
@@ -95,10 +96,9 @@ public class Menu {
 
         String name = "";
         String phone = "";
-        String creditCardId = "";
-        int billingAddressId;
         int flag = 0;
 
+        //Setting up account
         while(flag == 0){
 
             System.out.print("Please enter your name\n");
@@ -135,26 +135,116 @@ public class Menu {
             }
         }
 
+        newAccount = new Account(NULL,'P',name,phone,NULL,NULL);
+
+
+        //Address being setup
+        Address newAddress;
+        String street = "";
+        String city = "";
+        String state = "";
+        String postal = "";
+        String country = "";
+
         flag = 0;
 
-        while(flag == 0){
+        while (flag == 0){
 
-            System.out.print("Please enter your credit card ID\n");
+            System.out.print("Please enter your street\n");
             try {
-                creditCardId = Input.readStr();
+                street = Input.readStr();
             } catch (Input.InputException e) {
                 e.printStackTrace();
             }
 
-            creditCardId = creditCardId.replaceAll("\\s+", "");
-
-            if(creditCardId.length() > 50){
-                System.out.println("Your name is too long, enter a shorter form\n");
+            street = street.trim();
+            if(phone.length() > 50){
+                System.out.println("Invalid street(too long), try again\n");
             }else{
                 flag = 1;
             }
         }
 
+        flag = 0;
+
+        while (flag == 0){
+
+            System.out.print("Please enter your city\n");
+            try {
+                city = Input.readStr();
+            } catch (Input.InputException e) {
+                e.printStackTrace();
+            }
+
+            city = city.trim();
+            if(city.length() > 50){
+                System.out.println("Invalid city(too long), try again\n");
+            }else{
+                flag = 1;
+            }
+        }
+
+        flag = 0;
+
+        while (flag == 0){
+
+            System.out.print("Please enter your state\n");
+            try {
+                state = Input.readStr();
+            } catch (Input.InputException e) {
+                e.printStackTrace();
+            }
+
+            state = state.trim();
+            if(state.length() > 50){
+                System.out.println("Invalid state(too long), try again\n");
+            }else{
+                flag = 1;
+            }
+        }
+
+        flag = 0;
+
+        while (flag == 0){
+
+            System.out.print("Please enter your postal\n");
+            try {
+                postal = Input.readStr();
+            } catch (Input.InputException e) {
+                e.printStackTrace();
+            }
+
+            postal = postal.trim();
+            if(postal.length() > 8){
+                System.out.println("Invalid postal(too long/short), try again\n");
+            }else{
+                flag = 1;
+            }
+        }
+
+        flag = 0;
+
+
+        while (flag == 0){
+
+            System.out.print("Please enter your country\n");
+            try {
+                country = Input.readStr();
+            } catch (Input.InputException e) {
+                e.printStackTrace();
+            }
+
+            country = country.trim();
+            if(country.length() > 50){
+                System.out.println("Invalid country(too long/short), try again\n");
+            }else{
+                flag = 1;
+            }
+        }
+
+        newAddress = new Address(NULL,street,city,state,postal,country);
+
+        //TODO Need to get some more things, need to add credit card first
 
     }
 
