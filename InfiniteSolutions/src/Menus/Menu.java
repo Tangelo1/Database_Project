@@ -95,15 +95,80 @@ public class Menu {
 
         CustomerMenu.setAccount(userAccount);
 
+
     }
 
     /**
      * Called when the user selects to go down the account creation path.
      * This guides the user through creating a personal account, as only the adminstrators
-     * have permission to create corporate accounts.
+     * have permission to create corporate accounts. After creation, will be logged in
      */
     private static void createAccount() {
-        // TODO
+        Account newAccount;
+
+        String name = "";
+        String phone = "";
+        String creditCardId = "";
+        int billingAddressId;
+        int flag = 0;
+
+        while(flag == 0){
+
+            System.out.print("Please enter your name\n");
+            try {
+                name = Input.readStr();
+            } catch (Input.InputException e) {
+                e.printStackTrace();
+            }
+
+            name = name.trim();
+            if(name.length() > 50){
+                System.out.println("Your name is too long, enter a shorter form\n");
+            }else{
+                flag = 1;
+            }
+        }
+
+        flag = 0;
+
+        while (flag == 0){
+
+            System.out.print("Please enter your phone number\n");
+            try {
+                phone = Input.readStr();
+            } catch (Input.InputException e) {
+                e.printStackTrace();
+            }
+
+            phone = phone.trim();
+            if(phone.length() > 15){
+                System.out.println("Invalid number, try again\n");
+            }else{
+                flag = 1;
+            }
+        }
+
+        flag = 0;
+
+        while(flag == 0){
+
+            System.out.print("Please enter your credit card ID\n");
+            try {
+                creditCardId = Input.readStr();
+            } catch (Input.InputException e) {
+                e.printStackTrace();
+            }
+
+            creditCardId = creditCardId.replace(creditCardId,"\\s+");
+
+            if(creditCardId.length() > 50){
+                System.out.println("Your name is too long, enter a shorter form\n");
+            }else{
+                flag = 1;
+            }
+        }
+
+
     }
 
     /**

@@ -36,6 +36,7 @@ public class Input
         return line;
     }
 
+
     /**
      * An exception class for input errors.
      */
