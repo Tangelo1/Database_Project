@@ -10,7 +10,7 @@ CREATE TABLE creditCard (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(50),
   number VARCHAR(16),
-  exp_date DATE,
+  exp_date VARCHAR(5),
   cvv VARCHAR(4)
 );
 
