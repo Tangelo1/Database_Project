@@ -43,7 +43,7 @@ public class Input
      * @param max The maximum number
      * @return The number input by the user.
      */
-    public static int makeSelectionInrange(int min, int max)
+    public static int makeSelectionInRange(int min, int max)
     {
         // Stay in the admin menu until the user chooses to exit the admin menu.
         int menuSelection = -1;

@@ -22,7 +22,7 @@ public class AdminMenu {
         int menuSelection = -1;
         do {
             // Make a menu selection
-            menuSelection = Input.makeSelectionInrange(SQL_CONSOLE, LOG_OUT);
+            menuSelection = Input.makeSelectionInRange(SQL_CONSOLE, LOG_OUT);
         } while (menuSelection != LOG_OUT);
     }
 
