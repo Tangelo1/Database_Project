@@ -1,101 +1,101 @@
 Location_ID,Name,Type
-1,condimentum,Truck
-2,sit,Warehouse
-3,Vivamus,Warehouse
-4,vehicula.,Truck
-5,porttitor,Warehouse
-6,Mauris,Truck
-7,Sed,Warehouse
-8,risus.,Plane
-9,Donec,Truck
-10,Donec,Truck
-11,Nullam,Truck
-12,sit,Warehouse
-13,lectus,Warehouse
-14,sapien,Warehouse
-15,mus.,Plane
-16,hendrerit,Truck
-17,"sed,",Warehouse
-18,turpis,Truck
-19,"vel,",Warehouse
-20,tincidunt,Warehouse
-21,dolor,Warehouse
-22,magna.,Plane
-23,vel,Plane
-24,libero.,Plane
-25,orci,Plane
-26,tempus,Truck
-27,Aliquam,Warehouse
-28,turpis,Plane
-29,leo.,Plane
-30,porttitor,Warehouse
-31,a,Truck
-32,a,Truck
-33,Aliquam,Truck
-34,Nam,Truck
-35,nibh.,Plane
-36,a,Plane
-37,"montes,",Warehouse
-38,tincidunt,Truck
-39,eu,Truck
-40,Mauris,Warehouse
-41,"enim,",Plane
-42,convallis,Truck
-43,nisi.,Plane
-44,egestas.,Warehouse
-45,vel,Truck
-46,tellus.,Plane
-47,"placerat,",Plane
-48,"tellus,",Truck
-49,pretium,Plane
-50,in,Plane
-51,ac,Plane
-52,enim,Truck
-53,velit.,Warehouse
-54,habitant,Truck
-55,Donec,Warehouse
-56,ultrices,Warehouse
-57,nisi,Plane
-58,at,Plane
-59,mauris.,Plane
-60,Pellentesque,Truck
-61,"purus,",Truck
-62,Sed,Plane
-63,lacinia,Truck
-64,Proin,Warehouse
-65,semper,Truck
-66,tincidunt,Plane
-67,augue,Plane
-68,tincidunt,Warehouse
-69,Quisque,Warehouse
-70,Fusce,Plane
-71,"eu,",Plane
-72,risus.,Warehouse
-73,lobortis,Plane
-74,scelerisque,Truck
-75,vehicula,Warehouse
-76,lobortis,Plane
-77,"tempus,",Warehouse
-78,ligula.,Warehouse
-79,pede.,Plane
-80,sit,Warehouse
-81,"enim,",Plane
-82,Nam,Warehouse
-83,turpis,Plane
-84,"non,",Plane
-85,ut,Warehouse
-86,placerat.,Truck
-87,faucibus,Plane
-88,mauris,Truck
-89,ipsum,Plane
-90,rutrum.,Plane
-91,augue,Warehouse
-92,ac,Truck
-93,ultricies,Warehouse
-94,scelerisque,Plane
-95,sed,Plane
-96,dolor,Warehouse
-97,ante,Truck
-98,sapien.,Truck
-99,Vivamus,Warehouse
-100,et,Plane
+1,New York,T
+2,Los Angeles,T
+3,Chicago,T
+4,Houston,T
+5,Philadelphia,T
+6,Phoenix,T
+7,San Antonio,T
+8,San Diego,T
+9,Dallas,T
+10,San Jose,T
+11,Austin,T
+12,Jacksonville,T
+13,Indianapolis,T
+14,San Francisco,T
+15,Columbus,T
+16,Fort Worth,T
+17,Charlotte,T
+18,Detroit,T
+19,El Paso,T
+20,Memphis,T
+21,Boston,T
+22,Seattle,T
+23,Denver,T
+24,Washington,T
+25,Nashville,T
+26,Baltimore,T
+27,Louisville,T
+28,Portland,T
+29,Oklahoma City,T
+30,Milwaukee,T
+31,Las Vegas,T
+32,Albuquerque,T
+33,Tucson,T
+34,Fresno,T
+35,Sacramento,T
+36,Long Beach,T
+37,Kansas City,T
+38,Mesa,T
+39,Virginia Beach,T
+40,Atlanta,T
+41,Colorado Springs,T
+42,Raleigh,T
+43,Omaha,T
+44,Miami,T
+45,Oakland,T
+46,Tulsa,T
+47,Minneapolis,T
+48,Cleveland,T
+49,Wichita,T
+50,Arlington,W
+51,Leonila  ,W
+52,Harley  ,W
+53,Britta  ,W
+54,Jacob  ,W
+55,Cassy  ,W
+56,Cindi  ,W
+57,Kimbery  ,W
+58,Aurea  ,W
+59,Tony  ,W
+60,Quinton  ,W
+61,Larisa  ,W
+62,Elinor  ,W
+63,Josefa  ,W
+64,Ruby  ,W
+65,Delena  ,W
+66,Mohammed  ,W
+67,Tianna  ,W
+68,Mirta  ,W
+69,Tarsha  ,W
+70,Shante  ,W
+71,Alfonso  ,W
+72,Jeanmarie  ,W
+73,Elouise  ,W
+74,Rhonda  ,W
+75,Janet  ,P
+76,Mi  ,P
+77,Wade  ,P
+78,Brynn  ,P
+79,Zella  ,P
+80,Carroll  ,P
+81,Noah  ,P
+82,Dahlia  ,P
+83,Nathalie  ,P
+84,Danille  ,P
+85,Gianna  ,P
+86,Karoline  ,P
+87,Dione  ,P
+88,Rosalie  ,P
+89,Nikita  ,P
+90,Merilyn  ,P
+91,Albertina  ,P
+92,Freddy  ,P
+93,Tamela  ,P
+94,Porter  ,P
+95,Austin  ,P
+96,Elidia  ,P
+97,Valorie  ,P
+98,Song  ,P
+99,Sunny  ,P
+100,Antonetta  ,B
