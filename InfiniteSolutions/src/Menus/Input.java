@@ -38,6 +38,28 @@ public class Input
 
 
     /**
+     * Gets an integer in some range from the user.
+     * @param min The minimum number
+     * @param max The maximum number
+     * @return The number input by the user.
+     */
+    public static int makeSelectionInrange(int min, int max)
+    {
+        // Stay in the admin menu until the user chooses to exit the admin menu.
+        int menuSelection = -1;
+        while (menuSelection < min || menuSelection > max) {
+            try {
+                menuSelection = Input.readInt();
+            } catch (Input.InputException ie) {
+                System.out.println("Invalid menu selection.");
+                menuSelection = -1;
+            }
+        }
+
+        return menuSelection;
+    }
+
+    /**
      * An exception class for input errors.
      */
     public static class InputException extends Exception
