@@ -6,9 +6,10 @@ import DataModels.Package;
 
 import java.io.*;
 import java.sql.*;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.*;
 
 
 public class Main {
@@ -66,13 +67,13 @@ public class Main {
         loadCSV("./InfiniteSolutions/db/data/Package.csv", packages, "package");
 
         ArrayList<ManifestItem> manifestItems = new ArrayList<>();
-        //loadCSV("./InfiniteSolutions/db/data/ManifestItem.csv", manifestItems, "manifestitem");
+        loadCSV("./InfiniteSolutions/db/data/ManifestItem.csv", manifestItems, "manifestitem");
 
         ArrayList<ShippingOrder> shippingOrders = new ArrayList<>();
-        //loadCSV("./InfiniteSolutions/db/data/ShippingOrder.csv", shippingOrders, "shippingorder");
+        loadCSV("./InfiniteSolutions/db/data/ShippingOrder.csv", shippingOrders, "shippingorder");
 
         ArrayList<TrackingEvent> trackingEvents = new ArrayList<>();
-        //loadCSV("./InfiniteSolutions/db/data/TrackingEvents.csv", trackingEvents, "trackingevents");
+        loadCSV("./InfiniteSolutions/db/data/TrackingEvents.csv", trackingEvents, "trackingevents");
 
 
     }
@@ -108,10 +109,8 @@ public class Main {
                         break;
 
                     case "creditcard":
-                        String[] dateStr = args[3].split("/");
-                        java.sql.Date date = new java.sql.Date(
-                                Integer.parseInt(dateStr[0]), Integer.parseInt(dateStr[1]), Integer.parseInt(dateStr[2]));
-                        m = new CreditCard(Integer.parseInt(args[0]), args[1], args[2], date, Integer.parseInt(args[4]));
+
+                        m = new CreditCard(Integer.parseInt(args[0]), args[1], args[2], args[3], Integer.parseInt(args[4]));
                         break;
 
                     case "location":
@@ -129,31 +128,22 @@ public class Main {
                         break;
 
                     case "shippingorder":
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.SSS");
-                        java.util.Date parsedDate = null;
-                        try {
-                            parsedDate = dateFormat.parse(args[3]);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        Timestamp ts = new java.sql.Timestamp(parsedDate.getTime());
                         m = new ShippingOrder(
                                 Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]),
-                                ts, Double.parseDouble(args[4])
+                                args[3], Double.parseDouble(args[4])
                                 );
                         break;
 
-                    case "trackingevent":
-                        //This may cause an issue if tracking events is called after shipping order
-                        dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.SSS");
-                        parsedDate = null;
+                    case "trackingevents":
+                        DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy hh:mm");
+                        java.util.Date parsedDate = null;
                         try {
                             parsedDate = dateFormat.parse(args[2]);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        //This as well
-                        ts = new java.sql.Timestamp(parsedDate.getTime());
+
+                        Timestamp ts = new java.sql.Timestamp(parsedDate.getTime());
                         m = new TrackingEvent(Integer.parseInt(args[0]), Integer.parseInt(args[1]), ts, args[3]);
                         break;
 
@@ -161,8 +151,10 @@ public class Main {
                         break;
                 }
 
-                list.add(m);
-                m.saveToDB(conn);
+                if(m != null) {
+                    list.add(m);
+                    m.saveToDB(conn);
+                }
 
             }
         } catch (FileNotFoundException e) {

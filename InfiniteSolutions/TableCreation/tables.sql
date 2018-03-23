@@ -1,4 +1,4 @@
-CREATE TABLE address (
+CREATE TABLE IF NOT EXISTS address  (
   id INT AUTO_INCREMENT PRIMARY KEY,
   street VARCHAR(50),
   city VARCHAR(50),
@@ -6,21 +6,21 @@ CREATE TABLE address (
   postal VARCHAR(8),
   country VARCHAR(50));
 
-CREATE TABLE creditCard (
+CREATE TABLE IF NOT EXISTS creditCard  (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(50),
   number VARCHAR(16),
-  exp_date VARCHAR(5),
+  exp_date VARCHAR(8),
   cvv VARCHAR(4)
 );
 
-CREATE TABLE location (
+CREATE TABLE IF NOT EXISTS location (
   location_id int AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(50),
   type VARCHAR(1)
 );
 
-CREATE TABLE shippingCostMultipliers (
+CREATE TABLE IF NOT EXISTS shippingCostMultipliers (
   multiplier VARCHAR(30) PRIMARY KEY,
   value DOUBLE
 );
@@ -31,7 +31,7 @@ INSERT INTO shippingCostMultipliers VALUES ('Standard', 1);
 INSERT INTO shippingCostMultipliers VALUES ('NoRush', .85);
 INSERT INTO shippingCostMultipliers VALUES ('PerPound', 1);
 
-CREATE TABLE account (
+CREATE TABLE IF NOT EXISTS account (
   id INT AUTO_INCREMENT PRIMARY KEY,
   type VARCHAR(1),
   name VARCHAR(50),
@@ -42,7 +42,7 @@ CREATE TABLE account (
   FOREIGN KEY (billing_address_id) REFERENCES address
 );
 
-CREATE TABLE package (
+CREATE TABLE IF NOT EXISTS package (
   tracking_id INT PRIMARY KEY,
   weight DOUBLE,
   type VARCHAR(10),
@@ -56,13 +56,13 @@ CREATE TABLE package (
   FOREIGN KEY (source_addr_id) REFERENCES address
 ) ;
 
-CREATE TABLE manifestItem (
+CREATE TABLE IF NOT EXISTS manifestItem (
   tracking_id INT PRIMARY KEY,
   FOREIGN KEY (tracking_id) REFERENCES package,
-  name VARCHAR(25)
+  name VARCHAR(75)
 );
 
-CREATE TABLE trackingEvents (
+CREATE TABLE IF NOT EXISTS  trackingEvents(
   tracking_id INT,
   FOREIGN KEY (tracking_id) REFERENCES package,
   location_id INT,
@@ -70,11 +70,11 @@ CREATE TABLE trackingEvents (
   date TIMESTAMP,
   status VARCHAR(20));
 
-CREATE TABLE shippingOrder (
+CREATE TABLE IF NOT EXISTS shippingOrder (
   order_id INT AUTO_INCREMENT PRIMARY KEY,
   tracking_id INT,
   account_id INT,
-  date TIMESTAMP,
+  date VARCHAR(10),
   cost DOUBLE,
   FOREIGN KEY (tracking_id) REFERENCES package,
   FOREIGN KEY (account_id) REFERENCES  account

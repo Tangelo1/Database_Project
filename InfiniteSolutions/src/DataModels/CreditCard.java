@@ -10,10 +10,10 @@ public class CreditCard extends DataModel {
     private int id;
     private String name;
     private String number;
-    private Date expDate;
+    private String expDate;
     private int cvv;
 
-    public CreditCard(int id, String name, String number, Date expDate, int cvv) {
+    public CreditCard(int id, String name, String number, String expDate, int cvv) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -52,11 +52,11 @@ public class CreditCard extends DataModel {
         this.number = number;
     }
 
-    public Date getExpDate() {
+    public String getExpDate() {
         return expDate;
     }
 
-    public void setExpDate(Date expDate) {
+    public void setExpDate(String expDate) {
         this.expDate = expDate;
     }
 
