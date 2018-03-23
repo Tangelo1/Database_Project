@@ -2,9 +2,6 @@ package Menus;
 
 import DataModels.*;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
 /**
  * The main entry point for the front facing user interface of the application
  * This class displays the initial menu and set of menu options for the user to select when first
@@ -43,17 +40,7 @@ public class Menu {
         System.out.print("Main menu:\n\t1: Log in\n\t2: Create Account\n\t3: Track Package\n\t4: Exit\n");
 
         // Read user selection, sanitizing input values to numbers 1 2 3 or 4.
-        do {
-            try {
-                selectionFlag = Input.readInt();
-            } catch (Input.InputException ie) {
-                selectionFlag = -1;
-            } finally {
-                if (selectionFlag > 4 || selectionFlag < 1) {
-                    System.out.print("Error: Selection must be 1, 2, 3 or 4.");
-                }
-            }
-        } while (selectionFlag > 4 || selectionFlag < 1);
+        selectionFlag = Input.makeSelectionInRange(1, 4);
 
         // Selection choice of 1 should have the user log in
         switch(selectionFlag) {
