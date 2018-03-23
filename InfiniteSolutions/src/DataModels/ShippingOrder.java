@@ -11,9 +11,9 @@ public class ShippingOrder extends DataModel {
     private int trackingId;
     private int accountId;
     private double cost;
-    private Timestamp dateCreated;
+    private String dateCreated;
 
-    public ShippingOrder(int orderId, int trackingId, int accountId, Timestamp d, double c) {
+    public ShippingOrder(int orderId, int trackingId, int accountId, String d, double c) {
         this.orderId = orderId;
         this.trackingId = trackingId;
         this.accountId = accountId;
@@ -36,11 +36,11 @@ public class ShippingOrder extends DataModel {
     }
 
 
-    public Timestamp getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Timestamp dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 

@@ -25,7 +25,7 @@ public class TrackingEvent extends DataModel {
 
     @Override
     public void saveToDB(Connection conn) {
-        String query = String.format("INSERT INTO public.trackingevent " +
+        String query = String.format("INSERT INTO public.trackingevents " +
                         "VALUES (%d, %d, \'%s\', \'%s\');",
                 trackingId, locationId, time, status);
 
