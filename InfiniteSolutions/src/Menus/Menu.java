@@ -66,7 +66,8 @@ public class Menu {
      */
     private static void login() {
         int ID = 0;
-        System.out.print("Please enter your account ID, or -1 to go back to the menu\n");
+        System.out.print("Please enter your account ID, otherwise -1 to go back to the menu" +
+                "or -2 to go to the admin menu\n");
         try {
             ID = Input.readInt();
         } catch (Input.InputException e) {
@@ -76,13 +77,15 @@ public class Menu {
         //Get account
         Account userAccount = Account.getAccount(ID);
 
-        if(userAccount == null){
+        if(ID == -1){
 
             enterMainMenu();
+        }else if(ID == -2){
+            AdminMenu.enterMainAdminMenu();
+        }else{
+            CustomerMenu.setAccount(userAccount);
+
         }
-
-        CustomerMenu.setAccount(userAccount);
-
 
     }
 
@@ -332,5 +335,7 @@ public class Menu {
      */
     private static void trackPackage() {
         //
+
+
     }
 }
