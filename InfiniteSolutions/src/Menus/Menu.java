@@ -68,7 +68,7 @@ public class Menu {
      */
     private static void login() {
         int ID = 0;
-        System.out.print("Please enter your account ID, otherwise -1 to go back to the menu" +
+        System.out.print("Please enter your account ID, otherwise -1 to go back to the menu " +
                 "or -2 to go to the admin menu\n");
         try {
             ID = Input.readInt();
