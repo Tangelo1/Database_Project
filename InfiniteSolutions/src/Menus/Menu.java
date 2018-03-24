@@ -88,15 +88,16 @@ public class Menu {
             // TODO: When we have querying set up correctly, actually load the account.
             Account userAccount = null; //Account.getAccount(ID);
 
+            // TODO enable this check when the account can actually be queried.
             // If the user account doesn't exist, return to the previous menu.
-            if (userAccount == null) {
-                System.out.println("Error: Unknown Account Number.");
-                return;
-            }
-            else {
+            //if (userAccount == null) {
+            //    System.out.println("Error: Unknown Account Number.");
+            //    return;
+            //}
+            //else {
                 CustomerMenu.setAccount(userAccount);
                 CustomerMenu.enterCustomerMenu();
-            }
+            //}
         }
     }
 
