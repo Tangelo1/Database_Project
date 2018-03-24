@@ -86,6 +86,9 @@ public class Menu {
         else {
             //Get account
             // TODO: When we have querying set up correctly, actually load the account.
+            // The way to do this will be create a new account
+            // Then load it from the DB like this
+            //Account userAccount = new Account(id).loadFromDB();
             Account userAccount = null; //Account.getAccount(ID);
 
             // TODO enable this check when the account can actually be queried.
