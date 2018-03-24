@@ -11,8 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
-public class Main {
+public class Driver {
 
     private static Connection conn;
 
@@ -41,13 +40,17 @@ public class Main {
     }
 
 
-    public static void main(String[] args) {
-
+    public Driver() {
         String location = "./InfiniteSolutions/db/db";
         String user = "";
         String password = "";
 
         createConnection(location, user, password);
+        loadDB(conn);
+    }
+
+
+    public static void loadDB(Connection conn) {
 
         ShippingCostMultipliers costs = new ShippingCostMultipliers(conn);
 
