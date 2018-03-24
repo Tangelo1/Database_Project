@@ -135,7 +135,86 @@ public class Menu {
             }
         }
 
+        //TODO SAVE TO DB
         newAccount = new Account(NULL,'P',name,phone,NULL,NULL);
+
+        //Setting up Credit card
+
+        CreditCard card;
+        String cardID = "";
+        String ownerName = "";
+        String expD = "";
+        String cvv = "";
+
+        while (flag == 0){
+
+            System.out.print("Please enter your credit card ID\n");
+            try {
+                cardID = Input.readStr();
+            } catch (Input.InputException e) {
+                e.printStackTrace();
+            }
+            cardID = cardID.trim();
+            if(cardID.length() < 16){
+                System.out.println("Invalid credit card ID, try again\n");
+            }else{
+                flag = 1;
+            }
+        }
+
+
+        while (flag == 0){
+
+            System.out.print("Please enter your name\n");
+            try {
+                ownerName = Input.readStr();
+            } catch (Input.InputException e) {
+                e.printStackTrace();
+            }
+            ownerName = ownerName.trim();
+            if(ownerName.length() < 50){
+                System.out.println("Invalid credit card ID, try again\n");
+            }else{
+                flag = 1;
+            }
+        }
+
+        while (flag == 0){
+
+            System.out.print("Please enter your exp date\n");
+            try {
+                expD = Input.readStr();
+            } catch (Input.InputException e) {
+                e.printStackTrace();
+            }
+            expD = expD.trim();
+            if(expD.length() < 8){
+                System.out.println("Invalid credit card ID, try again\n");
+            }else{
+                flag = 1;
+            }
+        }
+
+        while (flag == 0){
+
+            System.out.print("Please enter your cvv\n");
+            try {
+                cvv = Input.readStr();
+            } catch (Input.InputException e) {
+                e.printStackTrace();
+            }
+            cvv = cvv.trim();
+            if(cvv.length() < 3){
+                System.out.println("Invalid cvv, try again\n");
+            }else{
+                flag = 1;
+            }
+        }
+
+        card = new CreditCard(NULL,name,cardID,expD,Integer.parseInt(cvv));
+        //TODO need a way to get creditcardid and need to save to db
+
+        newAccount.setCreditCardId(card);
 
 
         //Address being setup
@@ -244,7 +323,7 @@ public class Menu {
 
         newAddress = new Address(NULL,street,city,state,postal,country);
 
-        //TODO Need to get some more things, need to add credit card first
+        //TODO NEED TO SAVE TO DB
 
     }
 
