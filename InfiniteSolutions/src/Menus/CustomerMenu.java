@@ -28,7 +28,7 @@ public class CustomerMenu {
 
         // display the menu options
         System.out.print("Customer Menu:\n\t1. Track Package\n\t2. Ship New Package\n\t3. " +
-                "Edit Account Details\n\t4. Log out");
+                "Edit Account Details\n\t4. Log out\n");
 
         // Stay in the admin menu until the user chooses to exit the admin menu.
         int menuSelection = -1;
