@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import Driver.DBDriver;
 
 public class CreditCard extends DataModel {
 
@@ -27,12 +28,13 @@ public class CreditCard extends DataModel {
     }
 
     @Override
-    public void saveToDB(Connection conn) {
+    public void saveToDB() {
+        Connection conn = DBDriver.getConnection();
         String query = String.format("INSERT INTO public.creditcard " +
                         "VALUES (%d, \'%s\', \'%s\', \'%s\', %d);",
                 id, name, number, expDate, cvv);
 
-        super.executeQuery(conn, query);
+        super.executeQuery(query);
     }
 
 

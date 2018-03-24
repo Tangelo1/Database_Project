@@ -1,8 +1,9 @@
 package DataModels;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import Driver.DBDriver;
 import java.util.ArrayList;
 
 public class Package extends DataModel {
@@ -48,8 +49,27 @@ public class Package extends DataModel {
         return null;
     }
 
-    public ArrayList<TrackingEvent> getTrackingHistory(Connection conn) {
+    public ArrayList<TrackingEvent> getHistory(Connection conn) {
         return null;
+    }
+
+    public static Package getPackageByTrackingID(int trackingId) {
+        Connection conn = DBDriver.getConnection();
+        String query = String.format("SELECT FROM public.package WHERE tracking_id=%d;" + trackingId);
+        ResultSet s = DataModel.getStatementFromQuery(query);
+
+
+        Package p = null;
+        try {
+            p = new Package(s.getInt(1), s.getDouble(2), s.getString(3),
+                    s.getString(4), s.getDouble(5), s.getInt(6),
+                    s.getInt(7), s.getBoolean(8), s.getBoolean(9));
+        }catch (SQLException e) {
+            System.out.println("\nCANNOT EXECUTE QUERY:");
+            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+        }
+
+        return p;
     }
 
     @Override
@@ -58,12 +78,13 @@ public class Package extends DataModel {
     }
 
     @Override
-    public void saveToDB(Connection conn) {
+    public void saveToDB() {
+        Connection conn = DBDriver.getConnection();
         String query = String.format("INSERT INTO public.package " +
                         "VALUES (%d, %f, \'%s\', \'%s\', %f, %d, %d, %b, %b);",
                 trackingId, weight, type, speed, value, destAddrId, srcAddrId, isHazard, isHazard);
 
-        super.executeQuery(conn, query);
+        super.executeQuery(query);
     }
 
 

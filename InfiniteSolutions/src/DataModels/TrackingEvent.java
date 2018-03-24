@@ -1,5 +1,7 @@
 package DataModels;
 
+import Driver.DBDriver;
+
 import java.sql.Connection;
 import java.sql.Timestamp;
 
@@ -24,12 +26,13 @@ public class TrackingEvent extends DataModel {
     }
 
     @Override
-    public void saveToDB(Connection conn) {
+    public void saveToDB() {
+        Connection conn = DBDriver.getConnection();
         String query = String.format("INSERT INTO public.trackingevents " +
                         "VALUES (%d, %d, \'%s\', \'%s\');",
                 trackingId, locationId, time, status);
 
-        super.executeQuery(conn, query);
+        super.executeQuery(query);
     }
 
     public Timestamp getTime() {

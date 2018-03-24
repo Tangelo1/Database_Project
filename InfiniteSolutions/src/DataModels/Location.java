@@ -1,5 +1,7 @@
 package DataModels;
 
+import Driver.DBDriver;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,12 +24,13 @@ public class Location extends DataModel {
     }
 
     @Override
-    public void saveToDB(Connection conn) {
+    public void saveToDB() {
+        Connection conn = DBDriver.getConnection();
         String query = String.format("INSERT INTO public.location " +
                         "VALUES (%d, \'%s\', \'%s\');",
                 locationId, name, type);
 
-        super.executeQuery(conn, query);
+        super.executeQuery(query);
     }
 
     public String getName() {

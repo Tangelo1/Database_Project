@@ -1,5 +1,7 @@
 package DataModels;
 
+import Driver.DBDriver;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,12 +25,13 @@ public class Account extends DataModel {
 
 
     @Override
-    public void saveToDB(Connection conn) {
+    public void saveToDB() {
+        Connection conn = DBDriver.getConnection();
         String query = String.format("INSERT INTO public.account " +
                         "VALUES (%d, \'%s\', \'%s\', \'%s\', %d, %d);",
                 id, type, name, phone, creditCardId, billingAddressId);
 
-        super.executeQuery(conn, query);
+        super.executeQuery(query);
 
     }
 

@@ -1,6 +1,7 @@
 package DataModels;
 
 import java.sql.*;
+import Driver.DBDriver;
 
 public class Address extends DataModel{
     private int id;
@@ -73,12 +74,13 @@ public class Address extends DataModel{
     }
 
     @Override
-    public void saveToDB(Connection conn) {
+    public void saveToDB() {
+        Connection conn = DBDriver.getConnection();
         String query = String.format("INSERT INTO public.address " +
                 "VALUES (%d, \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');",
                 id, street, city, state, postal, country);
 
-        super.executeQuery(conn, query);
+        super.executeQuery(query);
     }
 
 

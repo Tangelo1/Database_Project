@@ -1,5 +1,7 @@
 package DataModels;
 
+import Driver.DBDriver;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,12 +29,13 @@ public class ShippingOrder extends DataModel {
     }
 
     @Override
-    public void saveToDB(Connection conn) {
+    public void saveToDB() {
+        Connection conn = DBDriver.getConnection();
         String query = String.format("INSERT INTO public.shippingorder " +
                         "VALUES (%d, %d, %d, \'%s\', %f);",
                 orderId, trackingId, accountId, dateCreated, cost);
 
-        super.executeQuery(conn, query);
+        super.executeQuery(query);
     }
 
 
