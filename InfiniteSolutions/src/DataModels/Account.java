@@ -3,6 +3,7 @@ package DataModels;
 import Driver.DBDriver;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -23,6 +24,33 @@ public class Account extends DataModel {
         this.billingAddressId = billingAddressId;
     }
 
+    public Account(int id) {
+        this.id = id;
+        this.type = ' ';
+        this.name = null;
+        this.phone = null;
+        this.creditCardId = -1;
+        this.billingAddressId = -1;
+    }
+
+    @Override
+    public Account loadFromDB() {
+        Connection conn = DBDriver.getConnection();
+        String query = String.format("SELECT * FROM public.account WHERE id=%d", this.id);
+        ResultSet s = DataModel.getStatementFromQuery(query);
+
+        Account a = null;
+        try {
+            a = new Account(s.getInt(1), s.getString(2).charAt(0), s.getString(3),
+                    s.getString(4), s.getInt(5), s.getInt(6)
+            );
+        }catch (SQLException e) {
+            System.out.println("\nCANNOT EXECUTE QUERY:");
+            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+        }
+
+        return a;
+    }
 
     @Override
     public void saveToDB() {
@@ -71,7 +99,6 @@ public class Account extends DataModel {
         this.phone = phone;
     }
 
-    //TODO
     public int getCreditCardId() {
         return creditCardId;
     }

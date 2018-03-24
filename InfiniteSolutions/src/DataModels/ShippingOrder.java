@@ -2,10 +2,7 @@ package DataModels;
 
 import Driver.DBDriver;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 
 public class ShippingOrder extends DataModel {
 
@@ -23,9 +20,36 @@ public class ShippingOrder extends DataModel {
         this.dateCreated = d;
     }
 
+    public ShippingOrder(int trackingId) {
+        this.orderId = -1;
+        this.trackingId = trackingId;
+        this.accountId = -1;
+        this.cost = 0;
+        this.dateCreated = null;
+    }
+
     @Override
-    public void loadFromDB(Connection conn, String query) {
-        super.loadFromDB(conn, query);
+    public ShippingOrder loadFromDB() {
+        Connection conn = DBDriver.getConnection();
+        String query = "";
+
+        if(this.orderId == -1)
+            query = String.format("SELECT * FROM public.shippingorder WHERE tracking_id=%d", this.trackingId);
+        else {
+            query = String.format("SELECT * FROM public.shippingorder WHERE order_id=%d", this.orderId);
+        }
+        ResultSet s = DataModel.getStatementFromQuery(query);
+
+        ShippingOrder o = null;
+        try {
+            o = new ShippingOrder(s.getInt(1), s.getInt(2), s.getInt(3),
+                    s.getString(4), s.getDouble(5));
+        }catch (SQLException e) {
+            System.out.println("\nCANNOT EXECUTE QUERY:");
+            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+        }
+
+        return o;
     }
 
     @Override

@@ -3,8 +3,10 @@ package DataModels;
 import Driver.DBDriver;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class ManifestItem extends DataModel {
 
@@ -16,13 +18,44 @@ public class ManifestItem extends DataModel {
         this.name = name;
     }
 
+    public ManifestItem(int trackingId) {
+        this.trackingId = trackingId;
+        this.name = null;
+    }
+
     public Package getPackage() {
         return null;
     }
 
     @Override
-    public void loadFromDB(Connection conn, String query) {
-        super.loadFromDB(conn, query);
+    public ArrayList<ManifestItem> loadFromDB() {
+        ArrayList<ManifestItem> items = new ArrayList<>();
+        Connection conn = DBDriver.getConnection();
+        String query = "";
+
+        query = String.format("SELECT * FROM public.manifestitem WHERE tracking_id=%d", this.trackingId);
+
+        ResultSet s = DataModel.getStatementFromQuery(query);
+
+        try {
+            while (s.next()) {
+                ManifestItem m = null;
+                try {
+                    m = new ManifestItem(
+                            s.getInt(1),
+                            s.getString(2));
+
+                    items.add(m);
+
+                } catch (SQLException e) {
+                    System.out.println("\nCANNOT EXECUTE QUERY:");
+                    System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+                }
+
+            }
+        } catch (SQLException ex) {}
+
+        return items;
     }
 
     @Override

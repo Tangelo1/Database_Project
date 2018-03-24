@@ -9,9 +9,8 @@ import java.sql.Statement;
 
 public abstract class DataModel {
 
-    public void loadFromDB(Connection conn, String query) {
+    public abstract Object loadFromDB();
 
-    }
     public abstract void saveToDB();
 
     public void executeQuery(String query) {

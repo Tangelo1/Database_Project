@@ -37,6 +37,11 @@ public class ShippingCostMultiplier extends DataModel{
     }
 
     @Override
+    public Object loadFromDB() {
+        return null;
+    }
+
+    @Override
     public void saveToDB() {
 
         Connection conn = DBDriver.getConnection();

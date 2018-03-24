@@ -1,6 +1,7 @@
 package DataModels;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
@@ -22,9 +23,31 @@ public class CreditCard extends DataModel {
         this.cvv = cvv;
     }
 
+    public CreditCard(int id) {
+        this.id = id;
+        this.name = null;
+        this.number = null;
+        this.expDate = null;
+        this.cvv = 0;
+    }
+
     @Override
-    public void loadFromDB(Connection conn, String query) {
-        super.loadFromDB(conn, query);
+    public CreditCard loadFromDB() {
+        Connection conn = DBDriver.getConnection();
+        String query = String.format("SELECT * FROM public.creditcard WHERE id=%d", this.id);
+        ResultSet s = DataModel.getStatementFromQuery(query);
+
+        CreditCard c = null;
+        try {
+            c = new CreditCard(s.getInt(1), s.getString(2), s.getString(3),
+                    s.getString(4), s.getInt(5)
+            );
+        }catch (SQLException e) {
+            System.out.println("\nCANNOT EXECUTE QUERY:");
+            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+        }
+
+        return c;
     }
 
     @Override

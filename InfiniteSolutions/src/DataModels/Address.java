@@ -20,6 +20,10 @@ public class Address extends DataModel{
         this.country = country;
     }
 
+    public Address(int id) {
+        this.id = id;
+    }
+
     public String getStreet() {
         return street;
     }
@@ -69,8 +73,22 @@ public class Address extends DataModel{
     }
 
     @Override
-    public void loadFromDB(Connection conn, String query) {
-        super.loadFromDB(conn, query);
+    public Address loadFromDB() {
+        Connection conn = DBDriver.getConnection();
+        String query = String.format("SELECT * FROM public.address WHERE id=%d", this.id);
+        ResultSet s = DataModel.getStatementFromQuery(query);
+
+        Address a = null;
+        try {
+            a = new Address(s.getInt(1), s.getString(2), s.getString(3),
+                    s.getString(4), s.getString(5), s.getString(6)
+            );
+        }catch (SQLException e) {
+            System.out.println("\nCANNOT EXECUTE QUERY:");
+            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+        }
+
+        return a;
     }
 
     @Override

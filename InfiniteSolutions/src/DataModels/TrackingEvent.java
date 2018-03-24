@@ -3,7 +3,10 @@ package DataModels;
 import Driver.DBDriver;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class TrackingEvent extends DataModel {
 
@@ -19,10 +22,47 @@ public class TrackingEvent extends DataModel {
         this.status = status;
     }
 
+    public TrackingEvent(int trackingId) {
+        this.trackingId = trackingId;
+        this.locationId = -1;
+        this.time = null;
+        this.status = null;
+    }
 
     @Override
-    public void loadFromDB(Connection conn, String query) {
-        super.loadFromDB(conn, query);
+    public ArrayList<TrackingEvent> loadFromDB() {
+        ArrayList<TrackingEvent> history = new ArrayList<>();
+        Connection conn = DBDriver.getConnection();
+        String query = "";
+
+        if (this.locationId == -1)
+            query = String.format("SELECT * FROM public.trackingevents WHERE tracking_id=%d", this.trackingId);
+        else if (this.trackingId == -1)
+            query = String.format("SELECT * FROM public.trackingevents WHERE location_id=%d", this.locationId);
+
+        ResultSet s = DataModel.getStatementFromQuery(query);
+
+        try {
+            while (s.next()) {
+                TrackingEvent t = null;
+                try {
+                    t = new TrackingEvent(
+                            s.getInt(1),
+                            s.getInt(2),
+                            s.getTimestamp(3),
+                            s.getString(4));
+
+                    history.add(t);
+
+                } catch (SQLException e) {
+                    System.out.println("\nCANNOT EXECUTE QUERY:");
+                    System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+                }
+
+            }
+        } catch (SQLException ex) {}
+
+        return history;
     }
 
     @Override

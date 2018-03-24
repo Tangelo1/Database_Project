@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import Driver.DBDriver;
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
+
 import java.util.ArrayList;
 
 public class Package extends DataModel {
@@ -33,33 +35,52 @@ public class Package extends DataModel {
         this.isInternational = isInternational;
     }
 
-    public Address getDestination() {
+    public Package(int trackingId) {
+        this.trackingId = trackingId;
+        this.weight = -1;
+        this.type = null;
+        this.speed = null;
+        this.value = -1;
+        this.destAddrId = -1;
+        this.srcAddrId = -1;
+        this.isHazard = false;
+        this.isInternational = false;
+    }
 
-        return null;
+    public Address getDestination() {
+       Address a = new Address(this.destAddrId);
+       return a.loadFromDB();
     }
 
     public Address getOrigin() {
-        return null;
+        Address a = new Address(this.srcAddrId);
+        return a.loadFromDB();
     }
 
     public ShippingOrder getOrder() {
-
-        return null;
+        ShippingOrder s = new ShippingOrder(this.trackingId);
+        return s.loadFromDB();
     }
 
     public ArrayList<ManifestItem> getManifest() {
-
-        return null;
+        ManifestItem i = new ManifestItem(this.trackingId);
+        return i.loadFromDB();
     }
 
     public ArrayList<TrackingEvent> getHistory() {
-
-        return null;
+        TrackingEvent t = new TrackingEvent(this.trackingId);
+        return t.loadFromDB();
     }
 
     public static Package getPackageByTrackingID(int trackingId) {
+        Package p = new Package(trackingId);
+        return p.loadFromDB();
+    }
+
+    @Override
+    public Package loadFromDB() {
         Connection conn = DBDriver.getConnection();
-        String query = String.format("SELECT FROM public.package WHERE tracking_id=%d;" + trackingId);
+        String query = String.format("SELECT * FROM public.package WHERE tracking_id=%d;" + this.trackingId);
         ResultSet s = DataModel.getStatementFromQuery(query);
 
         Package p = null;
@@ -73,11 +94,6 @@ public class Package extends DataModel {
         }
 
         return p;
-    }
-
-    @Override
-    public void loadFromDB(Connection conn, String query) {
-        super.loadFromDB(conn, query);
     }
 
     @Override

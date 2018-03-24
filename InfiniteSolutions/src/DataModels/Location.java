@@ -3,6 +3,7 @@ package DataModels;
 import Driver.DBDriver;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -12,15 +13,35 @@ public class Location extends DataModel {
     private String name;
     private String type;
 
-    public Location(int locaionId, String name, String type) {
-        this.locationId = locaionId;
+    public Location(int locationId, String name, String type) {
+        this.locationId = locationId;
         this.name = name;
         this.type = type;
     }
 
+    public Location(int locationId) {
+        this.locationId = locationId;
+        this.name = null;
+        this.type = null;
+    }
+
     @Override
-    public void loadFromDB(Connection conn, String query) {
-        super.loadFromDB(conn, query);
+    public Location loadFromDB() {
+        Connection conn = DBDriver.getConnection();
+
+        String query = String.format("SELECT * FROM public.location WHERE location_id=%d", this.locationId);
+        ResultSet s = DataModel.getStatementFromQuery(query);
+
+        Location l = null;
+        try {
+            l = new Location(s.getInt(1), s.getString(2), s.getString(4));
+
+        }catch (SQLException e) {
+            System.out.println("\nCANNOT EXECUTE QUERY:");
+            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+        }
+
+        return l;
     }
 
     @Override
