@@ -33,23 +33,27 @@ public class Package extends DataModel {
         this.isInternational = isInternational;
     }
 
-    public Address getDestination(Connection conn) {
+    public Address getDestination() {
+
         return null;
     }
 
-    public Address getOrigin(Connection conn) {
+    public Address getOrigin() {
         return null;
     }
 
-    public ShippingOrder getOrder(Connection conn) {
+    public ShippingOrder getOrder() {
+
         return null;
     }
 
-    public ArrayList<ManifestItem> getManifest(Connection conn) {
+    public ArrayList<ManifestItem> getManifest() {
+
         return null;
     }
 
-    public ArrayList<TrackingEvent> getHistory(Connection conn) {
+    public ArrayList<TrackingEvent> getHistory() {
+
         return null;
     }
 
@@ -57,7 +61,6 @@ public class Package extends DataModel {
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT FROM public.package WHERE tracking_id=%d;" + trackingId);
         ResultSet s = DataModel.getStatementFromQuery(query);
-
 
         Package p = null;
         try {
