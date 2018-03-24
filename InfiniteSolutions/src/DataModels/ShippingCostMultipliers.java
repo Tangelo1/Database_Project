@@ -1,3 +1,5 @@
+package DataModels;
+
 import DataModels.ShippingCostMultiplier;
 
 import java.sql.Connection;
@@ -6,11 +8,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class CostConstants {
+public class ShippingCostMultipliers {
 
     private ArrayList<ShippingCostMultiplier> costList;
 
-    public CostConstants (Connection conn){
+    public ShippingCostMultipliers(Connection conn){
         costList = new ArrayList<>();
 
         String query =
@@ -49,5 +51,42 @@ public class CostConstants {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Get a cost multiplier value.
+     * @param multiplier the name of the value to get.
+     */
+    public double get(String multiplier) {
+        //TODO
+        return 0;
+    }
+
+    /**
+     * Sets the value of a multiplier in the databaes
+     * @param multiplier the name of the multiplier
+     * @param value The value of the multipler
+     */
+    public void set(String multiplier, double value) {
+        // TODO
+    }
+
+    /**
+     * Creates a new multiplier in the table and saves the
+     * @param multiplier the name of the multiplier
+     * @param value the value of the multiplier
+     */
+    public void add(String multiplier, double value) {
+        // TODO
+    }
+
+    /**
+     * The name of the multiplier to remove from the database.
+     * @param multiplier The multiplier to remove.
+     * @return true if removed, false if not.
+     */
+    public boolean remove(String multiplier) {
+        // TODO
+        return false;
     }
 }

@@ -49,7 +49,7 @@ public class Main {
 
         createConnection(location, user, password);
 
-        CostConstants costs = new CostConstants(conn);
+        ShippingCostMultipliers costs = new ShippingCostMultipliers(conn);
 
         ArrayList<Address> address = new ArrayList<>();
         loadCSV("./InfiniteSolutions/db/data/Address.csv", address, "address");
