@@ -35,29 +35,31 @@ public class Menu {
      * login, track a package, or create an account.
      */
     private static void enterMainMenu() {
+        // Stay in the main menu indefinitely.
+        while (true) {
+            int selectionFlag = -1;
 
-        int selectionFlag = -1;
+            System.out.print("Main menu:\n\t1: Log in\n\t2: Create Account\n\t3: Track Package\n\t4: Exit\n");
 
-        System.out.print("Main menu:\n\t1: Log in\n\t2: Create Account\n\t3: Track Package\n\t4: Exit\n");
+            // Read user selection, sanitizing input values to numbers 1 2 3 or 4.
+            selectionFlag = Input.makeSelectionInRange(1, 4);
 
-        // Read user selection, sanitizing input values to numbers 1 2 3 or 4.
-        selectionFlag = Input.makeSelectionInRange(1, 4);
-
-        // Selection choice of 1 should have the user log in
-        switch(selectionFlag) {
-            case 1:
-                login();
-                break;
-            case 2:
-                createAccount();
-                break;
-            case 3:
-                trackPackage();
-                break;
-            case 4:
-                System.out.println("Goodbye.");
-                System.exit(0);
-                break;
+            // Selection choice of 1 should have the user log in
+            switch (selectionFlag) {
+                case 1:
+                    login();
+                    break;
+                case 2:
+                    createAccount();
+                    break;
+                case 3:
+                    trackPackage();
+                    break;
+                case 4:
+                    System.out.println("Goodbye.");
+                    System.exit(0);
+                    break;
+            }
         }
     }
 
@@ -74,19 +76,28 @@ public class Menu {
             e.printStackTrace();
         }
 
-        //Get account
-        Account userAccount = Account.getAccount(ID);
-
-        if(ID == -1){
-
-            enterMainMenu();
-        }else if(ID == -2){
+        // Log into admin menu
+        if (ID == -2) {
             AdminMenu.enterMainAdminMenu();
-        }else{
-            CustomerMenu.setAccount(userAccount);
-
         }
+        else if (ID == -1) {
+            return;
+        }
+        else {
+            //Get account
+            // TODO: When we have querying set up correctly, actually load the account.
+            Account userAccount = null; //Account.getAccount(ID);
 
+            // If the user account doesn't exist, return to the previous menu.
+            if (userAccount == null) {
+                System.out.println("Error: Unknown Account Number.");
+                return;
+            }
+            else {
+                CustomerMenu.setAccount(userAccount);
+                CustomerMenu.enterCustomerMenu();
+            }
+        }
     }
 
     /**
