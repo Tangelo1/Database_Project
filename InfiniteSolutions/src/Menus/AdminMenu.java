@@ -60,8 +60,7 @@ public class AdminMenu {
                     break;
                 case LOG_OUT:
                     System.out.println("Goodbye.");
-                    System.exit(0);
-                    break;
+                    return;
             }
 
         } while (menuSelection != LOG_OUT);
