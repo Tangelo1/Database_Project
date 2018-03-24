@@ -214,7 +214,7 @@ public class Menu {
         card = new CreditCard(NULL,name,cardID,expD,Integer.parseInt(cvv));
         //TODO need a way to get creditcardid and need to save to db
 
-        newAccount.setCreditCardId(card);
+        newAccount.setCreditCardId(Integer.parseInt(cardID));
 
 
         //Address being setup
@@ -331,6 +331,6 @@ public class Menu {
      * Displays the package tracking menu to the user.
      */
     private static void trackPackage() {
-        // TODO
+        //
     }
 }
