@@ -161,6 +161,8 @@ public class Menu {
         String expD = "";
         String cvv = "";
 
+        flag = 0;
+
         while (flag == 0){
 
             System.out.print("Please enter your credit card ID\n");
@@ -177,6 +179,7 @@ public class Menu {
             }
         }
 
+        flag = 0;
 
         while (flag == 0){
 
@@ -194,6 +197,8 @@ public class Menu {
             }
         }
 
+        flag = 0;
+
         while (flag == 0){
 
             System.out.print("Please enter your exp date\n");
@@ -209,6 +214,8 @@ public class Menu {
                 flag = 1;
             }
         }
+
+        flag = 0;
 
         while (flag == 0){
 
