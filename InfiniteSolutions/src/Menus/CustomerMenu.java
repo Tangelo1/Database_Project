@@ -66,7 +66,7 @@ public class CustomerMenu {
     }
 
     static void editAccountDetails(){
-        System.out.println("This is a ship new package stub");
+        System.out.println("This is a edit account details stub");
         return;
     }
 
