@@ -55,17 +55,47 @@ public class Account extends DataModel {
     @Override
     public void saveToDB() {
         Connection conn = DBDriver.getConnection();
-        String query = String.format("INSERT INTO public.account " +
-                        "VALUES (%d, \'%s\', \'%s\', \'%s\', %d, %d);",
-                id, type, name, phone, creditCardId, billingAddressId);
+
+        String query = "";
+        if (id != -1) {
+            query = String.format("INSERT INTO public.account " +
+                            "VALUES (%d, \'%s\', \'%s\', \'%s\', %d, %d);",
+                    id, type, name, phone, creditCardId, billingAddressId);
+        }
+        else {
+            query = String.format("INSERT INTO public.account " +
+                            "VALUES (%s, \'%s\', \'%s\', \'%s\', %d, %d);",
+                    null, type, name, phone, creditCardId, billingAddressId);
+        }
 
         super.executeQuery(query);
 
     }
 
+    public static Account createPersonal(Address a, CreditCard c, String name, String phone) {
+        a.saveToDB();
+        c.saveToDB();
 
-    //TODO need this for menu. return null if it does not exist
-    public static Account getAccount(int id){return null;}
+        Account acct = new Account(-1, 'P', name, phone, c.getId(), a.getId());
+        acct.saveToDB();
+
+        return acct;
+    }
+
+    public static Account createCorporate(Address a, CreditCard c, String name, String phone) {
+        a.saveToDB();
+        c.saveToDB();
+
+        Account acct = new Account(-1, 'C', name, phone, c.getId(), a.getId());
+        acct.saveToDB();
+
+        return acct;
+    }
+
+    public static Account getAccountByNumber(int id){
+        Account a = new Account(id);
+        return a.loadFromDB();
+    }
 
     public char getType() {
         return type;

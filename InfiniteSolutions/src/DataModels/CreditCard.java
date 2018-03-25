@@ -53,9 +53,16 @@ public class CreditCard extends DataModel {
     @Override
     public void saveToDB() {
         Connection conn = DBDriver.getConnection();
-        String query = String.format("INSERT INTO public.creditcard " +
-                        "VALUES (%d, \'%s\', \'%s\', \'%s\', %d);",
-                id, name, number, expDate, cvv);
+        String query = "";
+        if(id != -1)
+            query = String.format("INSERT INTO public.creditcard " +
+                            "VALUES (%d, \'%s\', \'%s\', \'%s\', %d);",
+                    id, name, number, expDate, cvv);
+        else {
+            query = String.format("INSERT INTO public.creditcard " +
+                            "VALUES (%s, \'%s\', \'%s\', \'%s\', %d);",
+                    null, name, number, expDate, cvv);
+        }
 
         super.executeQuery(query);
     }

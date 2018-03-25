@@ -1,6 +1,7 @@
 package DataModels;
 
 import Driver.DBDriver;
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -65,12 +66,36 @@ public class TrackingEvent extends DataModel {
         return history;
     }
 
+    public static ArrayList<TrackingEvent> getEventsForPackage(int trackingId) {
+        TrackingEvent t = new TrackingEvent(trackingId);
+        return t.loadFromDB();
+    }
+
+    public Location getLocation() {
+        Location l = new Location(locationId);
+        return l.loadFromDB();
+    }
+
+    public Package getPackage() {
+        Package p = new Package(trackingId);
+        return p.loadFromDB();
+    }
+
+
     @Override
     public void saveToDB() {
         Connection conn = DBDriver.getConnection();
-        String query = String.format("INSERT INTO public.trackingevents " +
-                        "VALUES (%d, %d, \'%s\', \'%s\');",
-                trackingId, locationId, time, status);
+        String query = "";
+        if(trackingId != -1) {
+            query = String.format("INSERT INTO public.trackingevents " +
+                            "VALUES (%d, %d, \'%s\', \'%s\');",
+                    trackingId, locationId, time, status);
+        }
+        else {
+            query = String.format("INSERT INTO public.trackingevents " +
+                            "VALUES (%s, %d, \'%s\', \'%s\');",
+                    null, locationId, time, status);
+        }
 
         super.executeQuery(query);
     }

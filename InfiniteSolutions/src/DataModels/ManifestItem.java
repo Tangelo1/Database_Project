@@ -61,9 +61,17 @@ public class ManifestItem extends DataModel {
     @Override
     public void saveToDB() {
         Connection conn = DBDriver.getConnection();
-        String query = String.format("INSERT INTO public.manifestitem " +
-                        "VALUES (%d, \'%s\');",
-                trackingId, name);
+
+        String query = "";
+        if (trackingId != -1)
+            query = String.format("INSERT INTO public.manifestitem " +
+                            "VALUES (%d, \'%s\');",
+                    trackingId, name);
+        else {
+            query = String.format("INSERT INTO public.manifestitem " +
+                            "VALUES (%s, \'%s\');",
+                    null, name);
+        }
 
         super.executeQuery(query);
     }

@@ -7,6 +7,7 @@ import Driver.DBDriver;
 import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Package extends DataModel {
 
@@ -77,6 +78,26 @@ public class Package extends DataModel {
         return p.loadFromDB();
     }
 
+    public static ShippingOrder createPackageOrder(Package pkg, Account acct) {
+        double speedMult = 0.0;
+        double weightMult = 0.0;
+        ArrayList<ShippingCostMultiplier> costList = ShippingCostMultiplier.getCostList();
+        for (ShippingCostMultiplier s : costList) {
+            if (pkg.speed.equals(s.getMultiplier()))
+                speedMult = s.getValue();
+            if ("PerPound".equals(s.getMultiplier()))
+                weightMult = s.getValue();
+        }
+
+        Double cost = speedMult * weightMult * pkg.weight;
+        ShippingOrder s = new ShippingOrder(-1, pkg.trackingId, acct.getId(), new Date().toString(), cost);
+
+        s.saveToDB();
+        pkg.saveToDB();
+
+        return s;
+    }
+
     @Override
     public Package loadFromDB() {
         Connection conn = DBDriver.getConnection();
@@ -99,9 +120,18 @@ public class Package extends DataModel {
     @Override
     public void saveToDB() {
         Connection conn = DBDriver.getConnection();
-        String query = String.format("INSERT INTO public.package " +
-                        "VALUES (%d, %f, \'%s\', \'%s\', %f, %d, %d, %b, %b);",
-                trackingId, weight, type, speed, value, destAddrId, srcAddrId, isHazard, isHazard);
+        String query = "";
+
+        if(trackingId != -1) {
+            query = String.format("INSERT INTO public.package " +
+                            "VALUES (%d, %f, \'%s\', \'%s\', %f, %d, %d, %b, %b);",
+                    trackingId, weight, type, speed, value, destAddrId, srcAddrId, isHazard, isHazard);
+        }
+        else {
+            query = String.format("INSERT INTO public.package " +
+                            "VALUES (%s, %f, \'%s\', \'%s\', %f, %d, %d, %b, %b);",
+                    null, weight, type, speed, value, destAddrId, srcAddrId, isHazard, isHazard);
+        }
 
         super.executeQuery(query);
     }

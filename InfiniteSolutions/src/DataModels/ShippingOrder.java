@@ -1,8 +1,10 @@
 package DataModels;
 
 import Driver.DBDriver;
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class ShippingOrder extends DataModel {
 
@@ -55,9 +57,17 @@ public class ShippingOrder extends DataModel {
     @Override
     public void saveToDB() {
         Connection conn = DBDriver.getConnection();
-        String query = String.format("INSERT INTO public.shippingorder " +
-                        "VALUES (%d, %d, %d, \'%s\', %f);",
-                orderId, trackingId, accountId, dateCreated, cost);
+        String query = "";
+        if (orderId != -1) {
+            query = String.format("INSERT INTO public.shippingorder " +
+                            "VALUES (%d, %d, %d, \'%s\', %f);",
+                    orderId, trackingId, accountId, dateCreated, cost);
+        }
+        else {
+            query = String.format("INSERT INTO public.shippingorder " +
+                            "VALUES (%s, %d, %d, \'%s\', %f);",
+                    null, trackingId, accountId, dateCreated, cost);
+        }
 
         super.executeQuery(query);
     }
@@ -102,5 +112,46 @@ public class ShippingOrder extends DataModel {
 
     public void setAccountId(int accountId) {
         this.accountId = accountId;
+    }
+
+    public Account getAccount() {
+        Account a = new Account(this.accountId);
+        return a.loadFromDB();
+    }
+
+    public Package getPackage() {
+        Package p = new Package(this.trackingId);
+        return p.loadFromDB();
+    }
+
+    public static ArrayList<ShippingOrder> getOrdersForAccount(Account acct, String start, String end) {
+        ArrayList<ShippingOrder> orders = new ArrayList<>();
+        Connection conn = DBDriver.getConnection();
+
+        //We're going to have problems with comparing dates as strings
+        String query = String.format("SELECT * FROM public.shippingorder WHERE account_id=%d " +
+                "AND date>\'%s\' AND date<\'%s\';", acct.getId(), start, end);
+
+
+        ResultSet s = DataModel.getStatementFromQuery(query);
+
+        try {
+            while (s.next()) {
+                ShippingOrder o = null;
+                try {
+                    o = new ShippingOrder(s.getInt(1), s.getInt(2), s.getInt(3),
+                            s.getString(4), s.getDouble(5));
+
+                    orders.add(o);
+
+                } catch (SQLException e) {
+                    System.out.println("\nCANNOT EXECUTE QUERY:");
+                    System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+                }
+
+            }
+        } catch (SQLException ex) {}
+
+        return orders;
     }
 }
