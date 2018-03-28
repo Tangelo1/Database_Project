@@ -1,6 +1,7 @@
 package Menus;
 
 import DataModels.*;
+import Driver.DBDriver;
 
 /**
  * The main entry point for the front facing user interface of the application
@@ -15,12 +16,18 @@ public class Menu {
      * @param args unused command line args.
      */
     public static void main(String[] args) {
+        //TODO
+        // Need to check to see if our DB already exists to avoid exceptions
+        //Create connection to DB, execute table creation and insert from CSVs
+        DBDriver driver = new DBDriver();
 
         // Welcome message.
         printWelcome();
 
         // Show the main menu options and wait for the user to make a selection
         enterMainMenu();
+
+        driver.closeConnection();
     }
 
     /**

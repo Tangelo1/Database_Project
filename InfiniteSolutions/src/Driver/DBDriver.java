@@ -3,6 +3,7 @@ package Driver; /**
  */
 import DataModels.*;
 import DataModels.Package;
+import org.h2.tools.RunScript;
 
 import java.io.*;
 import java.sql.*;
@@ -23,7 +24,7 @@ public class DBDriver {
         try {
 
             String url = "jdbc:h2:" + location;
-            Class.forName("org.h2.Driver.DBDriver");
+            Class.forName("org.h2.Driver");
 
             conn = DriverManager.getConnection(url, user, password);
 
@@ -48,8 +49,30 @@ public class DBDriver {
         String user = "";
         String password = "";
 
-        createConnection(location, user, password);
-        loadDB(conn);
+        File f = null;
+
+        f = new File("./InfiniteSolutions/db/db.mv.db");
+
+        if (!f.isFile()) {
+            createConnection(location, user, password);
+            loadTables();
+            loadDB(conn);
+        }
+        else {
+            createConnection(location, user, password);
+        }
+    }
+
+    private void loadTables() {
+        try {
+            RunScript.execute(conn, new FileReader("./InfiniteSolutions/TableCreation/tables.sql"));
+        }
+        catch (FileNotFoundException | SQLException e) {
+            System.out.println("\nCANNOT EXECUTE QUERY:");
+            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+            System.out.println("Table creation script not found in ./TableCreation");
+            System.exit(0);
+        }
     }
 
 
