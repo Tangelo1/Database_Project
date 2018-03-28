@@ -30,12 +30,13 @@ public class AdminMenu {
      * Displays and operates over the main admin menu.
      */
     public static void enterMainAdminMenu() {
-        // display the menu options
-        System.out.print("Administration Menu:\n\t1. Enter the SQL Console\n\t2. Create New Corporate Account\n\t3. Monitor Distribution Network\n\t4. View Package Details\n\t5. View Orders\n\t6. Charge Corporate Customers\n\t7. Log Out\n");
-
         // Stay in the admin menu until the user chooses to exit the admin menu.
         int menuSelection = -1;
         do {
+            // display the menu options
+            System.out.print("Administration Menu:\n\t1. Enter the SQL Console\n\t2. Create New Corporate Account\n\t3. Monitor Distribution Network\n\t4. View Package Details\n\t5. View Orders\n\t6. Charge Corporate Customers\n\t7. Log Out\n");
+
+
             // Make a menu selection
             menuSelection = Input.makeSelectionInRange(SQL_CONSOLE, LOG_OUT);
 
@@ -79,7 +80,54 @@ public class AdminMenu {
      */
     private static void createCorporateAccount() {
         // TODO
-        System.out.println("Corporate Account Creation Method Stub");
+        System.out.println("Please enter the following details of the corporate account");
+
+        // Read the name string, ensuring they don't just enter nothing.
+        String accountName;
+        do {
+            System.out.print("Name on Account ");
+            accountName = Input.readStr();
+        } while (accountName.length() == 0);
+
+        // Get the phone number
+        String phone;
+        do {
+            System.out.println("Account Phone Number ");
+            phone = Input.readStr();
+        } while (phone.length() == 0);
+
+        System.out.println("Please enter the following information pertaining\n" +
+                "to the account's billing address:");
+
+        // Get address line 1, ex: 123 Main Street
+        String street;
+        do {
+            System.out.print("Number and Street ");
+            street = Input.readStr();
+        } while (street.length() == 0);
+
+        // Read city
+        String city;
+        do {
+            System.out.print("City ");
+            city = Input.readStr();
+        } while (city.length() == 0);
+
+        // Read state
+        String state;
+        do {
+            System.out.println("State/Province ");
+            state = Input.readStr();
+        } while (state.length() == 0);
+
+        // Read postal code
+        String postalCode;
+        do {
+            System.out.println("Postal Code ");
+            postalCode = Input.readStr();
+        } while (postalCode.length() == 0);
+
+
     }
 
     /**

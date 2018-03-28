@@ -26,10 +26,10 @@ public class Input
     }
 
     /**
-     * Reads an string from stdin
+     * Reads an string from stdin. Trims the string. Does not perform any error checking on the string.
      * @return the string read
      */
-    public static String readStr() throws InputException{
+    public static String readStr() {
         System.out.print("> ");
         String line = stdin.nextLine().trim();
 

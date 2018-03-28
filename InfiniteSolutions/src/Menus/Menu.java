@@ -121,11 +121,7 @@ public class Menu {
         while(flag == 0){
 
             System.out.print("Please enter your name\n");
-            try {
-                name = Input.readStr();
-            } catch (Input.InputException e) {
-                e.printStackTrace();
-            }
+            name = Input.readStr();
 
             name = name.trim();
             if(name.length() > 50){
@@ -140,11 +136,7 @@ public class Menu {
         while (flag == 0){
 
             System.out.print("Please enter your phone number\n");
-            try {
-                phone = Input.readStr();
-            } catch (Input.InputException e) {
-                e.printStackTrace();
-            }
+            phone = Input.readStr();
 
             phone = phone.trim();
             if(phone.length() > 15){
@@ -170,12 +162,7 @@ public class Menu {
         while (flag == 0){
 
             System.out.print("Please enter your credit card ID\n");
-            try {
-                cardID = Input.readStr();
-            } catch (Input.InputException e) {
-                e.printStackTrace();
-            }
-            cardID = cardID.trim();
+            cardID = Input.readStr();
             if(cardID.length() < 16){
                 System.out.println("Invalid credit card ID, try again\n");
             }else{
@@ -188,12 +175,7 @@ public class Menu {
         while (flag == 0){
 
             System.out.print("Please enter your name\n");
-            try {
-                ownerName = Input.readStr();
-            } catch (Input.InputException e) {
-                e.printStackTrace();
-            }
-            ownerName = ownerName.trim();
+            ownerName = Input.readStr();
             if(ownerName.length() < 50){
                 System.out.println("Invalid credit card ID, try again\n");
             }else{
@@ -206,12 +188,7 @@ public class Menu {
         while (flag == 0){
 
             System.out.print("Please enter your exp date\n");
-            try {
-                expD = Input.readStr();
-            } catch (Input.InputException e) {
-                e.printStackTrace();
-            }
-            expD = expD.trim();
+            expD = Input.readStr();
             if(expD.length() < 8){
                 System.out.println("Invalid credit card ID, try again\n");
             }else{
@@ -224,12 +201,7 @@ public class Menu {
         while (flag == 0){
 
             System.out.print("Please enter your cvv\n");
-            try {
-                cvv = Input.readStr();
-            } catch (Input.InputException e) {
-                e.printStackTrace();
-            }
-            cvv = cvv.trim();
+            cvv = Input.readStr();
             if(cvv.length() < 3){
                 System.out.println("Invalid cvv, try again\n");
             }else{
@@ -256,13 +228,8 @@ public class Menu {
         while (flag == 0){
 
             System.out.print("Please enter your street\n");
-            try {
-                street = Input.readStr();
-            } catch (Input.InputException e) {
-                e.printStackTrace();
-            }
+            street = Input.readStr();
 
-            street = street.trim();
             if(phone.length() > 50){
                 System.out.println("Invalid street(too long), try again\n");
             }else{
@@ -275,13 +242,8 @@ public class Menu {
         while (flag == 0){
 
             System.out.print("Please enter your city\n");
-            try {
-                city = Input.readStr();
-            } catch (Input.InputException e) {
-                e.printStackTrace();
-            }
+            city = Input.readStr();
 
-            city = city.trim();
             if(city.length() > 50){
                 System.out.println("Invalid city(too long), try again\n");
             }else{
@@ -294,13 +256,8 @@ public class Menu {
         while (flag == 0){
 
             System.out.print("Please enter your state\n");
-            try {
-                state = Input.readStr();
-            } catch (Input.InputException e) {
-                e.printStackTrace();
-            }
+            state = Input.readStr();
 
-            state = state.trim();
             if(state.length() > 50){
                 System.out.println("Invalid state(too long), try again\n");
             }else{
@@ -313,13 +270,8 @@ public class Menu {
         while (flag == 0){
 
             System.out.print("Please enter your postal\n");
-            try {
-                postal = Input.readStr();
-            } catch (Input.InputException e) {
-                e.printStackTrace();
-            }
+            postal = Input.readStr();
 
-            postal = postal.trim();
             if(postal.length() > 8){
                 System.out.println("Invalid postal(too long/short), try again\n");
             }else{
@@ -333,13 +285,8 @@ public class Menu {
         while (flag == 0){
 
             System.out.print("Please enter your country\n");
-            try {
-                country = Input.readStr();
-            } catch (Input.InputException e) {
-                e.printStackTrace();
-            }
+            country = Input.readStr();
 
-            country = country.trim();
             if(country.length() > 50){
                 System.out.println("Invalid country(too long/short), try again\n");
             }else{
