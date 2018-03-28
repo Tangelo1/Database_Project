@@ -36,6 +36,22 @@ public class Input
         return line;
     }
 
+    /**
+     * Reads an input string with the given prompt.
+     * ensures that the user enters SOMETHING.
+     * @param prompt The prompty for input. E.g. "Account Name"
+     * @return The non-empty input string.
+     */
+    public static String readStrWhileNotEmpty(String prompt) {
+        String input;
+        do {
+            System.out.print(prompt + " ");
+            input = readStr();
+        } while (input.length() == 0);
+
+        return input;
+    }
+
 
     /**
      * Gets an integer in some range from the user.

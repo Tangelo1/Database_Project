@@ -83,51 +83,55 @@ public class AdminMenu {
         System.out.println("Please enter the following details of the corporate account");
 
         // Read the name string, ensuring they don't just enter nothing.
-        String accountName;
-        do {
-            System.out.print("Name on Account ");
-            accountName = Input.readStr();
-        } while (accountName.length() == 0);
+        String accountName = Input.readStrWhileNotEmpty("Name on Account");
 
         // Get the phone number
-        String phone;
-        do {
-            System.out.println("Account Phone Number ");
-            phone = Input.readStr();
-        } while (phone.length() == 0);
+        String phone = Input.readStrWhileNotEmpty("Account Phone");
 
-        System.out.println("Please enter the following information pertaining\n" +
+        // Get address information
+        System.out.println("\nPlease enter the following information pertaining\n" +
                 "to the account's billing address:");
 
         // Get address line 1, ex: 123 Main Street
-        String street;
-        do {
-            System.out.print("Number and Street ");
-            street = Input.readStr();
-        } while (street.length() == 0);
+        String street = Input.readStrWhileNotEmpty("Number and Street");
 
         // Read city
-        String city;
-        do {
-            System.out.print("City ");
-            city = Input.readStr();
-        } while (city.length() == 0);
+        String city = Input.readStrWhileNotEmpty("City");
 
         // Read state
-        String state;
-        do {
-            System.out.println("State/Province ");
-            state = Input.readStr();
-        } while (state.length() == 0);
+        String state = Input.readStrWhileNotEmpty("State/Province");
 
         // Read postal code
-        String postalCode;
-        do {
-            System.out.println("Postal Code ");
-            postalCode = Input.readStr();
-        } while (postalCode.length() == 0);
+        String postalCode = Input.readStrWhileNotEmpty("Postal Code");
 
+        // Read country
+        String country = Input.readStrWhileNotEmpty("Country");
 
+        // Now get details pertaining to the payment method of the account.
+        System.out.println("\nPlease enter the following details pertaining\n" +
+                "to the credit card for this new account");
+
+        // TODO validate the input on at least some of these fields...
+        String nameOnCard = Input.readStrWhileNotEmpty("Name on Card");
+        String number = Input.readStrWhileNotEmpty("Card Number");
+        String date = Input.readStrWhileNotEmpty("Expiration Date (MM/YY)");
+        String cvv = Input.readStrWhileNotEmpty("CVV");
+
+        System.out.println("\nCreating account...\n");
+
+        // TODO Actualy create the account tuples & stuff etc. here.
+        boolean success = true; // Set to false if something goes wrong creating the accounts.
+
+        if (!success) {
+            System.out.println("An unexpected error was encountered while creating the account.");
+            System.out.println("The account has not been created.");
+            return;
+        }
+
+        // If we get to this point the account should have been created successfully.
+        System.out.println("=========================================================");
+        System.out.println("====          Account Created Successfully           ====");
+        System.out.println("=========================================================\n");
     }
 
     /**
