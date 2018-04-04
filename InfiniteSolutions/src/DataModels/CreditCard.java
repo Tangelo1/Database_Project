@@ -30,6 +30,7 @@ public class CreditCard extends DataModel {
     }
 
     @Override
+    //SELECT MAX(ID) from CREDITCARD;
     public CreditCard loadFromDB() throws SQLException{
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.creditcard WHERE id=%d", this.id);
@@ -48,6 +49,7 @@ public class CreditCard extends DataModel {
         return c;
     }
 
+
     @Override
     public void saveToDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
@@ -63,6 +65,13 @@ public class CreditCard extends DataModel {
         }
 
         super.executeQuery(query);
+
+        if (id == -1) {
+            query = "SELECT MAX(ID) from CREDITCARD";
+            ResultSet r = super.getStatementFromQuery(query);
+            this.id = r.getInt(1);
+        }
+
     }
 
 
