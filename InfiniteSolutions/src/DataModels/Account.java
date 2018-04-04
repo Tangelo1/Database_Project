@@ -72,6 +72,11 @@ public class Account extends DataModel {
 
         super.executeQuery(query);
 
+        if (id == -1) {
+            query = "SELECT MAX(ID) from ACCOUNT";
+            ResultSet r = super.getStatementFromQuery(query);
+            this.id = r.getInt(1);
+        }
     }
 
     public static Account createPersonal(Address a, CreditCard c, String name, String phone) throws SQLException {

@@ -74,7 +74,10 @@ public class Input
         do {
             System.out.print(prompt + " ");
             input = readStr();
-        } while (input.length() > 0 && input.length() <= maxLength);
+            if (input.length() > maxLength) {
+                System.out.println("Error: " + prompt + " must not exceed " + maxLength + " characters.");
+            }
+        } while (input.length() == 0 || input.length() > maxLength);
         return input;
     }
 

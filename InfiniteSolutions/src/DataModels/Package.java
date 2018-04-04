@@ -133,6 +133,12 @@ public class Package extends DataModel {
         }
 
         super.executeQuery(query);
+
+        if (trackingId == -1) {
+            query = "SELECT MAX(ID) from PACKAGE";
+            ResultSet r = super.getStatementFromQuery(query);
+            this.trackingId = r.getInt(1);
+        }
     }
 
 

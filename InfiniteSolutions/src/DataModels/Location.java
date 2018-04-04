@@ -61,6 +61,12 @@ public class Location extends DataModel {
         }
 
         super.executeQuery(query);
+
+        if (locationId == -1) {
+            query = "SELECT MAX(ID) from LOCATION";
+            ResultSet r = super.getStatementFromQuery(query);
+            this.locationId = r.getInt(1);
+        }
     }
 
     public ArrayList<Package> getPackagesWithin() throws SQLException {

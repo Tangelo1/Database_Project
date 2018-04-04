@@ -101,8 +101,8 @@ public class Menu {
             Account userAccount = null;
             try {
                 userAccount = Account.getAccountByNumber(ID);
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch(SQLException e) {
+                // Don't need to do anything here.
             }
 
             // TODO enable this check when the account can actually be queried.

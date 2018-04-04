@@ -1,5 +1,11 @@
 package Menus;
 
+import DataModels.Account;
+import DataModels.Address;
+import DataModels.CreditCard;
+
+import java.sql.SQLException;
+
 /**
  * Menu System for the administrator.
  */
@@ -83,16 +89,7 @@ public class AdminMenu {
         System.out.println("----- Basic Account Info -----");
 
         // Read the name string, ensuring they don't just enter nothing.
-        boolean accountNameValid;
-        String accountName;
-        do {
-            accountNameValid = true;
-            accountName = Input.readStrWhileNotEmpty("Name on Account");
-            if (accountName.length() > 50) {
-                accountNameValid = false;
-                System.out.println("Error: Name on account may not exceed 50 characters.");
-            }
-        } while (!accountNameValid);
+        String accountName = Input.readStrWhileNotEmpty("Name on Account", 50);
 
         // Get the phone number
         String phone;
@@ -113,24 +110,24 @@ public class AdminMenu {
         System.out.println("\n----- Billing Address Info -----");
 
         // Get address line 1, ex: 123 Main Street
-        String street = Input.readStrWhileNotEmpty("Number and Street");
+        String street = Input.readStrWhileNotEmpty("Number and Street", 50);
 
         // Read city
-        String city = Input.readStrWhileNotEmpty("City");
+        String city = Input.readStrWhileNotEmpty("City", 50);
 
         // Read state
-        String state = Input.readStrWhileNotEmpty("State/Province");
+        String state = Input.readStrWhileNotEmpty("State/Province", 50);
 
         // Read postal code
-        String postalCode = Input.readStrWhileNotEmpty("Postal Code");
+        String postalCode = Input.readStrWhileNotEmpty("Postal Code", 8);
 
         // Read country
-        String country = Input.readStrWhileNotEmpty("Country");
+        String country = Input.readStrWhileNotEmpty("Country", 50);
 
         // Now get details pertaining to the payment method of the account.
         System.out.println("\n----- Payment Info -----");
 
-        String nameOnCard = Input.readStrWhileNotEmpty("Name on Card");
+        String nameOnCard = Input.readStrWhileNotEmpty("Name on Card", 50);
 
         // Validate the card number
         String number;
@@ -158,14 +155,18 @@ public class AdminMenu {
         } while (!dateValid);
 
         // Read and validate the cvv.
-        String cvv;
+        int cvv = 0;
         boolean cvvValid;
         do {
             cvvValid = true;
-            cvv = Input.readStrWhileNotEmpty("CVV");
-            if (cvv.length() > 4 || !Input.isNumeric(cvv)) {
+            String cvvStr = Input.readStrWhileNotEmpty("CVV");
+            if (cvvStr.length() > 4 || !Input.isNumeric(cvvStr)) {
                 cvvValid = false;
                 System.out.println("Error: CVV Must be a number with no more than 4 digits.");
+            }
+            else {
+                // Won't need to catch exception because it is at this point guaranteed to be an integer
+                cvv = Integer.parseInt(cvvStr);
             }
         } while (!cvvValid);
 
@@ -174,15 +175,23 @@ public class AdminMenu {
         // TODO Actualy create the account tuples & stuff etc. here.
         boolean success = true; // Set to false if something goes wrong creating the accounts.
 
-        if (!success) {
-            System.out.println("An unexpected error was encountered while creating the account.");
-            System.out.println("The account has not been created.");
+        try {
+            Address address = new Address(-1, street, city, state, postalCode, country);
+            address.saveToDB();
+            CreditCard card = new CreditCard(-1, nameOnCard, number, date, cvv);
+            card.saveToDB();
+            Account account =  Account.createCorporate(address, card, accountName, phone);
+            account.saveToDB();
+        } catch(SQLException e) {
+            System.out.println("\nAn unexpected error occurred while creating the account. The account could not be created.\n");
+            System.out.println("Technical information:\n");
+            e.printStackTrace();
             return;
         }
 
         // If we get to this point the account should have been created successfully.
         System.out.println("=========================================================");
-        System.out.println("====          Account Created Successfully           ====");
+        System.out.println("====       \uD83D\uDD25  Account Created Successfully  \uD83D\uDD25         ====");
         System.out.println("=========================================================\n");
     }
 

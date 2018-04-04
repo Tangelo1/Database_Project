@@ -69,6 +69,12 @@ public class ShippingOrder extends DataModel {
         }
 
         super.executeQuery(query);
+
+        if (orderId == -1) {
+            query = "SELECT MAX(ID) from SHIPPINGORDER";
+            ResultSet r = super.getStatementFromQuery(query);
+            this.orderId = r.getInt(1);
+        }
     }
 
 
