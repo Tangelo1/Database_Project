@@ -5,7 +5,6 @@ import Driver.DBDriver;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 public class Location extends DataModel {
@@ -27,7 +26,7 @@ public class Location extends DataModel {
     }
 
     @Override
-    public Location loadFromDB() {
+    public Location loadFromDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
 
         String query = String.format("SELECT * FROM public.location WHERE location_id=%d", this.locationId);
@@ -46,7 +45,7 @@ public class Location extends DataModel {
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
 
         String query = "";
@@ -64,7 +63,7 @@ public class Location extends DataModel {
         super.executeQuery(query);
     }
 
-    public ArrayList<Package> getPackagesWithin() {
+    public ArrayList<Package> getPackagesWithin() throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT (PACKAGE.TRACKING_ID, WEIGHT, TYPE, SPEED, PACKAGE.VALUE, " +
                 "DESTINATION_ADDR_ID, SOURCE_ADDR_ID, ISHAZARD, ISINTERNATIONAL) FROM PACKAGE " +

@@ -5,7 +5,6 @@ import Driver.DBDriver;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 public class ManifestItem extends DataModel {
@@ -28,7 +27,7 @@ public class ManifestItem extends DataModel {
     }
 
     @Override
-    public ArrayList<ManifestItem> loadFromDB() {
+    public ArrayList<ManifestItem> loadFromDB()throws SQLException {
         ArrayList<ManifestItem> items = new ArrayList<>();
         Connection conn = DBDriver.getConnection();
         String query = "";
@@ -59,7 +58,7 @@ public class ManifestItem extends DataModel {
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
 
         String query = "";

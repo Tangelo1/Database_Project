@@ -189,7 +189,12 @@ public class DBDriver {
 
                 if(m != null) {
                     list.add(m);
-                    m.saveToDB();
+                    try {
+                        m.saveToDB();
+                    }
+                    catch (SQLException ex) {
+                        System.out.println("Can't load CSV.");
+                    }
                 }
 
             }
