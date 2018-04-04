@@ -29,7 +29,11 @@ public abstract class DataModel {
         try {
             Statement stmt = conn.createStatement();
             stmt.execute(query);
-            return stmt.getResultSet();
+
+            ResultSet rs = stmt.getResultSet();
+            rs.next();
+
+            return rs;
         } catch (SQLException e) {
             System.out.println("\nCANNOT EXECUTE QUERY:");
             System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);

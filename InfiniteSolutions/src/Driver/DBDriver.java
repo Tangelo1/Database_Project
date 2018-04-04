@@ -3,6 +3,7 @@ package Driver; /**
  */
 import DataModels.*;
 import DataModels.Package;
+import org.h2.jdbc.JdbcSQLException;
 import org.h2.tools.RunScript;
 
 import java.io.*;
@@ -26,7 +27,13 @@ public class DBDriver {
             String url = "jdbc:h2:" + location;
             Class.forName("org.h2.Driver");
 
-            conn = DriverManager.getConnection(url, user, password);
+            try {
+                conn = DriverManager.getConnection(url, user, password);
+            }
+            catch (JdbcSQLException e) {
+                System.out.println("Please close any existing database connections.");
+                System.exit(-1);
+            }
 
         } catch (SQLException | ClassNotFoundException e) {
 

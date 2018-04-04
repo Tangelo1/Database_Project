@@ -16,10 +16,9 @@ public class Menu {
      * @param args unused command line args.
      */
     public static void main(String[] args) {
-        //TODO
-        // Need to check to see if our DB already exists to avoid exceptions
-        //Create connection to DB, execute table creation and insert from CSVs
+        //Catch IllegalState Exception
         DBDriver driver = new DBDriver();
+
 
         // Welcome message.
         printWelcome();
@@ -97,18 +96,19 @@ public class Menu {
             // Then load it from the DB like this
             //Account userAccount = new Account(id).loadFromDB();
             //This has the same functionality as getAccountByNumber
-            Account userAccount = null; //Account.getAccount(ID);
+            Account userAccount = null;
+            userAccount = Account.getAccountByNumber(ID);
 
             // TODO enable this check when the account can actually be queried.
             // If the user account doesn't exist, return to the previous menu.
-            //if (userAccount == null) {
-            //    System.out.println("Error: Unknown Account Number.");
-            //    return;
-            //}
-            //else {
+            if (userAccount == null) {
+                System.out.println("\nError: Unknown Account Number.");
+                return;
+            }
+            else {
                 CustomerMenu.setAccount(userAccount);
                 CustomerMenu.enterCustomerMenu();
-            //}
+            }
         }
     }
 

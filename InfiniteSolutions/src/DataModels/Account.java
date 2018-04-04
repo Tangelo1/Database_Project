@@ -44,10 +44,13 @@ public class Account extends DataModel {
             a = new Account(s.getInt(1), s.getString(2).charAt(0), s.getString(3),
                     s.getString(4), s.getInt(5), s.getInt(6)
             );
-        }catch (SQLException e) {
-            System.out.println("\nCANNOT EXECUTE QUERY:");
-            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+        } catch (SQLException e) {
+            try {
+                //System.out.println("\nCANNOT EXECUTE QUERY:");
+                System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+            } catch (ArrayIndexOutOfBoundsException ex) {}
         }
+
 
         return a;
     }
@@ -61,8 +64,7 @@ public class Account extends DataModel {
             query = String.format("INSERT INTO public.account " +
                             "VALUES (%d, \'%s\', \'%s\', \'%s\', %d, %d);",
                     id, type, name, phone, creditCardId, billingAddressId);
-        }
-        else {
+        } else {
             query = String.format("INSERT INTO public.account " +
                             "VALUES (%s, \'%s\', \'%s\', \'%s\', %d, %d);",
                     null, type, name, phone, creditCardId, billingAddressId);
@@ -92,7 +94,7 @@ public class Account extends DataModel {
         return acct;
     }
 
-    public static Account getAccountByNumber(int id){
+    public static Account getAccountByNumber(int id) {
         Account a = new Account(id);
         return a.loadFromDB();
     }
