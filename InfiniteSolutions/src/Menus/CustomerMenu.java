@@ -2,6 +2,8 @@ package Menus;
 
 import DataModels.Account;
 import DataModels.TrackingEvent;
+
+import java.sql.SQLException;
 import java.util.Collections;
 
 import java.util.ArrayList;
@@ -68,11 +70,15 @@ public class CustomerMenu {
         ArrayList<TrackingEvent> packages = null;
         int flag = 0;
         while(flag == 0) {
-            packages = getEventsForPackage(Integer.parseInt(trackingID));
-            if (packages == null) {
-                System.out.println("Invalid ID, please try again");
-            } else {
-                flag = 1;
+            try {
+                packages = getEventsForPackage(Integer.parseInt(trackingID));
+                if (packages == null) {
+                    System.out.println("Invalid ID, please try again");
+                } else {
+                    flag = 1;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
 
@@ -91,7 +97,11 @@ public class CustomerMenu {
         });
 
         for(TrackingEvent event : packages){
-            System.out.println("At " + event.getTime() + "the package was at "+event.getLocation().getName());
+            try {
+                System.out.println("At " + event.getTime() + "the package was at "+event.getLocation().getName());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return;
