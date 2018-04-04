@@ -177,11 +177,11 @@ public class AdminMenu {
 
         try {
             Address address = new Address(-1, street, city, state, postalCode, country);
-            address.saveToDB();
+            //address.saveToDB();
             CreditCard card = new CreditCard(-1, nameOnCard, number, date, cvv);
-            card.saveToDB();
+            //card.saveToDB();
             Account account =  Account.createCorporate(address, card, accountName, phone);
-            account.saveToDB();
+            //account.saveToDB();
         } catch(SQLException e) {
             System.out.println("\nAn unexpected error occurred while creating the account. The account could not be created.\n");
             System.out.println("Technical information:\n");
