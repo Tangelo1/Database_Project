@@ -1,6 +1,13 @@
 package Menus;
 
 import DataModels.Account;
+import DataModels.TrackingEvent;
+import java.util.Collections;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+
+import static DataModels.TrackingEvent.*;
 
 public class CustomerMenu {
 
@@ -56,7 +63,37 @@ public class CustomerMenu {
     }
 
     static void trackPackage(){
-        System.out.println("This is a track package stub");
+        System.out.println("Please enter your tracking ID");
+        String trackingID = Input.readStr();
+        ArrayList<TrackingEvent> packages = null;
+        int flag = 0;
+        while(flag == 0) {
+            packages = getEventsForPackage(Integer.parseInt(trackingID));
+            if (packages == null) {
+                System.out.println("Invalid ID, please try again");
+            } else {
+                flag = 1;
+            }
+        }
+
+        Collections.sort(packages, new Comparator<TrackingEvent>() {
+            @Override
+            public int compare(TrackingEvent o1, TrackingEvent o2) {
+
+                if(o1.getTime().after(o2.getTime())){
+                    return 1;
+                }else if(o1.getTime().before(o2.getTime())){
+                    return -1;
+                }else{
+                    return 0;
+                }
+            }
+        });
+
+        for(TrackingEvent event : packages){
+            System.out.println("At " + event.getTime() + "the package was at "+event.getLocation().getName());
+        }
+
         return;
     }
 
