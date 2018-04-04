@@ -42,7 +42,7 @@ public class ShippingCostMultiplier extends DataModel{
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB() throws SQLException{
 
         Connection conn = DBDriver.getConnection();
         String query = String.format("INSERT INTO public.shippingcostmultiplier " +

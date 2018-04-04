@@ -5,7 +5,7 @@ import Driver.DBDriver;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
 
 public class Account extends DataModel {
     private int id;
@@ -34,7 +34,7 @@ public class Account extends DataModel {
     }
 
     @Override
-    public Account loadFromDB() {
+    public Account loadFromDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.account WHERE id=%d", this.id);
         ResultSet s = DataModel.getStatementFromQuery(query);
@@ -56,7 +56,7 @@ public class Account extends DataModel {
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
 
         String query = "";
@@ -74,7 +74,7 @@ public class Account extends DataModel {
 
     }
 
-    public static Account createPersonal(Address a, CreditCard c, String name, String phone) {
+    public static Account createPersonal(Address a, CreditCard c, String name, String phone) throws SQLException {
         a.saveToDB();
         c.saveToDB();
 
@@ -84,7 +84,7 @@ public class Account extends DataModel {
         return acct;
     }
 
-    public static Account createCorporate(Address a, CreditCard c, String name, String phone) {
+    public static Account createCorporate(Address a, CreditCard c, String name, String phone)throws SQLException {
         a.saveToDB();
         c.saveToDB();
 
@@ -94,7 +94,7 @@ public class Account extends DataModel {
         return acct;
     }
 
-    public static Account getAccountByNumber(int id) {
+    public static Account getAccountByNumber(int id) throws SQLException{
         Account a = new Account(id);
         return a.loadFromDB();
     }

@@ -1,7 +1,6 @@
 package DataModels;
 
 import Driver.DBDriver;
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ public class ShippingOrder extends DataModel {
     }
 
     @Override
-    public ShippingOrder loadFromDB() {
+    public ShippingOrder loadFromDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = "";
 
@@ -55,7 +54,7 @@ public class ShippingOrder extends DataModel {
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = "";
         if (orderId != -1) {
@@ -114,17 +113,17 @@ public class ShippingOrder extends DataModel {
         this.accountId = accountId;
     }
 
-    public Account getAccount() {
+    public Account getAccount() throws SQLException{
         Account a = new Account(this.accountId);
         return a.loadFromDB();
     }
 
-    public Package getPackage() {
+    public Package getPackage() throws SQLException {
         Package p = new Package(this.trackingId);
         return p.loadFromDB();
     }
 
-    public static ArrayList<ShippingOrder> getOrdersForAccount(Account acct, String start, String end) {
+    public static ArrayList<ShippingOrder> getOrdersForAccount(Account acct, String start, String end) throws SQLException{
         ArrayList<ShippingOrder> orders = new ArrayList<>();
         Connection conn = DBDriver.getConnection();
 

@@ -9,36 +9,24 @@ import java.sql.Statement;
 
 public abstract class DataModel {
 
-    public abstract Object loadFromDB();
+    public abstract Object loadFromDB() throws SQLException;
 
-    public abstract void saveToDB();
+    public abstract void saveToDB() throws SQLException;
 
-    public void executeQuery(String query) {
+    public void executeQuery(String query) throws SQLException {
         Connection conn = DBDriver.getConnection();
-        try {
             Statement stmt = conn.createStatement();
             stmt.execute(query);
-        } catch (SQLException e) {
-            System.out.println("\nCANNOT EXECUTE QUERY:");
-            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
-        }
     }
 
-    public static ResultSet getStatementFromQuery(String query) {
+    public static ResultSet getStatementFromQuery(String query) throws SQLException {
         Connection conn = DBDriver.getConnection();
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
+        Statement stmt = conn.createStatement();
+        stmt.execute(query);
 
-            ResultSet rs = stmt.getResultSet();
-            rs.next();
+        ResultSet rs = stmt.getResultSet();
+        rs.next();
 
-            return rs;
-        } catch (SQLException e) {
-            System.out.println("\nCANNOT EXECUTE QUERY:");
-            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
-        }
-
-        return null;
+        return rs;
     }
 }

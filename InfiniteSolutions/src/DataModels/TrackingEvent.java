@@ -1,8 +1,6 @@
 package DataModels;
 
 import Driver.DBDriver;
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +21,7 @@ public class TrackingEvent extends DataModel {
         this.status = status;
     }
 
-    public TrackingEvent(int trackingId) {
+    public TrackingEvent(int trackingId)throws SQLException {
         this.trackingId = trackingId;
         this.locationId = -1;
         this.time = null;
@@ -31,7 +29,7 @@ public class TrackingEvent extends DataModel {
     }
 
     @Override
-    public ArrayList<TrackingEvent> loadFromDB() {
+    public ArrayList<TrackingEvent> loadFromDB() throws SQLException {
         ArrayList<TrackingEvent> history = new ArrayList<>();
         Connection conn = DBDriver.getConnection();
         String query = "";
@@ -66,24 +64,24 @@ public class TrackingEvent extends DataModel {
         return history;
     }
 
-    public static ArrayList<TrackingEvent> getEventsForPackage(int trackingId) {
+    public static ArrayList<TrackingEvent> getEventsForPackage(int trackingId) throws SQLException{
         TrackingEvent t = new TrackingEvent(trackingId);
         return t.loadFromDB();
     }
 
-    public Location getLocation() {
+    public Location getLocation()throws SQLException {
         Location l = new Location(locationId);
         return l.loadFromDB();
     }
 
-    public Package getPackage() {
+    public Package getPackage() throws SQLException{
         Package p = new Package(trackingId);
         return p.loadFromDB();
     }
 
 
     @Override
-    public void saveToDB() {
+    public void saveToDB() throws SQLException{
         Connection conn = DBDriver.getConnection();
         String query = "";
         if(trackingId != -1) {

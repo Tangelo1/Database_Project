@@ -73,7 +73,7 @@ public class Address extends DataModel{
     }
 
     @Override
-    public Address loadFromDB() {
+    public Address loadFromDB()throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.address WHERE id=%d", this.id);
         ResultSet s = DataModel.getStatementFromQuery(query);
@@ -92,7 +92,7 @@ public class Address extends DataModel{
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB() throws SQLException{
         Connection conn = DBDriver.getConnection();
         String query = "";
         if (id != -1)

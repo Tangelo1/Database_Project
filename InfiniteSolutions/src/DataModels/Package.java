@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import Driver.DBDriver;
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,37 +47,37 @@ public class Package extends DataModel {
         this.isInternational = false;
     }
 
-    public Address getDestination() {
+    public Address getDestination() throws SQLException{
        Address a = new Address(this.destAddrId);
        return a.loadFromDB();
     }
 
-    public Address getOrigin() {
+    public Address getOrigin() throws SQLException{
         Address a = new Address(this.srcAddrId);
         return a.loadFromDB();
     }
 
-    public ShippingOrder getOrder() {
+    public ShippingOrder getOrder()throws SQLException {
         ShippingOrder s = new ShippingOrder(this.trackingId);
         return s.loadFromDB();
     }
 
-    public ArrayList<ManifestItem> getManifest() {
+    public ArrayList<ManifestItem> getManifest() throws SQLException{
         ManifestItem i = new ManifestItem(this.trackingId);
         return i.loadFromDB();
     }
 
-    public ArrayList<TrackingEvent> getHistory() {
+    public ArrayList<TrackingEvent> getHistory() throws SQLException{
         TrackingEvent t = new TrackingEvent(this.trackingId);
         return t.loadFromDB();
     }
 
-    public static Package getPackageByTrackingID(int trackingId) {
+    public static Package getPackageByTrackingID(int trackingId)throws SQLException {
         Package p = new Package(trackingId);
         return p.loadFromDB();
     }
 
-    public static ShippingOrder createPackageOrder(Package pkg, Account acct) {
+    public static ShippingOrder createPackageOrder(Package pkg, Account acct)throws SQLException {
         double speedMult = 0.0;
         double weightMult = 0.0;
         ArrayList<ShippingCostMultiplier> costList = ShippingCostMultiplier.getCostList();
@@ -99,7 +98,7 @@ public class Package extends DataModel {
     }
 
     @Override
-    public Package loadFromDB() {
+    public Package loadFromDB()throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.package WHERE tracking_id=%d;" + this.trackingId);
         ResultSet s = DataModel.getStatementFromQuery(query);
@@ -118,7 +117,7 @@ public class Package extends DataModel {
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB() throws SQLException{
         Connection conn = DBDriver.getConnection();
         String query = "";
 

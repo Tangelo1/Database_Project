@@ -3,8 +3,6 @@ package DataModels;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Date;
 import Driver.DBDriver;
 
 public class CreditCard extends DataModel {
@@ -32,7 +30,7 @@ public class CreditCard extends DataModel {
     }
 
     @Override
-    public CreditCard loadFromDB() {
+    public CreditCard loadFromDB() throws SQLException{
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.creditcard WHERE id=%d", this.id);
         ResultSet s = DataModel.getStatementFromQuery(query);
@@ -51,7 +49,7 @@ public class CreditCard extends DataModel {
     }
 
     @Override
-    public void saveToDB() {
+    public void saveToDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = "";
         if(id != -1)
