@@ -58,8 +58,8 @@ public class CreditCard extends DataModel {
                     id, name, number, expDate, cvv);
         else {
             query = String.format("INSERT INTO public.creditcard " +
-                            "VALUES (%s, \'%s\', \'%s\', \'%s\', %d);",
-                    null, name, number, expDate, cvv);
+                            "VALUES (\'%s\', \'%s\', \'%s\', %d);",
+                    name, number, expDate, cvv);
         }
 
         super.executeQuery(query);
