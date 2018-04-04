@@ -1,4 +1,4 @@
-cd /d %~dp0
-cd ../../out/artifacts/CSCI320_jar/
-java -jar CSCI320
+cd -d %~dp0
+cd ../../out/artifacts/InfSol/
+java -jar InfSol.jar
 PAUSE
