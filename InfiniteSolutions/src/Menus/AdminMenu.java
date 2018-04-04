@@ -80,17 +80,37 @@ public class AdminMenu {
      */
     private static void createCorporateAccount() {
         // TODO
-        System.out.println("Please enter the following details of the corporate account");
+        System.out.println("----- Basic Account Info -----");
 
         // Read the name string, ensuring they don't just enter nothing.
-        String accountName = Input.readStrWhileNotEmpty("Name on Account");
+        boolean accountNameValid;
+        String accountName;
+        do {
+            accountNameValid = true;
+            accountName = Input.readStrWhileNotEmpty("Name on Account");
+            if (accountName.length() > 50) {
+                accountNameValid = false;
+                System.out.println("Error: Name on account may not exceed 50 characters.");
+            }
+        } while (!accountNameValid);
 
         // Get the phone number
-        String phone = Input.readStrWhileNotEmpty("Account Phone");
+        String phone;
+        boolean phoneValid;
+        do {
+            phoneValid = true;
+            phone = Input.readStrWhileNotEmpty("Account Phone (10 digits)");
+            if (!Input.isPhone(phone)) {
+                phoneValid = false;
+                System.out.println("Error: \'" + phone + "\' is not a valid phone number.");
+            } else {
+                // Format the phone number into a string of 10 digits so that it can be stored in the database.
+                phone = Input.formatPhoneNumber(phone);
+            }
+        } while (!phoneValid);
 
         // Get address information
-        System.out.println("\nPlease enter the following information pertaining\n" +
-                "to the account's billing address:");
+        System.out.println("\n----- Billing Address Info -----");
 
         // Get address line 1, ex: 123 Main Street
         String street = Input.readStrWhileNotEmpty("Number and Street");
@@ -108,14 +128,46 @@ public class AdminMenu {
         String country = Input.readStrWhileNotEmpty("Country");
 
         // Now get details pertaining to the payment method of the account.
-        System.out.println("\nPlease enter the following details pertaining\n" +
-                "to the credit card for this new account");
+        System.out.println("\n----- Payment Info -----");
 
-        // TODO validate the input on at least some of these fields...
         String nameOnCard = Input.readStrWhileNotEmpty("Name on Card");
-        String number = Input.readStrWhileNotEmpty("Card Number");
-        String date = Input.readStrWhileNotEmpty("Expiration Date (MM/YY)");
-        String cvv = Input.readStrWhileNotEmpty("CVV");
+
+        // Validate the card number
+        String number;
+        boolean numberValid;
+        do {
+            numberValid = true;
+            number = Input.readStrWhileNotEmpty("Card Number");
+            number = number.replaceAll("\\s+", "");
+            if (number.length() > 16 || !Input.isNumeric(number)) {
+                numberValid = false;
+                System.out.println("Error: invalid credit card number.");
+            }
+        } while (!numberValid);
+
+        // Read the expiration date. Ensure that it is the proper MM/YY format.
+        String date;
+        boolean dateValid;
+        do {
+            dateValid = true;
+            date = Input.readStrWhileNotEmpty("Expiration Date (MM/YY)");
+            if (!Input.isDate(date, "MM/YY")) {
+                dateValid = false;
+                System.out.println("Error: Please enter the date in the MM/YY format.");
+            }
+        } while (!dateValid);
+
+        // Read and validate the cvv.
+        String cvv;
+        boolean cvvValid;
+        do {
+            cvvValid = true;
+            cvv = Input.readStrWhileNotEmpty("CVV");
+            if (cvv.length() > 4 || !Input.isNumeric(cvv)) {
+                cvvValid = false;
+                System.out.println("Error: CVV Must be a number with no more than 4 digits.");
+            }
+        } while (!cvvValid);
 
         System.out.println("\nCreating account...\n");
 
