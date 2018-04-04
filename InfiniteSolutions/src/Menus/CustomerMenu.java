@@ -109,6 +109,7 @@ public class CustomerMenu {
 
     static void shipNewPackage(){
         System.out.println("This is a ship new package stub");
+        
         return;
     }
 

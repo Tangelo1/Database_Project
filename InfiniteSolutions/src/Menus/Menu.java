@@ -3,6 +3,8 @@ package Menus;
 import DataModels.*;
 import Driver.DBDriver;
 
+import java.sql.SQLException;
+
 /**
  * The main entry point for the front facing user interface of the application
  * This class displays the initial menu and set of menu options for the user to select when first
@@ -97,7 +99,11 @@ public class Menu {
             //Account userAccount = new Account(id).loadFromDB();
             //This has the same functionality as getAccountByNumber
             Account userAccount = null;
-            userAccount = Account.getAccountByNumber(ID);
+            try {
+                userAccount = Account.getAccountByNumber(ID);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
             // TODO enable this check when the account can actually be queried.
             // If the user account doesn't exist, return to the previous menu.
