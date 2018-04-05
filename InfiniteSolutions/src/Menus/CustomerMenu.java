@@ -1,6 +1,7 @@
 package Menus;
 
 import DataModels.Account;
+import DataModels.Address;
 import DataModels.TrackingEvent;
 
 import java.sql.SQLException;
@@ -108,8 +109,72 @@ public class CustomerMenu {
     }
 
     static void shipNewPackage(){
-        System.out.println("This is a ship new package stub");
-        
+        //Need To first build a Address, both destAddress and srcAddress
+        Address srcAddress;
+        String srcStreet;
+        String srcCity;
+        String srcState;
+        String srcPostal;
+        String srcCountry;
+
+        System.out.println("Starting up steps to ship new package");
+        System.out.println("Enter the street of where it is being shipped from");
+        int flag = 0;
+        while(flag == 0) {
+            srcStreet = Input.readStr();
+            if (srcStreet.length() > 50) {
+                System.out.println("Invalid street, please try again");
+            } else {
+                flag = 1;
+            }
+        }
+
+        System.out.println("Enter the city of where it is being shipped from");
+        flag = 0;
+        while(flag == 0) {
+            srcCity = Input.readStr();
+            if (srcCity.length() > 50) {
+                System.out.println("Invalid city, please try again");
+            } else {
+                flag = 1;
+            }
+        }
+
+        System.out.println("Enter the state of where it is being shipped from");
+        flag = 0;
+        while(flag == 0) {
+            srcState = Input.readStr();
+            if (srcState.length() > 50) {
+                System.out.println("Invalid state, please try again");
+            } else {
+                flag = 1;
+            }
+        }
+
+        System.out.println("Enter the postal of where it is being shipped from");
+        flag = 0;
+        while(flag == 0) {
+            srcPostal = Input.readStr();
+            if (srcPostal.length() != 8) {
+                System.out.println("Invalid postal, please try again");
+            } else {
+                flag = 1;
+            }
+        }
+
+        System.out.println("Enter the country of where it is being shipped from");
+        flag = 0;
+        while(flag == 0) {
+            srcCountry = Input.readStr();
+            if (srcCountry.length() > 50) {
+                System.out.println("Invalid country, please try again");
+            } else {
+                flag = 1;
+            }
+        }
+
+        //TODO create the address
+
         return;
     }
 
