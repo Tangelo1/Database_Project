@@ -13,18 +13,33 @@ public class Location extends DataModel {
     private String name;
     private String type;
 
+    /**
+     * Main constructor for creating a Location object
+     * @param locationId Database ID
+     * @param name The name of the location
+     * @param type The type of the location
+     */
     public Location(int locationId, String name, String type) {
         this.locationId = locationId;
         this.name = name;
         this.type = type;
     }
 
+    /**
+     * Constructor for creating an "empty" location object
+     * @param locationId Database ID
+     */
     public Location(int locationId) {
         this.locationId = locationId;
         this.name = null;
         this.type = null;
     }
 
+    /**
+     * Loads a matching location from the database that matches this objects ID
+     * @return A matching location object
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public Location loadFromDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
@@ -44,6 +59,10 @@ public class Location extends DataModel {
         return l;
     }
 
+    /**
+     * Inserts this object into the database
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public void saveToDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
@@ -69,6 +88,11 @@ public class Location extends DataModel {
         }
     }
 
+    /**
+     * Find and return all the packages within this database
+     * @return An arraylist of packages for this location
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     public ArrayList<Package> getPackagesWithin() throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT (PACKAGE.TRACKING_ID, WEIGHT, TYPE, SPEED, PACKAGE.VALUE, " +

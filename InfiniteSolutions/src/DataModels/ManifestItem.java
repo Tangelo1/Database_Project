@@ -12,20 +12,44 @@ public class ManifestItem extends DataModel {
     private int trackingId;
     private String name;
 
+    /**
+     * Constructor to create a new Manifest item object
+     * @param trackingId the tracking ID associated with the item
+     * @param name The name of the item
+     */
     public ManifestItem(int trackingId, String name) {
         this.trackingId = trackingId;
         this.name = name;
     }
 
+    /**
+     * Constructor for creating an "empty" manifest item object
+     * @param trackingId Database ID
+     */
     public ManifestItem(int trackingId) {
         this.trackingId = trackingId;
         this.name = null;
     }
 
-    public Package getPackage() {
-        return null;
+    /**
+     * Find the package associated with this manifest item.
+     * @return Returns the package that the given manifest item belongs to
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
+    public Package getPackage() throws SQLException {
+        Connection conn = DBDriver.getConnection();
+
+        String query = String.format("SELECT * FROM public.package WHERE tracking_id=%d", this.trackingId);
+
+        ResultSet s = DataModel.getStatementFromQuery(query);
+        return new Package(trackingId).loadFromDB();
     }
 
+    /**
+     * Loads all the matching manifest items from the database that matches this tracking ID
+     * @return A matching list of manifest item objects
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public ArrayList<ManifestItem> loadFromDB()throws SQLException {
         ArrayList<ManifestItem> items = new ArrayList<>();
@@ -57,6 +81,10 @@ public class ManifestItem extends DataModel {
         return items;
     }
 
+    /**
+     * Inserts this object into the database
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public void saveToDB() throws SQLException {
         Connection conn = DBDriver.getConnection();

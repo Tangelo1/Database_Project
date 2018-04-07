@@ -11,6 +11,15 @@ public class Address extends DataModel{
     private String postal;
     private String country;
 
+    /**
+     * Main constructor for creating an address object
+     * @param id Database ID
+     * @param street The street for the address
+     * @param city The city for the address
+     * @param state The state for the address
+     * @param postal The postal code for the address
+     * @param country The country for the address
+     */
     public Address(int id, String street, String city, String state, String postal, String country) {
         this.id = id;
         this.street = street;
@@ -20,6 +29,10 @@ public class Address extends DataModel{
         this.country = country;
     }
 
+    /**
+     * Constructor for creating an "empty" address object
+     * @param id Database ID
+     */
     public Address(int id) {
         this.id = id;
     }
@@ -72,6 +85,11 @@ public class Address extends DataModel{
         this.country = country;
     }
 
+    /**
+     * Loads a matching address from the database that matches this objects ID
+     * @return A matching address object
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public Address loadFromDB()throws SQLException {
         Connection conn = DBDriver.getConnection();
@@ -91,6 +109,10 @@ public class Address extends DataModel{
         return a;
     }
 
+    /**
+     * Inserts this object into the database
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public void saveToDB() throws SQLException{
         Connection conn = DBDriver.getConnection();

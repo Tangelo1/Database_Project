@@ -3,6 +3,7 @@ package DataModels;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import Driver.DBDriver;
 
 import java.util.ArrayList;
@@ -47,37 +48,70 @@ public class Package extends DataModel {
         this.isInternational = false;
     }
 
-    public Address getDestination() throws SQLException{
-       Address a = new Address(this.destAddrId);
-       return a.loadFromDB();
+    /**
+     * @return
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
+    public Address getDestination() throws SQLException {
+        Address a = new Address(this.destAddrId);
+        return a.loadFromDB();
     }
 
-    public Address getOrigin() throws SQLException{
+    /**
+     * @return
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
+    public Address getOrigin() throws SQLException {
         Address a = new Address(this.srcAddrId);
         return a.loadFromDB();
     }
 
-    public ShippingOrder getOrder()throws SQLException {
+    /**
+     * @return
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
+    public ShippingOrder getOrder() throws SQLException {
         ShippingOrder s = new ShippingOrder(this.trackingId);
         return s.loadFromDB();
     }
 
-    public ArrayList<ManifestItem> getManifest() throws SQLException{
+    /**
+     * @return
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
+    public ArrayList<ManifestItem> getManifest() throws SQLException {
         ManifestItem i = new ManifestItem(this.trackingId);
         return i.loadFromDB();
     }
 
-    public ArrayList<TrackingEvent> getHistory() throws SQLException{
+    /**
+     * @return
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
+    public ArrayList<TrackingEvent> getHistory() throws SQLException {
         TrackingEvent t = new TrackingEvent(this.trackingId);
         return t.loadFromDB();
     }
 
-    public static Package getPackageByTrackingID(int trackingId)throws SQLException {
+    /**
+     * @param trackingId
+     * @return
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
+    public static Package getPackageByTrackingID(int trackingId) throws SQLException {
         Package p = new Package(trackingId);
         return p.loadFromDB();
     }
 
-    public static ShippingOrder createPackageOrder(Package pkg, Account acct)throws SQLException {
+    /**
+     * Create an order object with a given account and package and save the order and the package to the database
+     *
+     * @param pkg  The package for the order
+     * @param acct The account object that is shipping the package
+     * @return A shipping order object containing the package and account given
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
+    public static ShippingOrder createPackageOrder(Package pkg, Account acct) throws SQLException {
         double speedMult = 0.0;
         double weightMult = 0.0;
         ArrayList<ShippingCostMultiplier> costList = ShippingCostMultiplier.getCostList();
@@ -97,8 +131,14 @@ public class Package extends DataModel {
         return s;
     }
 
+    /**
+     * Loads the matching package from the database that matches this tracking ID
+     *
+     * @return A matching package object
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
-    public Package loadFromDB()throws SQLException {
+    public Package loadFromDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.package WHERE tracking_id=%d;" + this.trackingId);
         ResultSet s = DataModel.getStatementFromQuery(query);
@@ -108,7 +148,7 @@ public class Package extends DataModel {
             p = new Package(s.getInt(1), s.getDouble(2), s.getString(3),
                     s.getString(4), s.getDouble(5), s.getInt(6),
                     s.getInt(7), s.getBoolean(8), s.getBoolean(9));
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println("\nCANNOT EXECUTE QUERY:");
             System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
         }
@@ -116,17 +156,21 @@ public class Package extends DataModel {
         return p;
     }
 
+    /**
+     * Inserts this object into the database
+     *
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
-    public void saveToDB() throws SQLException{
+    public void saveToDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = "";
 
-        if(trackingId != -1) {
+        if (trackingId != -1) {
             query = String.format("INSERT INTO public.package " +
                             "VALUES (%d, %f, \'%s\', \'%s\', %f, %d, %d, %b, %b);",
                     trackingId, weight, type, speed, value, destAddrId, srcAddrId, isHazard, isHazard);
-        }
-        else {
+        } else {
             query = String.format("INSERT INTO public.package " +
                             "VALUES (%s, %f, \'%s\', \'%s\', %f, %d, %d, %b, %b);",
                     null, weight, type, speed, value, destAddrId, srcAddrId, isHazard, isHazard);

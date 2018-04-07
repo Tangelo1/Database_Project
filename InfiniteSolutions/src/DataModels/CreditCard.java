@@ -13,6 +13,14 @@ public class CreditCard extends DataModel {
     private String expDate;
     private int cvv;
 
+    /**
+     * The Main constructor to create a Credit card object
+     * @param id Database ID
+     * @param name Name on the card
+     * @param number Credit card number
+     * @param expDate Expiration date on the credit card
+     * @param cvv CVV number on the credit card
+     */
     public CreditCard(int id, String name, String number, String expDate, int cvv) {
         this.id = id;
         this.name = name;
@@ -21,6 +29,10 @@ public class CreditCard extends DataModel {
         this.cvv = cvv;
     }
 
+    /**
+     * Constructor to create an "empty" Credit card object
+     * @param id Database ID
+     */
     public CreditCard(int id) {
         this.id = id;
         this.name = null;
@@ -29,8 +41,12 @@ public class CreditCard extends DataModel {
         this.cvv = 0;
     }
 
+    /**
+     * Loads a matching credit card from the database that matches this objects ID
+     * @return A matching credit card object
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
-    //SELECT MAX(ID) from CREDITCARD;
     public CreditCard loadFromDB() throws SQLException{
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.creditcard WHERE id=%d", this.id);
@@ -49,7 +65,10 @@ public class CreditCard extends DataModel {
         return c;
     }
 
-
+    /**
+     * Inserts this onject into the database
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public void saveToDB() throws SQLException {
         Connection conn = DBDriver.getConnection();

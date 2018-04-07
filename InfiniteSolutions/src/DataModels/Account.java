@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
+/**
+ * The representation of an account object within the database
+ */
 public class Account extends DataModel {
     private int id;
     private char type;
@@ -15,6 +17,15 @@ public class Account extends DataModel {
     private int creditCardId;
     private int billingAddressId;
 
+    /**
+     * The main constructor for an account object
+     * @param id Database ID
+     * @param type The type of account 'P' or 'C'
+     * @param name The name on the account
+     * @param phone The phone number on the account
+     * @param creditCardId The reference ID to the credit card that the account is associated with
+     * @param billingAddressId The reference ID to the address that the account is associated with
+     */
     public Account(int id, char type, String name, String phone, int creditCardId, int billingAddressId) {
         this.id = id;
         this.type = type;
@@ -24,6 +35,10 @@ public class Account extends DataModel {
         this.billingAddressId = billingAddressId;
     }
 
+    /**
+     * Constructor used to create an "empty" account object
+     * @param id Database ID
+     */
     public Account(int id) {
         this.id = id;
         this.type = ' ';
@@ -33,6 +48,11 @@ public class Account extends DataModel {
         this.billingAddressId = -1;
     }
 
+    /**
+     * Loads a matching account from the database that matches this objects ID
+     * @return A matching account object
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public Account loadFromDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
@@ -55,6 +75,10 @@ public class Account extends DataModel {
         return a;
     }
 
+    /**
+     * Inserts this onject into the database
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public void saveToDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
@@ -79,6 +103,15 @@ public class Account extends DataModel {
         }
     }
 
+    /**
+     * Creates an account with the personal type and saves it to the database
+     * @param a Address on the account
+     * @param c Credit card on the account
+     * @param name Name on the account
+     * @param phone Phone number on the account
+     * @return The account that was inserted into the database
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     public static Account createPersonal(Address a, CreditCard c, String name, String phone) throws SQLException {
         a.saveToDB();
         c.saveToDB();
@@ -89,6 +122,15 @@ public class Account extends DataModel {
         return acct;
     }
 
+    /**
+     * Creates an account with the corporate type and saves it to the database
+     * @param a Address on the account
+     * @param c Credit card on the account
+     * @param name Name on the account
+     * @param phone Phone number on the account
+     * @return The account that was inserted into the database
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     public static Account createCorporate(Address a, CreditCard c, String name, String phone)throws SQLException {
         a.saveToDB();
         c.saveToDB();
@@ -99,6 +141,12 @@ public class Account extends DataModel {
         return acct;
     }
 
+    /**
+     * Queries the database for an account matching the given ID
+     * @param id The ID to find in the database
+     * @return An account object representing the database entry
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     public static Account getAccountByNumber(int id) throws SQLException{
         Account a = new Account(id);
         return a.loadFromDB();
