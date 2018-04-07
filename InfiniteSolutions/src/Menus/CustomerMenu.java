@@ -174,6 +174,10 @@ public class CustomerMenu {
         }
 
         //TODO create the address
+        srcAddress = new Address(-1,srcStreet,srcCity,srcState,srcPostal,srcCountry);
+        //@not being recognized
+        srcAddress.saveToDB;
+
 
         return;
     }
