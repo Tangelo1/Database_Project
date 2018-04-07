@@ -14,6 +14,13 @@ public class TrackingEvent extends DataModel {
     private Timestamp time;
     private String status;
 
+    /**
+     * Constructor to create a new Tracking event
+     * @param trackingId Database ID
+     * @param locationId Location ID referencing an location in the database
+     * @param time A timestamp of the event
+     * @param status A short description of the event
+     */
     public TrackingEvent(int trackingId, int locationId,Timestamp time, String status) {
         this.trackingId = trackingId;
         this.locationId = locationId;
@@ -21,13 +28,22 @@ public class TrackingEvent extends DataModel {
         this.status = status;
     }
 
-    public TrackingEvent(int trackingId)throws SQLException {
+    /**
+     * Constructor to create an "empty" Tracking event
+     * @param trackingId Database ID
+     */
+    public TrackingEvent(int trackingId) {
         this.trackingId = trackingId;
         this.locationId = -1;
         this.time = null;
         this.status = null;
     }
 
+    /**
+     * Loads the matching package from the shipping order that matches this tracking ID or order ID
+     * @return A list of matching tracking event objects
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public ArrayList<TrackingEvent> loadFromDB() throws SQLException {
         ArrayList<TrackingEvent> history = new ArrayList<>();
@@ -64,22 +80,42 @@ public class TrackingEvent extends DataModel {
         return history;
     }
 
+    /**
+     * Queries the database to find all tracking events for a given tracking ID
+     * @param trackingId Tracking ID for a package
+     * @return A list of matching tracking event objects
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     public static ArrayList<TrackingEvent> getEventsForPackage(int trackingId) throws SQLException{
         TrackingEvent t = new TrackingEvent(trackingId);
         return t.loadFromDB();
     }
 
+    /**
+     * Gets the location object for this tracking event
+     * @return A location object
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     public Location getLocation()throws SQLException {
         Location l = new Location(locationId);
         return l.loadFromDB();
     }
 
+    /**
+     * Gets the package object for this tracking event
+     * @return A package object
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     public Package getPackage() throws SQLException{
         Package p = new Package(trackingId);
         return p.loadFromDB();
     }
 
 
+    /**
+     * Inserts this object into the database
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public void saveToDB() throws SQLException{
         Connection conn = DBDriver.getConnection();

@@ -11,9 +11,18 @@ public class ShippingOrder extends DataModel {
     private int trackingId;
     private int accountId;
     private double cost;
-    private String dateCreated;
+    private Timestamp dateCreated;
 
-    public ShippingOrder(int orderId, int trackingId, int accountId, String d, double c) {
+    //May need to chang4e dateCreated to a timestamp object
+    /**
+     * Constructor to create a new Shipping Order
+     * @param orderId Database ID
+     * @param trackingId Tracking ID referencing a related package
+     * @param accountId Account ID referencing a related account
+     * @param d Date created
+     * @param c Cost of the order
+     */
+    public ShippingOrder(int orderId, int trackingId, int accountId, Timestamp d, double c) {
         this.orderId = orderId;
         this.trackingId = trackingId;
         this.accountId = accountId;
@@ -21,6 +30,10 @@ public class ShippingOrder extends DataModel {
         this.dateCreated = d;
     }
 
+    /**
+     * Constructor to create an "empty" shipping order object
+     * @param trackingId Database ID
+     */
     public ShippingOrder(int trackingId) {
         this.orderId = -1;
         this.trackingId = trackingId;
@@ -29,6 +42,12 @@ public class ShippingOrder extends DataModel {
         this.dateCreated = null;
     }
 
+    /**
+     * Loads the matching package from the shipping order that matches this tracking ID or order ID
+     *
+     * @return A matching Shipping order object
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public ShippingOrder loadFromDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
@@ -44,7 +63,7 @@ public class ShippingOrder extends DataModel {
         ShippingOrder o = null;
         try {
             o = new ShippingOrder(s.getInt(1), s.getInt(2), s.getInt(3),
-                    s.getString(4), s.getDouble(5));
+                    s.getTimestamp(4), s.getDouble(5));
         }catch (SQLException e) {
             System.out.println("\nCANNOT EXECUTE QUERY:");
             System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
@@ -53,6 +72,10 @@ public class ShippingOrder extends DataModel {
         return o;
     }
 
+    /**
+     * Inserts this object into the database
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public void saveToDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
@@ -78,11 +101,11 @@ public class ShippingOrder extends DataModel {
     }
 
 
-    public String getDateCreated() {
+    public Timestamp getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(Timestamp dateCreated) {
         this.dateCreated = dateCreated;
     }
 
@@ -129,13 +152,20 @@ public class ShippingOrder extends DataModel {
         return p.loadFromDB();
     }
 
-    public static ArrayList<ShippingOrder> getOrdersForAccount(Account acct, String start, String end) throws SQLException{
+    /**
+     * Find all the orders for a given account between two dates
+     * @param acct The account object
+     * @param start The beginning date
+     * @param end The end date
+     * @return An array list of all the orders
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
+    public static ArrayList<ShippingOrder> getOrdersForAccount(Account acct, Timestamp start, Timestamp end) throws SQLException{
         ArrayList<ShippingOrder> orders = new ArrayList<>();
         Connection conn = DBDriver.getConnection();
 
-        //We're going to have problems with comparing dates as strings
         String query = String.format("SELECT * FROM public.shippingorder WHERE account_id=%d " +
-                "AND date>\'%s\' AND date<\'%s\';", acct.getId(), start, end);
+                "AND shippingorder.date>\'%s\' AND shippingorder.date<\'%s\';", acct.getId(), start, end);
 
 
         ResultSet s = DataModel.getStatementFromQuery(query);
@@ -145,7 +175,7 @@ public class ShippingOrder extends DataModel {
                 ShippingOrder o = null;
                 try {
                     o = new ShippingOrder(s.getInt(1), s.getInt(2), s.getInt(3),
-                            s.getString(4), s.getDouble(5));
+                            s.getTimestamp(4), s.getDouble(5));
 
                     orders.add(o);
 

@@ -15,12 +15,21 @@ import java.util.*;
 
 public class DBDriver {
 
+    /**
+     * Static connection object
+     */
     private static Connection conn;
 
     public static Connection getConnection() {
         return conn;
     }
 
+    /**
+     * Creates a connection to the database
+     * @param location File location of the database
+     * @param user Database user
+     * @param password Database password
+     */
     public static void createConnection(String location, String user, String password){
         try {
 
@@ -42,6 +51,9 @@ public class DBDriver {
         }
     }
 
+    /**
+     * Closes the database connection
+     */
     public void closeConnection(){
         try {
             conn.close();
@@ -51,6 +63,9 @@ public class DBDriver {
     }
 
 
+    /**
+     * DBDrive constructor to create the database and establish a connection
+     */
     public DBDriver() {
         String location = "./InfiniteSolutions/db/db";
         String user = "";
@@ -63,13 +78,16 @@ public class DBDriver {
         if (!f.isFile()) {
             createConnection(location, user, password);
             loadTables();
-            loadDB(conn);
+            loadDB();
         }
         else {
             createConnection(location, user, password);
         }
     }
 
+    /**
+     * Creates the table in the Database
+     */
     private void loadTables() {
         try {
             RunScript.execute(conn, new FileReader("./InfiniteSolutions/TableCreation/tables.sql"));
@@ -83,7 +101,10 @@ public class DBDriver {
     }
 
 
-    public static void loadDB(Connection conn) {
+    /**
+     * Load the CSV files into the database
+     */
+    public static void loadDB() {
 
         //ArrayList<ShippingCostMultiplier> costs = ShippingCostMultiplier.getCostList();
 
@@ -114,6 +135,12 @@ public class DBDriver {
 
     }
 
+    /**
+     *
+     * @param filename File path to the CSV
+     * @param list A list to load all the objects into
+     * @param type Type of object to load
+     */
     private static void loadCSV (String filename, ArrayList list, String type) {
 
         File file = new File(filename);
@@ -166,7 +193,7 @@ public class DBDriver {
                     case "shippingorder":
                         m = new ShippingOrder(
                                 Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]),
-                                args[3], Double.parseDouble(args[4])
+                                Timestamp.valueOf("1011-10-12 10:10:00.00"), Double.parseDouble(args[4])
                                 );
                         break;
 
@@ -193,6 +220,7 @@ public class DBDriver {
                         m.saveToDB();
                     }
                     catch (SQLException ex) {
+                        ex.printStackTrace();
                         System.out.println("Can't load CSV.");
                     }
                 }

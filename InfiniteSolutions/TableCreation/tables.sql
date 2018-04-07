@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS shippingOrder (
   order_id INT AUTO_INCREMENT PRIMARY KEY,
   tracking_id INT,
   account_id INT,
-  date VARCHAR(10),
+  date TIMESTAMP,
   cost DOUBLE,
   FOREIGN KEY (tracking_id) REFERENCES package,
   FOREIGN KEY (account_id) REFERENCES  account

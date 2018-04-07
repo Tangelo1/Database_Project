@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import Driver.DBDriver;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -21,6 +22,18 @@ public class Package extends DataModel {
     private boolean isHazard;
     private boolean isInternational;
 
+    /**
+     * Constructor to create a new package object
+     * @param trackingId Database ID
+     * @param weight Weight of the package
+     * @param type Type of package
+     * @param speed Spped of the package
+     * @param value Value of times inside the package
+     * @param destAddrId The ID that references the corresponding destination address object
+     * @param srcAddrId The ID that references the corresponding source address object
+     * @param isHazard True if contains hazardous material
+     * @param isInternational True if going outside the country
+     */
     public Package(int trackingId, double weight, String type,
                    String speed, double value, int destAddrId, int srcAddrId,
                    boolean isHazard, boolean isInternational) {
@@ -36,6 +49,10 @@ public class Package extends DataModel {
         this.isInternational = isInternational;
     }
 
+    /**
+     * Constructor to create an "empty" package object
+     * @param trackingId Database ID
+     */
     public Package(int trackingId) {
         this.trackingId = trackingId;
         this.weight = -1;
@@ -48,8 +65,8 @@ public class Package extends DataModel {
         this.isInternational = false;
     }
 
-    /**
-     * @return
+    /** Returns the destination address object
+     * @return Address object
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public Address getDestination() throws SQLException {
@@ -57,8 +74,8 @@ public class Package extends DataModel {
         return a.loadFromDB();
     }
 
-    /**
-     * @return
+    /** Returns the origin address object
+     * @return Address object
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public Address getOrigin() throws SQLException {
@@ -66,8 +83,8 @@ public class Package extends DataModel {
         return a.loadFromDB();
     }
 
-    /**
-     * @return
+    /** Queries the database and returns the shipping object related to this objects tracking ID
+     * @return A shipping order object
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public ShippingOrder getOrder() throws SQLException {
@@ -75,8 +92,8 @@ public class Package extends DataModel {
         return s.loadFromDB();
     }
 
-    /**
-     * @return
+    /** Queries the database and finds all the Manifest items associated to this package
+     * @return Array list of manifest items
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public ArrayList<ManifestItem> getManifest() throws SQLException {
@@ -84,8 +101,8 @@ public class Package extends DataModel {
         return i.loadFromDB();
     }
 
-    /**
-     * @return
+    /** Queries the database and finds all the tracking events related to this objects tracking id
+     * @return Array list of tracking events
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public ArrayList<TrackingEvent> getHistory() throws SQLException {
@@ -93,9 +110,9 @@ public class Package extends DataModel {
         return t.loadFromDB();
     }
 
-    /**
-     * @param trackingId
-     * @return
+    /** Queries the database and returns a package object from a given trakcing ID
+     * @param trackingId A package tracking ID
+     * @return Package object that matches given ID
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public static Package getPackageByTrackingID(int trackingId) throws SQLException {
@@ -123,7 +140,7 @@ public class Package extends DataModel {
         }
 
         Double cost = speedMult * weightMult * pkg.weight;
-        ShippingOrder s = new ShippingOrder(-1, pkg.trackingId, acct.getId(), new Date().toString(), cost);
+        ShippingOrder s = new ShippingOrder(-1, pkg.trackingId, acct.getId(), Timestamp.valueOf(new Date().toString()), cost);
 
         s.saveToDB();
         pkg.saveToDB();
@@ -158,7 +175,6 @@ public class Package extends DataModel {
 
     /**
      * Inserts this object into the database
-     *
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override

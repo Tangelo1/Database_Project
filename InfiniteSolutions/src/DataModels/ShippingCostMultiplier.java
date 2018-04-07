@@ -8,13 +8,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-/**
- * Created by Tyler on 3/22/2018.
- */
 public class ShippingCostMultiplier extends DataModel{
     private String multiplier;
     private double value;
 
+    /**
+     *
+     * @param multiplier Type of multiplier
+     * @param value Multiplier value
+     */
     public ShippingCostMultiplier(String multiplier, double value) {
         this.multiplier = multiplier;
         this.value = value;
@@ -41,6 +43,10 @@ public class ShippingCostMultiplier extends DataModel{
         return null;
     }
 
+    /**
+     * Inserts this object into the database
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
     @Override
     public void saveToDB() throws SQLException{
 
@@ -52,9 +58,12 @@ public class ShippingCostMultiplier extends DataModel{
         super.executeQuery(query);
     }
 
-
-
-    public static ArrayList<ShippingCostMultiplier> getCostList(){
+    /**
+     * Get all the current shipping cost multipliers in the database
+     * @return Array list of all the shipping cost multipliers
+     * @throws SQLException Throws this on the event that the query cannot be executed
+     */
+    public static ArrayList<ShippingCostMultiplier> getCostList() throws SQLException{
         ArrayList<ShippingCostMultiplier> costList = new ArrayList<>();
         Connection conn = DBDriver.getConnection();
         costList = new ArrayList<>();
@@ -62,32 +71,14 @@ public class ShippingCostMultiplier extends DataModel{
         String query =
                 "SELECT * FROM shippingcostmultipliers;";
 
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
+        Statement stmt = conn.createStatement();
+        stmt.execute(query);
 
-            ResultSet results = stmt.getResultSet();
-            while (results.next())
-                costList.add(new ShippingCostMultiplier(
-                        results.getString(1), results.getInt(2)));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        ResultSet results = stmt.getResultSet();
+        while (results.next())
+            costList.add(new ShippingCostMultiplier(
+                    results.getString(1), results.getInt(2)));
         return costList;
-    }
-
-    public void addCostMultiplier(ShippingCostMultiplier s, Connection conn) {
-        String query = String.format("INSERT INTO shippingcostmultiplier VALUES (\'%s\', %f);",
-                s.getMultiplier(), s.getValue());
-
-        try {
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
