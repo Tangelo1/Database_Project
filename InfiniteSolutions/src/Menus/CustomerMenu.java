@@ -111,11 +111,11 @@ public class CustomerMenu {
     static void shipNewPackage(){
         //Need To first build a Address, both destAddress and srcAddress
         Address srcAddress;
-        String srcStreet;
-        String srcCity;
-        String srcState;
-        String srcPostal;
-        String srcCountry;
+        String srcStreet = "";
+        String srcCity = "";
+        String srcState = "";
+        String srcPostal = "";
+        String srcCountry = "";
 
         System.out.println("Starting up steps to ship new package");
         System.out.println("Enter the street of where it is being shipped from");
@@ -172,21 +172,25 @@ public class CustomerMenu {
                 flag = 1;
             }
         }
-
+        flag = 0;
         //TODO create the address
         srcAddress = new Address(-1,srcStreet,srcCity,srcState,srcPostal,srcCountry);
         //@not being recognized
-        srcAddress.saveToDB;
+        try {
+            srcAddress.saveToDB();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         Address dscAddress;
-        String dscStreet;
-        String dscCity;
-        String dscState;
-        String dscPostal;
-        String dscCountry;
+        String dscStreet = "";
+        String dscCity = "";
+        String dscState = "";
+        String dscPostal = "";
+        String dscCountry = "";
 
         System.out.println("Enter the street of where it is being shipped to");
-        int flag = 0;
+
         while(flag == 0) {
             dscStreet = Input.readStr();
             if (dscStreet.length() > 50) {
@@ -243,8 +247,12 @@ public class CustomerMenu {
         //TODO create the address
         dscAddress = new Address(-1,dscStreet,dscCity,dscState,dscPostal,dscCountry);
         //@not being recognized
-        dscAddress.saveToDB;
-        
+        try {
+            dscAddress.saveToDB();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
 
         return;
     }
