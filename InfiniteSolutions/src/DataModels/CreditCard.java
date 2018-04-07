@@ -82,7 +82,7 @@ public class CreditCard extends DataModel {
 
         if (id == -1) {
             query = "SELECT MAX(ID) from CREDITCARD";
-            ResultSet r = super.getStatementFromQuery(query);
+            ResultSet r = getStatementFromQuery(query);
             this.id = r.getInt(1);
         }
 

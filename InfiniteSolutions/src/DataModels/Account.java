@@ -90,7 +90,7 @@ public class Account extends DataModel {
 
         if (id == -1) {
             query = "SELECT MAX(ID) from ACCOUNT";
-            ResultSet r = super.getStatementFromQuery(query);
+            ResultSet r = getStatementFromQuery(query);
             this.id = r.getInt(1);
         }
     }

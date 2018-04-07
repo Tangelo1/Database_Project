@@ -130,7 +130,7 @@ public class Address extends DataModel{
 
         if (id == -1) {
             query = "SELECT MAX(ID) from ADDRESS";
-            ResultSet r = super.getStatementFromQuery(query);
+            ResultSet r = getStatementFromQuery(query);
             this.id = r.getInt(1);
         }
     }
