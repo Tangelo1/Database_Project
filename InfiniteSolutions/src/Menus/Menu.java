@@ -2,8 +2,11 @@ package Menus;
 
 import DataModels.*;
 import Driver.DBDriver;
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 
+import java.lang.Package;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * The main entry point for the front facing user interface of the application
@@ -92,20 +95,14 @@ public class Menu {
             return;
         }
         else {
-            //Get account
-            // TODO: When we have querying set up correctly, actually load the account.
-            // The way to do this will be create a new account
-            // Then load it from the DB like this
-            //Account userAccount = new Account(id).loadFromDB();
-            //This has the same functionality as getAccountByNumber
             Account userAccount = null;
             try {
+                // Get account
                 userAccount = Account.getAccountByNumber(ID);
             } catch(SQLException e) {
                 // Don't need to do anything here.
             }
 
-            // TODO enable this check when the account can actually be queried.
             // If the user account doesn't exist, return to the previous menu.
             if (userAccount == null) {
                 System.out.println("\nError: Unknown Account Number.");
@@ -124,7 +121,7 @@ public class Menu {
      * have permission to create corporate accounts. After creation, will be logged in
      */
     private static void createAccount() {
-        Account newAccount;
+       /* Account newAccount;
 
         String name = "";
         String phone = "";
@@ -157,7 +154,10 @@ public class Menu {
             }else{
                 flag = 1;
             }
+
+
         }
+
 
         //TODO SAVE TO DB
         newAccount = new Account(NULL,'P',name,phone,NULL,NULL);
@@ -309,7 +309,111 @@ public class Menu {
 
         newAddress = new Address(NULL,street,city,state,postal,country);
 
-        //TODO NEED TO SAVE TO DB
+        */
+        System.out.println("----- Basic Account Info -----");
+
+        // Read the name string, ensuring they don't just enter nothing.
+        String accountName = Input.readStrWhileNotEmpty("Name on Account", 50);
+
+        // Get the phone number
+        String phone;
+        boolean phoneValid;
+        do {
+            phoneValid = true;
+            phone = Input.readStrWhileNotEmpty("Account Phone (10 digits)");
+            if (!Input.isPhone(phone)) {
+                phoneValid = false;
+                System.out.println("Error: \'" + phone + "\' is not a valid phone number.");
+            } else {
+                // Format the phone number into a string of 10 digits so that it can be stored in the database.
+                phone = Input.formatPhoneNumber(phone);
+            }
+        } while (!phoneValid);
+
+        // Get address information
+        System.out.println("\n----- Billing Address Info -----");
+
+        // Get address line 1, ex: 123 Main Street
+        String street = Input.readStrWhileNotEmpty("Number and Street", 50);
+
+        // Read city
+        String city = Input.readStrWhileNotEmpty("City", 50);
+
+        // Read state
+        String state = Input.readStrWhileNotEmpty("State/Province", 50);
+
+        // Read postal code
+        String postalCode = Input.readStrWhileNotEmpty("Postal Code", 8);
+
+        // Read country
+        String country = Input.readStrWhileNotEmpty("Country", 50);
+
+        // Now get details pertaining to the payment method of the account.
+        System.out.println("\n----- Payment Info -----");
+
+        String nameOnCard = Input.readStrWhileNotEmpty("Name on Card", 50);
+
+        // Validate the card number
+        String number;
+        boolean numberValid;
+        do {
+            numberValid = true;
+            number = Input.readStrWhileNotEmpty("Card Number");
+            number = number.replaceAll("\\s+", "");
+            if (number.length() > 16 || !Input.isNumeric(number)) {
+                numberValid = false;
+                System.out.println("Error: invalid credit card number.");
+            }
+        } while (!numberValid);
+
+        // Read the expiration date. Ensure that it is the proper MM/YY format.
+        String date;
+        boolean dateValid;
+        do {
+            dateValid = true;
+            date = Input.readStrWhileNotEmpty("Expiration Date (MM/YY)");
+            if (!Input.isDate(date, "MM/YY")) {
+                dateValid = false;
+                System.out.println("Error: Please enter the date in the MM/YY format.");
+            }
+        } while (!dateValid);
+
+        // Read and validate the cvv.
+        int cvv = 0;
+        boolean cvvValid;
+        do {
+            cvvValid = true;
+            String cvvStr = Input.readStrWhileNotEmpty("CVV");
+            if (cvvStr.length() > 4 || !Input.isNumeric(cvvStr)) {
+                cvvValid = false;
+                System.out.println("Error: CVV Must be a number with no more than 4 digits.");
+            }
+            else {
+                // Won't need to catch exception because it is at this point guaranteed to be an integer
+                cvv = Integer.parseInt(cvvStr);
+            }
+        } while (!cvvValid);
+
+        System.out.println("\nCreating account...\n");
+
+        boolean success = true; // Set to false if something goes wrong creating the accounts.
+
+        try {
+            Address address = new Address(-1, street, city, state, postalCode, country);
+            CreditCard card = new CreditCard(-1, nameOnCard, number, date, cvv);
+            Account account =  Account.createPersonal(address, card, accountName, phone);
+        } catch(SQLException e) {
+            System.out.println("\nAn unexpected error occurred while creating the account. The account could not be created.\n");
+            System.out.println("Technical information:\n");
+            e.printStackTrace();
+            return;
+        }
+
+        // If we get to this point the account should have been created successfully.
+        System.out.println("=========================================================");
+        System.out.println("====           Account Created Successfully          ====");
+        System.out.println("=========================================================\n");
+
 
     }
 
@@ -317,8 +421,39 @@ public class Menu {
      * Displays the package tracking menu to the user.
      */
     private static void trackPackage() {
-        //
+        boolean packageFound = true;
+        DataModels.Package p = null;
+        do {
+            String trackingID = Input.readStrWhileNotEmpty("\nEnter your tracking number:\n", 10);
 
+            try {
+                p = DataModels.Package.getPackageByTrackingID(Integer.parseInt(trackingID));
+            } catch (SQLException e) {
+                System.out.println("\nPackage not found.\n");
+                packageFound = false;
+            }
+        }while (!packageFound);
+
+        ArrayList<TrackingEvent> history = null;
+
+        try {
+            history = p.getHistory();
+        } catch (SQLException e) {
+            System.out.println("\nAn unexpected error occurred while creating the account. The account could not be created.\n");
+            System.out.println("Technical information:\n");
+            e.printStackTrace();
+            return;
+        }
+
+        for (TrackingEvent e: history) {
+            try {
+                System.out.printf("\n%s -- %s, %s", e.getTime(), e.getLocation().getName(), e.getStatus());
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        System.out.println("\n");
 
     }
 }
