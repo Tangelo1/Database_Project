@@ -3,8 +3,12 @@ package Menus;
 import DataModels.Account;
 import DataModels.Address;
 import DataModels.CreditCard;
+import Driver.DBDriver;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Menu System for the administrator.
@@ -77,8 +81,45 @@ public class AdminMenu {
      * Delivers user to the SQL console.
      */
     private static void enterSQLConsole() {
-        // TODO
-        System.out.println("SQL Console Method Stub");
+        System.out.println("===========================================================");
+        System.out.println("===  You are now in the admin SQL console. Be careful.  ===");
+        System.out.println("===  You may type 'EXIT' at any time to return to the   ===");
+        System.out.println("===  admin menu.                                        ===");
+        System.out.println("===========================================================");
+
+        // Get databse connection
+        Connection conn = DBDriver.getConnection();
+
+        // The console will read in a SQL command from the user and print results to them continuously.
+        String input = "";
+        while (true) {
+
+            // Read input and exit when necessary.
+            input = Input.readStr();
+            if (input.trim().toLowerCase().equals("exit")) break;
+
+            System.out.println();
+
+            // Actually execute the query
+            try {
+                Statement stmt = conn.createStatement();
+                stmt.execute(input);
+
+                ResultSet rs = stmt.getResultSet();
+                int cols = rs.getMetaData().getColumnCount();
+                while (rs.next()) {
+                    for (int i = 1; i <= cols; i++) {
+                        System.out.print(rs.getString(i) + "\t\t");
+                    }
+                    System.out.println();
+                }
+
+            } catch (SQLException sqle) {
+                System.out.println("Error executing query:\n" + sqle.getMessage());
+            }
+
+            System.out.println();
+        }
     }
 
     /**
@@ -191,7 +232,7 @@ public class AdminMenu {
 
         // If we get to this point the account should have been created successfully.
         System.out.println("=========================================================");
-        System.out.println("====       \uD83D\uDD25  Account Created Successfully  \uD83D\uDD25         ====");
+        System.out.println("====           Account Created Successfully          ====");
         System.out.println("=========================================================\n");
     }
 
