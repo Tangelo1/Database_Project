@@ -12,7 +12,7 @@ import java.sql.Statement;
  */
 public abstract class DataModel {
 
-    public abstract Object loadFromDB() throws SQLException;
+    public abstract void loadFromDB() throws SQLException;
 
     public abstract void saveToDB() throws SQLException;
 

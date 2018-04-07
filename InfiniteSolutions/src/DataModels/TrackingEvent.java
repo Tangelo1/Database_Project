@@ -29,31 +29,26 @@ public class TrackingEvent extends DataModel {
     }
 
     /**
-     * Constructor to create an "empty" Tracking event
-     * @param trackingId Database ID
+     * NOTE: TrackingEvent is a weak entity set of package, this it does not make sense to
+     * loadFromDB() a single instance; instead, use TrackingEvent.getEventsForPackage() to
+     * load a package.
+     * @throws SQLException never
      */
-    public TrackingEvent(int trackingId) {
-        this.trackingId = trackingId;
-        this.locationId = -1;
-        this.time = null;
-        this.status = null;
+    @Override
+    public void loadFromDB() throws SQLException {
+        // See doc string.
     }
 
     /**
-     * Loads the matching package from the shipping order that matches this tracking ID or order ID
+     * Queries the database to find all tracking events for a given tracking ID
+     * @param trackingId Tracking ID for a package
      * @return A list of matching tracking event objects
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
-    @Override
-    public ArrayList<TrackingEvent> loadFromDB() throws SQLException {
+    public static ArrayList<TrackingEvent> getEventsForPackage(int trackingId) throws SQLException{
         ArrayList<TrackingEvent> history = new ArrayList<>();
         Connection conn = DBDriver.getConnection();
-        String query = "";
-
-        if (this.locationId == -1)
-            query = String.format("SELECT * FROM public.trackingevents WHERE tracking_id=%d", this.trackingId);
-        else if (this.trackingId == -1)
-            query = String.format("SELECT * FROM public.trackingevents WHERE location_id=%d", this.locationId);
+        String query = String.format("SELECT * FROM public.trackingevents WHERE tracking_id=%d", trackingId);
 
         ResultSet s = DataModel.getStatementFromQuery(query);
 
@@ -81,24 +76,12 @@ public class TrackingEvent extends DataModel {
     }
 
     /**
-     * Queries the database to find all tracking events for a given tracking ID
-     * @param trackingId Tracking ID for a package
-     * @return A list of matching tracking event objects
-     * @throws SQLException Throws this on the event that the query cannot be executed
-     */
-    public static ArrayList<TrackingEvent> getEventsForPackage(int trackingId) throws SQLException{
-        TrackingEvent t = new TrackingEvent(trackingId);
-        return t.loadFromDB();
-    }
-
-    /**
      * Gets the location object for this tracking event
      * @return A location object
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public Location getLocation()throws SQLException {
-        Location l = new Location(locationId);
-        return l.loadFromDB();
+        return new Location(locationId);
     }
 
     /**
@@ -107,8 +90,7 @@ public class TrackingEvent extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public Package getPackage() throws SQLException{
-        Package p = new Package(trackingId);
-        return p.loadFromDB();
+        return new Package(trackingId);
     }
 
 

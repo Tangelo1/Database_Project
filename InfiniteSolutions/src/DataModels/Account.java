@@ -18,8 +18,7 @@ public class Account extends DataModel {
     private int billingAddressId;
 
     /**
-     * The main constructor for an account object
-     * @param id Database ID
+     * The main constructor for an account object.
      * @param type The type of account 'P' or 'C'
      * @param name The name on the account
      * @param phone The phone number on the account
@@ -36,16 +35,13 @@ public class Account extends DataModel {
     }
 
     /**
-     * Constructor used to create an "empty" account object
+     * Loads the object from the database with the given ID.
      * @param id Database ID
+     * @throws SQLException if an error occurs loading
      */
-    public Account(int id) {
+    public Account(int id) throws SQLException {
         this.id = id;
-        this.type = ' ';
-        this.name = null;
-        this.phone = null;
-        this.creditCardId = -1;
-        this.billingAddressId = -1;
+        loadFromDB();
     }
 
     /**
@@ -54,25 +50,24 @@ public class Account extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override
-    public Account loadFromDB() throws SQLException {
+    public void loadFromDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.account WHERE id=%d", this.id);
         ResultSet s = DataModel.getStatementFromQuery(query);
 
-        Account a = null;
         try {
-            a = new Account(s.getInt(1), s.getString(2).charAt(0), s.getString(3),
-                    s.getString(4), s.getInt(5), s.getInt(6)
-            );
+            this.id = s.getInt(1);
+            this.type = s.getString(2).charAt(0);
+            this.name = s.getString(3);
+            this.phone = s.getString(4);
+            this.creditCardId = s.getInt(5);
+            this.billingAddressId = s.getInt(6);
         } catch (SQLException e) {
             try {
                 //System.out.println("\nCANNOT EXECUTE QUERY:");
                 System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
             } catch (ArrayIndexOutOfBoundsException ex) {}
         }
-
-
-        return a;
     }
 
     /**
@@ -116,7 +111,7 @@ public class Account extends DataModel {
         a.saveToDB();
         c.saveToDB();
 
-        Account acct = new Account(-1, 'P', name, phone, c.getId(), a.getId());
+        Account acct = new Account(-1,'P', name, phone, c.getId(), a.getId());
         acct.saveToDB();
 
         return acct;
@@ -135,7 +130,7 @@ public class Account extends DataModel {
         a.saveToDB();
         c.saveToDB();
 
-        Account acct = new Account(-1, 'C', name, phone, c.getId(), a.getId());
+        Account acct = new Account(-1,'C', name, phone, c.getId(), a.getId());
         acct.saveToDB();
 
         return acct;
@@ -149,7 +144,8 @@ public class Account extends DataModel {
      */
     public static Account getAccountByNumber(int id) throws SQLException{
         Account a = new Account(id);
-        return a.loadFromDB();
+        a.loadFromDB();
+        return a;
     }
 
     public char getType() {

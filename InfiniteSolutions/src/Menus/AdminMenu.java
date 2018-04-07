@@ -3,12 +3,15 @@ package Menus;
 import DataModels.Account;
 import DataModels.Address;
 import DataModels.CreditCard;
+import DataModels.Location;
+import DataModels.Package;
 import Driver.DBDriver;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * Menu System for the administrator.
@@ -105,14 +108,20 @@ public class AdminMenu {
                 Statement stmt = conn.createStatement();
                 stmt.execute(input);
 
+                // Print results, if any.
                 ResultSet rs = stmt.getResultSet();
-                int cols = rs.getMetaData().getColumnCount();
-                while (rs.next()) {
-                    for (int i = 1; i <= cols; i++) {
-                        System.out.print(rs.getString(i) + "\t\t");
-                    }
-                    System.out.println();
-                }
+                if (rs != null)
+				{
+					int cols = rs.getMetaData().getColumnCount();
+					while (rs.next())
+					{
+						for (int i = 1; i <= cols; i++)
+						{
+							System.out.print(rs.getString(i) + "\t\t");
+						}
+						System.out.println();
+					}
+				}
 
             } catch (SQLException sqle) {
                 System.out.println("Error executing query:\n" + sqle.getMessage());
@@ -218,11 +227,8 @@ public class AdminMenu {
 
         try {
             Address address = new Address(-1, street, city, state, postalCode, country);
-            //address.saveToDB();
             CreditCard card = new CreditCard(-1, nameOnCard, number, date, cvv);
-            //card.saveToDB();
-            Account account =  Account.createCorporate(address, card, accountName, phone);
-            //account.saveToDB();
+            Account account = Account.createCorporate(address, card, accountName, phone);
         } catch(SQLException e) {
             System.out.println("\nAn unexpected error occurred while creating the account. The account could not be created.\n");
             System.out.println("Technical information:\n");
@@ -240,8 +246,55 @@ public class AdminMenu {
      * Views locations within the network.
      */
     private static void viewLocation() {
-        // TODO
-        System.out.println("View Location Method Stub");
+
+    	// Get the location ID.
+    	System.out.println("Please enter the ID of the location you'd like to monitor\nor -1 to return to the admin menu.");
+
+    	int locId = 0;
+    	boolean locValid = true;
+    	do {
+    		if (!locValid) {
+    			System.out.println("Invalid location id. Please try again.");
+			}
+
+			locValid = true;
+
+			try {
+				locId = Input.readInt();
+			} catch (Input.InputException ie) {
+				locValid = false;
+				continue;
+			}
+
+			// Return when user enters -1.
+			if (locId == -1) return;
+
+			// Attempt to find a location with the given ID, if none exists, reiterate.
+			if (!Location.exists(locId)) locValid = false;
+
+		} while (!locValid);
+
+    	// Load the location
+		Location location = null;
+		try {
+			location = new Location(locId);
+		} catch (SQLException e) {
+			System.out.println("An unexpected error occurred while accessing the location information.");
+			return;
+		}
+
+		// Get all the packages at the location.
+		ArrayList<Package> packages = null;
+		try {
+			packages = location.getPackagesWithin();
+		} catch (SQLException e) {
+			System.out.println("An unexpected error occurred while accessing the packages within the location.\n" + e.getMessage() + "\n");
+			return;
+		}
+
+		System.out.println("\nLocation " + locId + ": " + location.getName() + " is a " + location.getType());
+		System.out.println(packages.size() + " packages are contained within.");
+
     }
 
     /**

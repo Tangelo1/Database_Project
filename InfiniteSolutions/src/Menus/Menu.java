@@ -427,7 +427,7 @@ public class Menu {
             String trackingID = Input.readStrWhileNotEmpty("\nEnter your tracking number:\n", 10);
 
             try {
-                p = DataModels.Package.getPackageByTrackingID(Integer.parseInt(trackingID));
+                p = new DataModels.Package(Integer.parseInt(trackingID));
             } catch (SQLException e) {
                 System.out.println("\nPackage not found.\n");
                 packageFound = false;

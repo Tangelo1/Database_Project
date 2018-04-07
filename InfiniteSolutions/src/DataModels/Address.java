@@ -13,7 +13,6 @@ public class Address extends DataModel{
 
     /**
      * Main constructor for creating an address object
-     * @param id Database ID
      * @param street The street for the address
      * @param city The city for the address
      * @param state The state for the address
@@ -30,11 +29,13 @@ public class Address extends DataModel{
     }
 
     /**
-     * Constructor for creating an "empty" address object
+     * Loads the Address from the database with the given ID.
      * @param id Database ID
+     * @throws SQLException if the object cannot be loaded from the db
      */
-    public Address(int id) {
+    public Address(int id) throws SQLException{
         this.id = id;
+        loadFromDB();
     }
 
     public String getStreet() {
@@ -91,22 +92,22 @@ public class Address extends DataModel{
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override
-    public Address loadFromDB()throws SQLException {
+    public void loadFromDB()throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.address WHERE id=%d", this.id);
         ResultSet s = DataModel.getStatementFromQuery(query);
 
-        Address a = null;
         try {
-            a = new Address(s.getInt(1), s.getString(2), s.getString(3),
-                    s.getString(4), s.getString(5), s.getString(6)
-            );
+            this.id = s.getInt(1);
+            this.street = s.getString(2);
+            this.city = s.getString(3);
+            this.state = s.getString(4);
+            this.postal = s.getString(5);
+            this.country = s.getString(6);
         }catch (SQLException e) {
             System.out.println("\nCANNOT EXECUTE QUERY:");
             System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
         }
-
-        return a;
     }
 
     /**

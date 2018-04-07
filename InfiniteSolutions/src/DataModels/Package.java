@@ -50,19 +50,13 @@ public class Package extends DataModel {
     }
 
     /**
-     * Constructor to create an "empty" package object
+     * Constructor for loading a package from the database via its tracking id.
      * @param trackingId Database ID
+     * @throws SQLException if an error occurs while loading the object.
      */
-    public Package(int trackingId) {
+    public Package(int trackingId) throws SQLException {
         this.trackingId = trackingId;
-        this.weight = -1;
-        this.type = null;
-        this.speed = null;
-        this.value = -1;
-        this.destAddrId = -1;
-        this.srcAddrId = -1;
-        this.isHazard = false;
-        this.isInternational = false;
+        loadFromDB();
     }
 
     /** Returns the destination address object
@@ -70,8 +64,7 @@ public class Package extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public Address getDestination() throws SQLException {
-        Address a = new Address(this.destAddrId);
-        return a.loadFromDB();
+        return new Address(this.destAddrId);
     }
 
     /** Returns the origin address object
@@ -79,8 +72,7 @@ public class Package extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public Address getOrigin() throws SQLException {
-        Address a = new Address(this.srcAddrId);
-        return a.loadFromDB();
+        return new Address(this.srcAddrId);
     }
 
     /** Queries the database and returns the shipping object related to this objects tracking ID
@@ -88,8 +80,7 @@ public class Package extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public ShippingOrder getOrder() throws SQLException {
-        ShippingOrder s = new ShippingOrder(this.trackingId);
-        return s.loadFromDB();
+        return new ShippingOrder(this.trackingId);
     }
 
     /** Queries the database and finds all the Manifest items associated to this package
@@ -97,8 +88,7 @@ public class Package extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public ArrayList<ManifestItem> getManifest() throws SQLException {
-        ManifestItem i = new ManifestItem(this.trackingId);
-        return i.loadFromDB();
+        return ManifestItem.loadManifestForPackage(this.trackingId);
     }
 
     /** Queries the database and finds all the tracking events related to this objects tracking id
@@ -106,18 +96,7 @@ public class Package extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public ArrayList<TrackingEvent> getHistory() throws SQLException {
-        TrackingEvent t = new TrackingEvent(this.trackingId);
-        return t.loadFromDB();
-    }
-
-    /** Queries the database and returns a package object from a given trakcing ID
-     * @param trackingId A package tracking ID
-     * @return Package object that matches given ID
-     * @throws SQLException Throws this on the event that the query cannot be executed
-     */
-    public static Package getPackageByTrackingID(int trackingId) throws SQLException {
-        Package p = new Package(trackingId);
-        return p.loadFromDB();
+        return TrackingEvent.getEventsForPackage(this.trackingId);
     }
 
     /**
@@ -155,22 +134,25 @@ public class Package extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override
-    public Package loadFromDB() throws SQLException {
+    public void loadFromDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
-        String query = String.format("SELECT * FROM public.package WHERE tracking_id=%d;" + this.trackingId);
+        String query = String.format("SELECT * FROM public.package WHERE tracking_id=%d;", this.trackingId);
         ResultSet s = DataModel.getStatementFromQuery(query);
 
-        Package p = null;
         try {
-            p = new Package(s.getInt(1), s.getDouble(2), s.getString(3),
-                    s.getString(4), s.getDouble(5), s.getInt(6),
-                    s.getInt(7), s.getBoolean(8), s.getBoolean(9));
+            this.trackingId = s.getInt(1);
+            this.weight = s.getDouble(2);
+            this.type = s.getString(3);
+            this.speed = s.getString(4);
+            this.value = s.getDouble(5);
+            this.destAddrId = s.getInt(6);
+            this.srcAddrId = s.getInt(7);
+            this.isHazard = s.getBoolean(8);
+            this.isInternational = s.getBoolean(9);
         } catch (SQLException e) {
             System.out.println("\nCANNOT EXECUTE QUERY:");
             System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
         }
-
-        return p;
     }
 
     /**

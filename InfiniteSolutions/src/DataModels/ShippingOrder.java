@@ -34,12 +34,9 @@ public class ShippingOrder extends DataModel {
      * Constructor to create an "empty" shipping order object
      * @param trackingId Database ID
      */
-    public ShippingOrder(int trackingId) {
-        this.orderId = -1;
+    public ShippingOrder(int trackingId) throws SQLException {
         this.trackingId = trackingId;
-        this.accountId = -1;
-        this.cost = 0;
-        this.dateCreated = null;
+        loadFromDB();
     }
 
     /**
@@ -49,7 +46,7 @@ public class ShippingOrder extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override
-    public ShippingOrder loadFromDB() throws SQLException {
+    public void loadFromDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
         String query = "";
 
@@ -62,14 +59,17 @@ public class ShippingOrder extends DataModel {
 
         ShippingOrder o = null;
         try {
+            this.orderId = s.getInt(1);
+            this.trackingId = s.getInt(2);
+            this.accountId = s.getInt(3);
+            this.dateCreated = s.getTimestamp(4);
+            this.cost = s.getDouble(5);
             o = new ShippingOrder(s.getInt(1), s.getInt(2), s.getInt(3),
                     s.getTimestamp(4), s.getDouble(5));
         }catch (SQLException e) {
             System.out.println("\nCANNOT EXECUTE QUERY:");
             System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
         }
-
-        return o;
     }
 
     /**
@@ -143,13 +143,11 @@ public class ShippingOrder extends DataModel {
     }
 
     public Account getAccount() throws SQLException{
-        Account a = new Account(this.accountId);
-        return a.loadFromDB();
+        return new Account(this.accountId);
     }
 
     public Package getPackage() throws SQLException {
-        Package p = new Package(this.trackingId);
-        return p.loadFromDB();
+        return new Package(this.trackingId);
     }
 
     /**

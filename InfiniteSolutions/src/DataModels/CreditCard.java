@@ -15,7 +15,6 @@ public class CreditCard extends DataModel {
 
     /**
      * The Main constructor to create a Credit card object
-     * @param id Database ID
      * @param name Name on the card
      * @param number Credit card number
      * @param expDate Expiration date on the credit card
@@ -30,15 +29,13 @@ public class CreditCard extends DataModel {
     }
 
     /**
-     * Constructor to create an "empty" Credit card object
+     * Loads a credit card object from the database.
      * @param id Database ID
+     * @throws SQLException if an error occurs while loading from the database
      */
-    public CreditCard(int id) {
+    public CreditCard(int id) throws SQLException {
         this.id = id;
-        this.name = null;
-        this.number = null;
-        this.expDate = null;
-        this.cvv = 0;
+        loadFromDB();
     }
 
     /**
@@ -47,22 +44,21 @@ public class CreditCard extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override
-    public CreditCard loadFromDB() throws SQLException{
+    public void loadFromDB() throws SQLException{
         Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.creditcard WHERE id=%d", this.id);
         ResultSet s = DataModel.getStatementFromQuery(query);
 
-        CreditCard c = null;
         try {
-            c = new CreditCard(s.getInt(1), s.getString(2), s.getString(3),
-                    s.getString(4), s.getInt(5)
-            );
+            this.id = s.getInt(1);
+            this.name = s.getString(2);
+            this.number = s.getString(3);
+            this.expDate = s.getString(4);
+            this.cvv = s.getInt(5);
         }catch (SQLException e) {
             System.out.println("\nCANNOT EXECUTE QUERY:");
             System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
         }
-
-        return c;
     }
 
     /**

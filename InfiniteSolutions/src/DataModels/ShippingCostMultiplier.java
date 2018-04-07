@@ -39,8 +39,8 @@ public class ShippingCostMultiplier extends DataModel{
     }
 
     @Override
-    public Object loadFromDB() {
-        return null;
+    public void loadFromDB() {
+
     }
 
     /**

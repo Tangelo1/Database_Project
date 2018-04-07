@@ -5,6 +5,7 @@ import Driver.DBDriver;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class Location extends DataModel {
@@ -15,24 +16,23 @@ public class Location extends DataModel {
 
     /**
      * Main constructor for creating a Location object
-     * @param locationId Database ID
      * @param name The name of the location
      * @param type The type of the location
      */
-    public Location(int locationId, String name, String type) {
-        this.locationId = locationId;
+    public Location(int id, String name, String type) {
+        this.locationId = id;
         this.name = name;
         this.type = type;
     }
 
     /**
-     * Constructor for creating an "empty" location object
+     * Loads the given location from the database.
      * @param locationId Database ID
+     * @throws SQLException if an error occurs loading the object from the database
      */
-    public Location(int locationId) {
+    public Location(int locationId) throws SQLException {
         this.locationId = locationId;
-        this.name = null;
-        this.type = null;
+        loadFromDB();
     }
 
     /**
@@ -41,22 +41,20 @@ public class Location extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override
-    public Location loadFromDB() throws SQLException {
+    public void loadFromDB() throws SQLException {
         Connection conn = DBDriver.getConnection();
 
         String query = String.format("SELECT * FROM public.location WHERE location_id=%d", this.locationId);
         ResultSet s = DataModel.getStatementFromQuery(query);
 
-        Location l = null;
         try {
-            l = new Location(s.getInt(1), s.getString(2), s.getString(4));
-
+            this.locationId = s.getInt(1);
+            this.name = s.getString(2);
+            this.type = s.getString(3);
         }catch (SQLException e) {
             System.out.println("\nCANNOT EXECUTE QUERY:");
-            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+            System.out.println("\t\t" + e.getMessage());
         }
-
-        return l;
     }
 
     /**
@@ -95,10 +93,13 @@ public class Location extends DataModel {
      */
     public ArrayList<Package> getPackagesWithin() throws SQLException {
         Connection conn = DBDriver.getConnection();
-        String query = String.format("SELECT (PACKAGE.TRACKING_ID, WEIGHT, TYPE, SPEED, PACKAGE.VALUE, " +
-                "DESTINATION_ADDR_ID, SOURCE_ADDR_ID, ISHAZARD, ISINTERNATIONAL) FROM PACKAGE " +
-                "INNER JOIN TRACKINGEVENTS ON PACKAGE.TRACKING_ID = TRACKINGEVENTS.TRACKING_ID " +
-                "WHERE LOCATION_ID=%d;", this.locationId);
+//        String query = String.format("SELECT (PACKAGE.TRACKING_ID, WEIGHT, TYPE, SPEED, PACKAGE.VALUE, " +
+//                "DESTINATION_ADDR_ID, SOURCE_ADDR_ID, ISHAZARD, ISINTERNATIONAL) FROM PACKAGE " +
+//                "INNER JOIN TRACKINGEVENTS ON PACKAGE.TRACKING_ID = TRACKINGEVENTS.TRACKING_ID " +
+//                "WHERE LOCATION_ID=%d;", this.locationId);
+        String query = String.format("WITH lastevents AS (SELECT location_id, trackingevents.tracking_id, MAX(date) FROM trackingevents GROUP BY trackingevents.tracking_id, trackingevents.location_id) " +
+                "SELECT package.tracking_id FROM (package INNER JOIN lastevents ON package.tracking_id = lastevents.tracking_id) " +
+                "WHERE location_id=%d", this.locationId);
 
         ResultSet s = DataModel.getStatementFromQuery(query);
         ArrayList<Package> packages = new ArrayList<>();
@@ -106,21 +107,52 @@ public class Location extends DataModel {
             while (s.next()) {
                 Package p = null;
                 try {
-                    p = new Package(s.getInt(1), s.getDouble(2), s.getString(3),
-                            s.getString(4), s.getDouble(5), s.getInt(6),
-                            s.getInt(7), s.getBoolean(8), s.getBoolean(9));
-
+//                    p = new Package(s.getInt(1), s.getDouble(2), s.getString(3),
+//                            s.getString(4), s.getDouble(5), s.getInt(6),
+//                            s.getInt(7), s.getBoolean(8), s.getBoolean(9));
+                    p = new Package(s.getInt(1));
+                    p.loadFromDB();
                     packages.add(p);
 
                 } catch (SQLException e) {
                     System.out.println("\nCANNOT EXECUTE QUERY:");
-                    System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+                    System.out.println("\t\t" + e.getMessage());
                 }
 
             }
         } catch (SQLException ex) {}
 
         return packages;
+    }
+
+    /**
+     * Given a location id, determines if a location exists.
+     * @param id The id of the location to check the existence of.
+     * @return true if the location exists, or false if the location does not exist or
+     * an error occurs while running the query.
+     */
+    public static boolean exists(int id) {
+        Connection conn = DBDriver.getConnection();
+
+        try
+        {
+            Statement s = conn.createStatement();
+            s.execute(String.format("SELECT * FROM location WHERE location_id=%d", id));
+            ResultSet rs = s.getResultSet();
+
+            int rows = 0;
+            if (rs.last()) {
+                rows = rs.getRow();
+            }
+
+            // There's more than one row with the given ID, so the location exists.
+            if (rows > 0) return true;
+
+        } catch (SQLException e) {
+            return false;
+        }
+
+        return false;
     }
 
     public String getName() {
