@@ -52,13 +52,12 @@ public class ManifestItem extends DataModel {
 
     /**
      * Inserts this object into the database
+     *
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override
     public void saveToDB() throws SQLException {
-        Connection conn = DBDriver.getConnection();
-
-        String query = "";
+        String query;
         if (trackingId != -1)
             query = String.format("INSERT INTO public.manifestitem " +
                             "VALUES (%d, \'%s\');",
@@ -80,8 +79,7 @@ public class ManifestItem extends DataModel {
      */
     public static ArrayList<ManifestItem> loadManifestForPackage(int trackingId) throws SQLException {
         ArrayList<ManifestItem> items = new ArrayList<>();
-        Connection conn = DBDriver.getConnection();
-        String query = "";
+        String query;
 
         query = String.format("SELECT * FROM public.manifestitem WHERE tracking_id=%d", trackingId);
 

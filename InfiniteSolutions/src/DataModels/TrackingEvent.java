@@ -29,13 +29,12 @@ public class TrackingEvent extends DataModel {
     }
 
     /**
-     * NOTE: TrackingEvent is a weak entity set of package, this it does not make sense to
+     * NOTE: TrackingEvent is a weak entity set of package, thus it does not make sense to
      * loadFromDB() a single instance; instead, use TrackingEvent.getEventsForPackage() to
      * load a package.
-     * @throws SQLException never
      */
     @Override
-    public void loadFromDB() throws SQLException {
+    public void loadFromDB() {
         // See doc string.
     }
 
@@ -47,7 +46,6 @@ public class TrackingEvent extends DataModel {
      */
     public static ArrayList<TrackingEvent> getEventsForPackage(int trackingId) throws SQLException{
         ArrayList<TrackingEvent> history = new ArrayList<>();
-        Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.trackingevents WHERE tracking_id=%d", trackingId);
 
         ResultSet s = DataModel.getStatementFromQuery(query);
@@ -96,12 +94,12 @@ public class TrackingEvent extends DataModel {
 
     /**
      * Inserts this object into the database
+     *
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override
     public void saveToDB() throws SQLException{
-        Connection conn = DBDriver.getConnection();
-        String query = "";
+        String query;
         if(trackingId != -1) {
             query = String.format("INSERT INTO public.trackingevents " +
                             "VALUES (%d, %d, \'%s\', \'%s\');",

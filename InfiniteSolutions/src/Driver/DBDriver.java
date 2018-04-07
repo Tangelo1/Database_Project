@@ -105,43 +105,31 @@ public class DBDriver {
      * Load the CSV files into the database
      */
     public static void loadDB() {
+        loadCSV("./InfiniteSolutions/db/data/Address.csv", "address");
 
-        //ArrayList<ShippingCostMultiplier> costs = ShippingCostMultiplier.getCostList();
+        loadCSV("./InfiniteSolutions/db/data/CreditCard.csv","creditcard");
 
-        ArrayList<Address> address = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/Address.csv", address, "address");
+        loadCSV("./InfiniteSolutions/db/data/Location.csv","location");
 
-        ArrayList<CreditCard> creditCards = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/CreditCard.csv", creditCards, "creditcard");
+        loadCSV("./InfiniteSolutions/db/data/Account.csv","account");
 
-        ArrayList<Location> locations = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/Location.csv", locations, "location");
+        loadCSV("./InfiniteSolutions/db/data/Package.csv","package");
 
-        ArrayList<Account> account = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/Account.csv", account, "account");
+        loadCSV("./InfiniteSolutions/db/data/ManifestItem.csv", "manifestitem");
 
-        ArrayList<Package> packages = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/Package.csv", packages, "package");
+        loadCSV("./InfiniteSolutions/db/data/ShippingOrder.csv", "shippingorder");
 
-        ArrayList<ManifestItem> manifestItems = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/ManifestItem.csv", manifestItems, "manifestitem");
-
-        ArrayList<ShippingOrder> shippingOrders = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/ShippingOrder.csv", shippingOrders, "shippingorder");
-
-        ArrayList<TrackingEvent> trackingEvents = new ArrayList<>();
-        loadCSV("./InfiniteSolutions/db/data/TrackingEvents.csv", trackingEvents, "trackingevents");
-
+        loadCSV("./InfiniteSolutions/db/data/TrackingEvents.csv", "trackingevents");
 
     }
 
     /**
+     * Method that does the actual work of Loading the CSVs
      *
      * @param filename File path to the CSV
-     * @param list A list to load all the objects into
      * @param type Type of object to load
      */
-    private static void loadCSV (String filename, ArrayList list, String type) {
+    private static void loadCSV (String filename, String type) {
 
         File file = new File(filename);
         BufferedReader reader = null;
@@ -153,8 +141,6 @@ public class DBDriver {
             reader.readLine();
 
             while ((line = reader.readLine()) != null) {
-
-                String query = "";
                 DataModel m = null;
 
                 String[] args = line.split(",");
@@ -193,7 +179,7 @@ public class DBDriver {
                     case "shippingorder":
                         m = new ShippingOrder(
                                 Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]),
-                                Timestamp.valueOf("1011-10-12 10:10:00.00"), Double.parseDouble(args[4])
+                                Timestamp.valueOf(args[3]), Double.parseDouble(args[4])
                                 );
                         break;
 
@@ -215,16 +201,14 @@ public class DBDriver {
                 }
 
                 if(m != null) {
-                    list.add(m);
                     try {
                         m.saveToDB();
                     }
                     catch (SQLException ex) {
                         ex.printStackTrace();
-                        System.out.println("Can't load CSV.");
+                        System.out.println("Can't load CSV " + type);
                     }
                 }
-
             }
         } catch (FileNotFoundException e) {
             System.out.println("Cannot find: " + filename);
@@ -235,7 +219,9 @@ public class DBDriver {
                 if (reader != null) {
                     reader.close();
                 }
-            } catch (IOException e) {}
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

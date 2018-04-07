@@ -40,12 +40,11 @@ public class CreditCard extends DataModel {
 
     /**
      * Loads a matching credit card from the database that matches this objects ID
-     * @return A matching credit card object
+     *
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override
     public void loadFromDB() throws SQLException{
-        Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.creditcard WHERE id=%d", this.id);
         ResultSet s = DataModel.getStatementFromQuery(query);
 

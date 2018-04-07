@@ -42,13 +42,11 @@ public class ShippingOrder extends DataModel {
     /**
      * Loads the matching package from the shipping order that matches this tracking ID or order ID
      *
-     * @return A matching Shipping order object
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override
     public void loadFromDB() throws SQLException {
-        Connection conn = DBDriver.getConnection();
-        String query = "";
+        String query;
 
         if(this.orderId == -1)
             query = String.format("SELECT * FROM public.shippingorder WHERE tracking_id=%d", this.trackingId);
@@ -78,8 +76,7 @@ public class ShippingOrder extends DataModel {
      */
     @Override
     public void saveToDB() throws SQLException {
-        Connection conn = DBDriver.getConnection();
-        String query = "";
+        String query;
         if (orderId != -1) {
             query = String.format("INSERT INTO public.shippingorder " +
                             "VALUES (%d, %d, %d, \'%s\', %f);",
@@ -160,7 +157,6 @@ public class ShippingOrder extends DataModel {
      */
     public static ArrayList<ShippingOrder> getOrdersForAccount(Account acct, Timestamp start, Timestamp end) throws SQLException{
         ArrayList<ShippingOrder> orders = new ArrayList<>();
-        Connection conn = DBDriver.getConnection();
 
         String query = String.format("SELECT * FROM public.shippingorder WHERE account_id=%d " +
                 "AND shippingorder.date>\'%s\' AND shippingorder.date<\'%s\';", acct.getId(), start, end);

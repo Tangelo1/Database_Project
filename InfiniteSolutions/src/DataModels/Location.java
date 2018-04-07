@@ -1,11 +1,7 @@
 package DataModels;
 
-import Driver.DBDriver;
-
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 public class Location extends DataModel {
@@ -42,8 +38,6 @@ public class Location extends DataModel {
      */
     @Override
     public void loadFromDB() throws SQLException {
-        Connection conn = DBDriver.getConnection();
-
         String query = String.format("SELECT * FROM public.location WHERE location_id=%d", this.locationId);
         ResultSet s = DataModel.getStatementFromQuery(query);
 
@@ -63,9 +57,7 @@ public class Location extends DataModel {
      */
     @Override
     public void saveToDB() throws SQLException {
-        Connection conn = DBDriver.getConnection();
-
-        String query = "";
+        String query;
         if(locationId != -1) {
             query = String.format("INSERT INTO public.location " +
                             "VALUES (%d, \'%s\', \'%s\');",
@@ -81,7 +73,7 @@ public class Location extends DataModel {
 
         if (locationId == -1) {
             query = "SELECT MAX(ID) from LOCATION";
-            ResultSet r = super.getStatementFromQuery(query);
+            ResultSet r = getStatementFromQuery(query);
             this.locationId = r.getInt(1);
         }
     }
@@ -92,7 +84,6 @@ public class Location extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public ArrayList<Package> getPackagesWithin() throws SQLException {
-        Connection conn = DBDriver.getConnection();
 //        String query = String.format("SELECT (PACKAGE.TRACKING_ID, WEIGHT, TYPE, SPEED, PACKAGE.VALUE, " +
 //                "DESTINATION_ADDR_ID, SOURCE_ADDR_ID, ISHAZARD, ISINTERNATIONAL) FROM PACKAGE " +
 //                "INNER JOIN TRACKINGEVENTS ON PACKAGE.TRACKING_ID = TRACKINGEVENTS.TRACKING_ID " +
@@ -105,7 +96,7 @@ public class Location extends DataModel {
         ArrayList<Package> packages = new ArrayList<>();
         try {
             while (s.next()) {
-                Package p = null;
+                Package p;
                 try {
 //                    p = new Package(s.getInt(1), s.getDouble(2), s.getString(3),
 //                            s.getString(4), s.getDouble(5), s.getInt(6),
@@ -132,13 +123,10 @@ public class Location extends DataModel {
      * an error occurs while running the query.
      */
     public static boolean exists(int id) {
-        Connection conn = DBDriver.getConnection();
-
-        try
-        {
-            Statement s = conn.createStatement();
-            s.execute(String.format("SELECT * FROM location WHERE location_id=%d", id));
-            ResultSet rs = s.getResultSet();
+        String query = String.format("SELECT * FROM location WHERE location_id=%d", id);
+        try {
+            //From super
+            ResultSet rs = getStatementFromQuery(query);
 
             int rows = 0;
             if (rs.last()) {

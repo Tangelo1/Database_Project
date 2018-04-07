@@ -46,12 +46,11 @@ public class Account extends DataModel {
 
     /**
      * Loads a matching account from the database that matches this objects ID
-     * @return A matching account object
+     *
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override
     public void loadFromDB() throws SQLException {
-        Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.account WHERE id=%d", this.id);
         ResultSet s = DataModel.getStatementFromQuery(query);
 
@@ -76,9 +75,7 @@ public class Account extends DataModel {
      */
     @Override
     public void saveToDB() throws SQLException {
-        Connection conn = DBDriver.getConnection();
-
-        String query = "";
+        String query;
         if (id != -1) {
             query = String.format("INSERT INTO public.account " +
                             "VALUES (%d, \'%s\', \'%s\', \'%s\', %d, %d);",

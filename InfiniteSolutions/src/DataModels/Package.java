@@ -130,12 +130,10 @@ public class Package extends DataModel {
     /**
      * Loads the matching package from the database that matches this tracking ID
      *
-     * @return A matching package object
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     @Override
     public void loadFromDB() throws SQLException {
-        Connection conn = DBDriver.getConnection();
         String query = String.format("SELECT * FROM public.package WHERE tracking_id=%d;", this.trackingId);
         ResultSet s = DataModel.getStatementFromQuery(query);
 
@@ -161,8 +159,7 @@ public class Package extends DataModel {
      */
     @Override
     public void saveToDB() throws SQLException {
-        Connection conn = DBDriver.getConnection();
-        String query = "";
+        String query;
 
         if (trackingId != -1) {
             query = String.format("INSERT INTO public.package " +
@@ -178,7 +175,7 @@ public class Package extends DataModel {
 
         if (trackingId == -1) {
             query = "SELECT MAX(ID) from PACKAGE";
-            ResultSet r = super.getStatementFromQuery(query);
+            ResultSet r = getStatementFromQuery(query);
             this.trackingId = r.getInt(1);
         }
     }
