@@ -178,6 +178,73 @@ public class CustomerMenu {
         //@not being recognized
         srcAddress.saveToDB;
 
+        Address dscAddress;
+        String dscStreet;
+        String dscCity;
+        String dscState;
+        String dscPostal;
+        String dscCountry;
+
+        System.out.println("Enter the street of where it is being shipped to");
+        int flag = 0;
+        while(flag == 0) {
+            dscStreet = Input.readStr();
+            if (dscStreet.length() > 50) {
+                System.out.println("Invalid street, please try again");
+            } else {
+                flag = 1;
+            }
+        }
+
+        System.out.println("Enter the city of where it is being shipped to");
+        flag = 0;
+        while(flag == 0) {
+            dscCity = Input.readStr();
+            if (dscCity.length() > 50) {
+                System.out.println("Invalid city, please try again");
+            } else {
+                flag = 1;
+            }
+        }
+
+        System.out.println("Enter the state of where it is being shipped to");
+        flag = 0;
+        while(flag == 0) {
+            dscState = Input.readStr();
+            if (dscState.length() > 50) {
+                System.out.println("Invalid state, please try again");
+            } else {
+                flag = 1;
+            }
+        }
+
+        System.out.println("Enter the postal of where it is being shipped to");
+        flag = 0;
+        while(flag == 0) {
+            dscPostal = Input.readStr();
+            if (dscPostal.length() != 8) {
+                System.out.println("Invalid postal, please try again");
+            } else {
+                flag = 1;
+            }
+        }
+
+        System.out.println("Enter the country of where it is being shipped to");
+        flag = 0;
+        while(flag == 0) {
+            dscCountry = Input.readStr();
+            if (dscCountry.length() > 50) {
+                System.out.println("Invalid country, please try again");
+            } else {
+                flag = 1;
+            }
+        }
+
+        //TODO create the address
+        dscAddress = new Address(-1,dscStreet,dscCity,dscState,dscPostal,dscCountry);
+        //@not being recognized
+        dscAddress.saveToDB;
+        
 
         return;
     }
