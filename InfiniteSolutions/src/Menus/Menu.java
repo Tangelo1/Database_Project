@@ -421,14 +421,15 @@ public class Menu {
      * Displays the package tracking menu to the user.
      */
     private static void trackPackage() {
-        boolean packageFound = true;
+        boolean packageFound;
         DataModels.Package p = null;
         do {
             String trackingID = Input.readStrWhileNotEmpty("\nEnter your tracking number:\n", 10);
 
             try {
                 p = new DataModels.Package(Integer.parseInt(trackingID));
-            } catch (SQLException e) {
+                packageFound = true;
+            } catch (Exception e) {
                 System.out.println("\nPackage not found.\n");
                 packageFound = false;
             }
