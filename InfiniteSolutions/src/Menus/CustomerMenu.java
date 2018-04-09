@@ -2,15 +2,9 @@ package Menus;
 
 import DataModels.Account;
 import DataModels.Address;
-import DataModels.TrackingEvent;
 
 import java.sql.SQLException;
-import java.util.Collections;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-
-import static DataModels.TrackingEvent.*;
 
 public class CustomerMenu {
 
@@ -66,7 +60,7 @@ public class CustomerMenu {
     }
 
     static void trackPackage(){
-        System.out.println("Please enter your tracking ID");
+        /*System.out.println("Please enter your tracking ID");
         String trackingID = Input.readStr();
         ArrayList<TrackingEvent> packages = null;
         int flag = 0;
@@ -106,6 +100,10 @@ public class CustomerMenu {
         }
 
         return;
+        */
+
+        //Already implemented in menu no need to duplicate code
+        Menu.trackPackage();
     }
 
     static void shipNewPackage(){

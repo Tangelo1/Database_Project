@@ -63,8 +63,7 @@ public class TrackingEvent extends DataModel {
                     history.add(t);
 
                 } catch (SQLException e) {
-                    System.out.println("\nCANNOT EXECUTE QUERY:");
-                    System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+
                 }
 
             }
@@ -81,6 +80,7 @@ public class TrackingEvent extends DataModel {
     public Location getLocation()throws SQLException {
         return new Location(locationId);
     }
+
 
     /**
      * Gets the package object for this tracking event

@@ -148,8 +148,6 @@ public class Package extends DataModel {
             this.isHazard = s.getBoolean(8);
             this.isInternational = s.getBoolean(9);
         } catch (SQLException e) {
-            System.out.println("\nCANNOT EXECUTE QUERY:");
-            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
         }
     }
 
@@ -179,6 +177,7 @@ public class Package extends DataModel {
             this.trackingId = r.getInt(1);
         }
     }
+
 
 
     public double getWeight() {

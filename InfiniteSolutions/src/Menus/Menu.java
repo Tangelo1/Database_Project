@@ -79,8 +79,8 @@ public class Menu {
      */
     private static void login() {
         int ID = 0;
-        System.out.print("Please enter your account ID, otherwise -1 to go back to the menu " +
-                "or -2 to go to the admin menu\n");
+        System.out.print("Please enter your account ID, otherwise -1 to go back to the menu, " +
+                "-2 to go to the admin menu, or -3 to go to the warehouse menu.\n");
         try {
             ID = Input.readInt();
         } catch (Input.InputException e) {
@@ -90,6 +90,9 @@ public class Menu {
         // Log into admin menu
         if (ID == -2) {
             AdminMenu.enterMainAdminMenu();
+        }
+        else if (ID == -3){
+            WarehouseMenu.enterMainWarehouseMenu();
         }
         else if (ID == -1) {
             return;
@@ -420,7 +423,7 @@ public class Menu {
     /**
      * Displays the package tracking menu to the user.
      */
-    private static void trackPackage() {
+    public static void trackPackage() {
         boolean packageFound;
         DataModels.Package p = null;
         do {
