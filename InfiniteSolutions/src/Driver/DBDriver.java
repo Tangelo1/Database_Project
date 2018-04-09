@@ -184,16 +184,7 @@ public class DBDriver {
                         break;
 
                     case "trackingevents":
-                        DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy hh:mm");
-                        java.util.Date parsedDate = null;
-                        try {
-                            parsedDate = dateFormat.parse(args[2]);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                        Timestamp ts = new java.sql.Timestamp(parsedDate.getTime());
-                        m = new TrackingEvent(Integer.parseInt(args[0]), Integer.parseInt(args[1]), ts, args[3]);
+                        m = new TrackingEvent(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Timestamp.valueOf(args[2]), args[3]);
                         break;
 
                     default:
