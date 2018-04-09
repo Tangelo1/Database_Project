@@ -105,4 +105,8 @@ public class ManifestItem extends DataModel {
 
         return items;
     }
+
+    public String getName() {
+        return this.name;
+    }
 }

@@ -117,12 +117,17 @@ public class Location extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public ArrayList<Package> getPackagesWithin() throws SQLException {
-        String query = String.format("SELECT PACKAGE.TRACKING_ID FROM PACKAGE " +
+        // TODO Rewrite such that this filters by packages that are currently in the location, not all packages that have
+        // at one point flown through this location.
+        /*String query = String.format("SELECT PACKAGE.TRACKING_ID FROM PACKAGE " +
                 "INNER JOIN TRACKINGEVENTS ON PACKAGE.TRACKING_ID = TRACKINGEVENTS.TRACKING_ID " +
-                "WHERE LOCATION_ID=%d;", this.locationId);
-        //String query = String.format("WITH lastevents AS (SELECT location_id, trackingevents.tracking_id, MAX(date) FROM trackingevents GROUP BY trackingevents.tracking_id, trackingevents.location_id) " +
-        //        "SELECT package.tracking_id FROM (package INNER JOIN lastevents ON package.tracking_id = lastevents.tracking_id) " +
-        //        "WHERE location_id=%d", this.locationId);
+                "WHERE LOCATION_ID=%d;", this.locationId);*/
+
+		String query = String.format("WITH lastevents AS (SELECT tracking_id, date, max(date) FROM TRACKINGEVENTS group by TRACKING_ID, DATE)" +
+				"SELECT lastevents.TRACKING_ID FROM (lastevents INNER JOIN trackingevents ON lastevents.date = trackingevents.date) WHERE TRACKINGEVENTS.LOCATION_ID=%d", this.locationId);
+        /*String query = String.format("WITH lastevents AS (SELECT location_id, trackingevents.tracking_id, MAX(date) FROM trackingevents GROUP BY trackingevents.tracking_id, trackingevents.location_id) " +
+                "SELECT package.tracking_id FROM (package INNER JOIN lastevents ON package.tracking_id = lastevents.tracking_id) " +
+                "WHERE location_id=%d", this.locationId);*/
 
         ResultSet s = DataModel.getStatementFromQuery(query);
         ArrayList<Package> packages = new ArrayList<>();
@@ -130,12 +135,13 @@ public class Location extends DataModel {
             while (s.next()) {
                 Package p;
                 try {
-//                    p = new Package(s.getInt(1), s.getDouble(2), s.getString(3),
-//                            s.getString(4), s.getDouble(5), s.getInt(6),
-//                            s.getInt(7), s.getBoolean(8), s.getBoolean(9));
+                    System.out.println("\t\tResult set contained a package with ID " + s.getInt(1));
                     p = new Package(s.getInt(1));
-                    p.loadFromDB();
                     packages.add(p);
+
+                    for(TrackingEvent te : p.getHistory()) {
+                        System.out.println("\t\t\t" + te.getTime() + ";" + te.getLocation().getName() + "; " + te.getStatus());
+                    }
 
                 } catch (SQLException e) {
                     System.out.println("\nCANNOT EXECUTE QUERY:");

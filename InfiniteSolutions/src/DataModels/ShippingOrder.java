@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class ShippingOrder extends DataModel {
 
-    private int orderId;
-    private int trackingId;
+    private int orderId = -1;
+    private int trackingId = -1;
     private int accountId;
     private double cost;
     private Timestamp dateCreated;
@@ -48,25 +48,22 @@ public class ShippingOrder extends DataModel {
     public void loadFromDB() throws SQLException {
         String query;
 
-        if(this.orderId == -1)
+        if(this.trackingId != -1)
             query = String.format("SELECT * FROM public.shippingorder WHERE tracking_id=%d", this.trackingId);
         else {
             query = String.format("SELECT * FROM public.shippingorder WHERE order_id=%d", this.orderId);
         }
         ResultSet s = DataModel.getStatementFromQuery(query);
 
-        ShippingOrder o = null;
         try {
             this.orderId = s.getInt(1);
             this.trackingId = s.getInt(2);
             this.accountId = s.getInt(3);
             this.dateCreated = s.getTimestamp(4);
             this.cost = s.getDouble(5);
-            o = new ShippingOrder(s.getInt(1), s.getInt(2), s.getInt(3),
-                    s.getTimestamp(4), s.getDouble(5));
         }catch (SQLException e) {
             System.out.println("\nCANNOT EXECUTE QUERY:");
-            System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+            System.out.println("\t\t" + e.getMessage());
         }
     }
 

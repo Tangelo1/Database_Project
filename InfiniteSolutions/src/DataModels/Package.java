@@ -178,7 +178,34 @@ public class Package extends DataModel {
         }
     }
 
+	/**
+	 * Given a tracking id, determines if a package exists.
+	 * @param id The id of the package to check the existence of.
+	 * @return true if the package exists, or false if the package does not exist or
+	 * an error occurs while running the query.
+	 */
+	public static boolean exists(int id) {
+		String query = String.format("SELECT * FROM package WHERE tracking_id=%d", id);
+		try {
+			//From super
+			ResultSet rs = getStatementFromQuery(query);
 
+			int rows = 0;
+			if (rs.last()) {
+				rows = rs.getRow();
+			}
+
+			// There's more than one row with the given ID, so the location exists.
+			if (rows > 0) return true;
+
+		} catch (SQLException e) {
+			return false;
+		}
+
+		return false;
+	}
+
+    public int getTrackingId() { return trackingId; }
 
     public double getWeight() {
         return weight;

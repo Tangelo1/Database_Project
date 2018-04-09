@@ -1,17 +1,15 @@
 package Menus;
 
-import DataModels.Account;
-import DataModels.Address;
-import DataModels.CreditCard;
-import DataModels.Location;
+import DataModels.*;
 import DataModels.Package;
 import Driver.DBDriver;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import javax.sound.midi.Track;
+import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Menu System for the administrator.
@@ -64,10 +62,10 @@ public class AdminMenu {
                     viewLocation();
                     break;
                 case PACKAGE_DETAILS:
+                	viewPackageDetails();
+                	break;
+				case ORDER_DETAILS:
                     viewOrders();
-                    break;
-                case ORDER_DETAILS:
-                    chargeCorporateCustomers();
                     break;
                 case BILL_CUSTOMERS:
                     chargeCorporateCustomers();
@@ -292,17 +290,212 @@ public class AdminMenu {
 			return;
 		}
 
+
 		System.out.println("\nLocation " + locId + ": " + location.getName() + " is a " + location.getType());
 		System.out.println(packages.size() + " packages are contained within.");
 
+		System.out.println("\nWould you like to see the list of packages contained within?");
+		if (Input.makeYesNoChoice()) {
+			System.out.println("Tracking No.\tWeight\tType\tSpeed\n");
+			for(Package p : packages) {
+				System.out.printf("%d\t\t\t%.2f\t%s\t%s\n", p.getTrackingId(), p.getWeight(), p.getType(), p.getSpeed());
+			}
+		}
     }
+
+	/**
+	 * Shows a menu for getting the details on a package.
+	 */
+	private static void viewPackageDetails() {
+
+		// Need to get the package details.
+		System.out.println("Please enter the tracking ID of the package");
+		int trackingId = -1;
+		do {
+			// Get a valid tracking number
+			try {
+				trackingId = Input.readInt();
+			} catch (Input.InputException ie) {
+				System.out.println("Invalid number");
+				continue;
+			}
+
+			// Make sure the package with that number exists
+			if (!Package.exists(trackingId)) {
+				System.out.println("Tracking number does not exist.");
+				trackingId = -1;
+			}
+
+		} while (trackingId == -1);
+
+		Package pack = null;
+		ShippingOrder order = null;
+		ArrayList<TrackingEvent> history = null;
+		ArrayList<ManifestItem> manifest = null;
+		Address origin = null;
+		Address destination = null;
+		try {
+			pack = new Package(trackingId);
+			order = pack.getOrder();
+			history = pack.getHistory();
+			manifest = pack.getManifest();
+			origin = pack.getOrigin();
+			destination = pack.getDestination();
+		} catch(SQLException e) {
+			System.out.println("An unexpected error occurred when loading the package information");
+			return;
+		}
+
+		// Show general package information.
+		System.out.println("Package " + pack.getTrackingId() + " information:\n");
+
+		System.out.printf("Order created on %s by account number %d for $.2f\n", order.getDateCreated(), order.getAccountId(), order.getCost());
+		System.out.println(pack.isHazard() ? "Package contains hazardous material" : "Package does not contain hazardous material.");
+		if (pack.isInternational()) {
+			// Show customs information about the package, if it's international.
+			System.out.println("Package will be shipped internationally. Customs information:");
+			System.out.printf("\tValue = $%.2f\n", pack.getValue());
+			System.out.println("\tManifest:");
+			if (manifest.size() > 0) {
+				for (ManifestItem item : manifest) {
+					System.out.printf("\t\t%s\n", item.getName());
+				}
+			}
+			else {
+				System.out.println("\t\tNo Items listed in manifest.");
+			}
+		}
+		else {
+			System.out.println("Package will be shipped domestically.");
+		}
+
+		// Print the origin and destination addresses of the package
+		System.out.println();
+		System.out.println("Source Address:");
+		System.out.println("---------------");
+		System.out.println(origin.toString() + "\n");
+
+		System.out.println("Destination Address:");
+		System.out.println("--------------------");
+		System.out.println(destination.toString() + "\n");
+
+		// Print the tracking history.
+		System.out.println("Tracking History:");
+		System.out.println("-----------------");
+		System.out.println();
+		System.out.println("Date\tLocation\tEvent");
+		System.out.println("-----------------------------");
+
+		try {
+			for (TrackingEvent event : history) {
+				System.out.println(event.getTime() + "\t" + event.getLocation().getName() + "\t" + event.getStatus());
+			}
+		} catch (SQLException e) {
+			System.out.println("An unexpected error occurred while getting the tracking history of the package.");
+		}
+
+		System.out.println();
+	}
 
     /**
      * Sub menu for viewing orders for customers and date ranges.
      */
     private static void viewOrders() {
-        // TODO
-        System.out.println("View Orders Method Stub");
+    	System.out.println("Please enter the account number to view orders for\nor enter -1 to return to the menu.");
+
+    	// Get a valid account number from the user
+    	int accountNumber = 0;
+    	boolean accountValid = true;
+    	do {
+    		if (!accountValid) {
+    			System.out.println("Invalid account number. Please try again.");
+			}
+
+			accountValid = true;
+
+    		try {
+    			accountNumber = Input.readInt();
+			} catch (Input.InputException ie) {
+    			accountValid = false;
+    			continue;
+			}
+
+			// return when the user enters -1
+			if (accountNumber == -1) return;
+
+    		if (!Account.exists(accountNumber)) accountValid = false;
+
+		} while (!accountValid);
+
+    	// Get a reference to the user account.
+    	Account account = null;
+    	try {
+			account = new Account(accountNumber);
+		} catch (SQLException e) {
+    		System.out.println("An unexpected error occurred while accessing the account information.");
+    		return;
+		}
+
+		// Get a time frame from the user to read the dates from.
+		System.out.println("Enter the starting date of the order range");
+    	String dateStr = "";
+    	Date startDate = null;
+    	boolean dateValid = true;
+    	do {
+    		dateValid = true;
+    		dateStr = Input.readStrWhileNotEmpty("YYYY-MM-DD");
+
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				startDate = format.parse(dateStr);
+				if (startDate.after(new Date())) {
+					System.out.println("Start date cannot be in the future.");
+					dateValid = false;
+				}
+			} catch(ParseException pe) {
+				System.out.println("Invalid format; please enter the date in the format YYYY-MM-DD");
+				dateValid = false;
+			}
+		} while (!dateValid);
+
+    	// Get the ending date.
+		System.out.println("Enter the ending date of the order range");
+		Date endDate = null;
+		do {
+			dateValid = true;
+			dateStr = Input.readStrWhileNotEmpty("YYYY-MM-DD");
+
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				endDate = format.parse(dateStr);
+				if (endDate.before(startDate)) {
+					System.out.println("End date cannot be before the starting date.");
+					dateValid = false;
+				}
+			} catch(ParseException pe) {
+				System.out.println("Invalid format; please enter the date in the format YYYY-MM-DD");
+				dateValid = false;
+			}
+		} while (!dateValid);
+
+		// Get the orders in the date range.
+		ArrayList<ShippingOrder> orders = null;
+		try {
+			orders = ShippingOrder.getOrdersForAccount(account, new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()));
+		} catch(SQLException se) {
+			System.out.println("An unexpected error occurred when loading the order information.");
+		}
+
+		// Print some info about the number of orders found.
+		System.out.println("Found " + orders.size() + " orders for account " + accountNumber + " in date range " +
+			startDate.toString() + " to " + endDate.toString() + "\n");
+
+		// Print and format the details of each order
+		System.out.println("Order\tPackage\tAccount\tDate\tTotal\n");
+		for(ShippingOrder order : orders) {
+			System.out.printf("%d\t%d\t%d\t%s\t$%.2f\n",
+					order.getOrderId(), order.getTrackingId(), order.getAccountId(), order.getDateCreated(), order.getCost());
+		}
     }
 
 

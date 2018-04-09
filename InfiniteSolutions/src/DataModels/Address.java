@@ -135,5 +135,11 @@ public class Address extends DataModel{
         }
     }
 
-
+    /**
+     * @return A 3-line format of this address.
+     */
+    @Override
+    public String toString() {
+        return street + "\n" + city + ", " + state + " " + postal + "\n" + country;
+    }
 }

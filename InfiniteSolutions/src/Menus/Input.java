@@ -81,6 +81,18 @@ public class Input
         return input;
     }
 
+    /**
+     * Waits for the user to enter some string that starts with Y or N.
+     * @return true if y, false if n.
+     */
+    public static boolean makeYesNoChoice() {
+        String choice = "";
+        do {
+            choice = readStrWhileNotEmpty("(Y/N)");
+        } while (!choice.toLowerCase().startsWith("y") && !choice.toLowerCase().startsWith("n"));
+
+        return choice.toLowerCase().startsWith("y");
+    }
 
     /**
      * Gets an integer in some range from the user.

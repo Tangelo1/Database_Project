@@ -101,7 +101,7 @@ public class Menu {
             Account userAccount = null;
             try {
                 // Get account
-                userAccount = Account.getAccountByNumber(ID);
+                userAccount = new Account(ID);
             } catch(SQLException e) {
                 // Don't need to do anything here.
             }

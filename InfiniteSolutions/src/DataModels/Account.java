@@ -134,15 +134,29 @@ public class Account extends DataModel {
     }
 
     /**
-     * Queries the database for an account matching the given ID
-     * @param id The ID to find in the database
-     * @return An account object representing the database entry
-     * @throws SQLException Throws this on the event that the query cannot be executed
+     * Determines if an account exists.
+     * @param number The number of the account
+     * @return true if the account exists, false if not.
      */
-    public static Account getAccountByNumber(int id) throws SQLException{
-        Account a = new Account(id);
-        a.loadFromDB();
-        return a;
+    public static boolean exists(int number) {
+        String query = String.format("SELECT * FROM account WHERE id=%d", number);
+        try {
+            //From super
+            ResultSet rs = getStatementFromQuery(query);
+
+            int rows = 0;
+            if (rs.last()) {
+                rows = rs.getRow();
+            }
+
+            // There's more than one row with the given ID, so the location exists.
+            if (rows > 0) return true;
+
+        } catch (SQLException e) {
+            return false;
+        }
+
+        return false;
     }
 
     public char getType() {

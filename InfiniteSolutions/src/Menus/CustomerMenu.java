@@ -20,9 +20,8 @@ public class CustomerMenu {
     /** Menu option for logging out. */
     private static final int LOG_OUT = 4;
 
+    /** Current account that is logged in. */
     private static Account account;
-
-    //TODO need a setAccount method
 
     public static void setAccount(Account account){
         CustomerMenu.account = account;
@@ -59,54 +58,12 @@ public class CustomerMenu {
         } while (menuSelection != LOG_OUT);
     }
 
-    static void trackPackage(){
-        /*System.out.println("Please enter your tracking ID");
-        String trackingID = Input.readStr();
-        ArrayList<TrackingEvent> packages = null;
-        int flag = 0;
-        while(flag == 0) {
-            try {
-                packages = getEventsForPackage(Integer.parseInt(trackingID));
-                if (packages == null) {
-                    System.out.println("Invalid ID, please try again");
-                } else {
-                    flag = 1;
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Collections.sort(packages, new Comparator<TrackingEvent>() {
-            @Override
-            public int compare(TrackingEvent o1, TrackingEvent o2) {
-
-                if(o1.getTime().after(o2.getTime())){
-                    return 1;
-                }else if(o1.getTime().before(o2.getTime())){
-                    return -1;
-                }else{
-                    return 0;
-                }
-            }
-        });
-
-        for(TrackingEvent event : packages){
-            try {
-                System.out.println("At " + event.getTime() + "the package was at "+event.getLocation().getName());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return;
-        */
-
-        //Already implemented in menu no need to duplicate code
+    private static void trackPackage() {
+        // Already implemented in Menu, no need to reimplement
         Menu.trackPackage();
     }
 
-    static void shipNewPackage(){
+    private static void shipNewPackage() {
         //Need To first build a Address, both destAddress and srcAddress
         Address srcAddress;
         String srcStreet = "";
@@ -250,14 +207,10 @@ public class CustomerMenu {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-        return;
     }
 
-    static void editAccountDetails(){
+    private static void editAccountDetails(){
         System.out.println("This is a edit account details stub");
-        return;
     }
 
 }
