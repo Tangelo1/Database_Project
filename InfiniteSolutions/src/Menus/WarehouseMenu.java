@@ -1,6 +1,6 @@
 package Menus;
 
-import DataModels.TrackingEvent;
+import DataModels.*;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -18,9 +18,40 @@ public class WarehouseMenu {
     private static final int MARK_PACKAGE_AS_DELIVERED = 2;
 
     /**
+     *
+     */
+    private static final int GET_PACKAGES_IN_LOCATION=3;
+
+    /**
      * Exit menu selection
      */
-    private static final int EXIT = 3;
+    private static final int EXIT = 4;
+    //private static final DataModels.Location Location = ;
+
+
+    private static void getAllPackagesInLocation() {
+        boolean goodID = false;
+
+        do {
+
+            System.out.println("\nEnter a location ID: ");
+            int locationID = 0;
+            try {
+                locationID = Input.readInt();
+            } catch (Input.InputException e) {
+            }
+
+            try {
+                Location l = new Location(locationID);
+                l.getPackagesWithin();
+                goodID = true;
+            }
+            catch (Exception e) {
+                System.out.println("\nLocation ID cannot be found.");
+                goodID = false;
+            }
+        } while (!goodID);
+    }
 
 
     /**
@@ -31,7 +62,7 @@ public class WarehouseMenu {
         do {
             // display the menu options
             System.out.print("\nWarehouse Menu:\n\t1. Move A Package To A New Location\n\t2. Mark Package As Delivered\n\t" +
-                    "3. Log Out\n");
+                    "3. Get All Packages In A Locationn\n\t4. Log Out\n");
 
 
             // Make a menu selection
@@ -43,6 +74,9 @@ public class WarehouseMenu {
                     break;
                 case MARK_PACKAGE_AS_DELIVERED:
                     markPackageAsDelivered();
+                    break;
+                case GET_PACKAGES_IN_LOCATION:
+                    getAllPackagesInLocation();
                     break;
                 case EXIT:
                     System.out.println("Goodbye.");
