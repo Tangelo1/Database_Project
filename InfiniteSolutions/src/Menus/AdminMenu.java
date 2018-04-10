@@ -349,7 +349,7 @@ public class AdminMenu {
 		// Show general package information.
 		System.out.println("Package " + pack.getTrackingId() + " information:\n");
 
-		System.out.printf("Order created on %s by account number %d for $.2f\n", order.getDateCreated(), order.getAccountId(), order.getCost());
+		System.out.printf("Order created on %s by account number %d for $%.2f\n", order.getDateCreated(), order.getAccountId(), order.getCost());
 		System.out.println(pack.isHazard() ? "Package contains hazardous material" : "Package does not contain hazardous material.");
 		if (pack.isInternational()) {
 			// Show customs information about the package, if it's international.
