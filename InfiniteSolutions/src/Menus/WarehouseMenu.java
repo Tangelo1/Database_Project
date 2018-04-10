@@ -29,6 +29,9 @@ public class WarehouseMenu {
     //private static final DataModels.Location Location = ;
 
 
+    /**
+     * Gets and prints all the packages in a given location
+     */
     private static void getAllPackagesInLocation() {
         boolean goodID = false;
 
@@ -43,6 +46,7 @@ public class WarehouseMenu {
 
             try {
                 Location l = new Location(locationID);
+                //When fixed might have to print here
                 l.getPackagesWithin();
                 goodID = true;
             }
@@ -55,7 +59,7 @@ public class WarehouseMenu {
 
 
     /**
-     *
+     * Main menu for the warehouse users
      */
     public static void enterMainWarehouseMenu () {
         int menuSelection;
@@ -87,8 +91,7 @@ public class WarehouseMenu {
     }
 
     /**
-     *
-     *
+     * Move a package to a new location by tracking number and location ID
      */
     private static void movePackageToLocation() {
 
@@ -126,7 +129,7 @@ public class WarehouseMenu {
     }
 
     /**
-     *
+     * Mark a package as delivered by tracking number
      */
     private static void markPackageAsDelivered() {
         boolean goodID = false;
