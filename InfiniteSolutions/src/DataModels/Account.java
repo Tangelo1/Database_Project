@@ -53,6 +53,7 @@ public class Account extends DataModel {
     public void loadFromDB() throws SQLException {
         String query = String.format("SELECT * FROM public.account WHERE id=%d", this.id);
         ResultSet s = DataModel.getStatementFromQuery(query);
+        s.next();
 
         try {
             this.id = s.getInt(1);
@@ -90,8 +91,9 @@ public class Account extends DataModel {
 
         if (id == -1) {
             query = "SELECT MAX(ID) from ACCOUNT";
-            ResultSet r = getStatementFromQuery(query);
-            this.id = r.getInt(1);
+            ResultSet rs = getStatementFromQuery(query);
+            rs.next();
+            this.id = rs.getInt(1);
         }
     }
 
@@ -143,6 +145,7 @@ public class Account extends DataModel {
         try {
             //From super
             ResultSet rs = getStatementFromQuery(query);
+            rs.next();
 
             int rows = 0;
             if (rs.last()) {

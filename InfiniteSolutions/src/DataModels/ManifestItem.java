@@ -28,11 +28,6 @@ public class ManifestItem extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public Package getPackage() throws SQLException {
-        Connection conn = DBDriver.getConnection();
-
-        String query = String.format("SELECT * FROM public.package WHERE tracking_id=%d", this.trackingId);
-
-        ResultSet s = DataModel.getStatementFromQuery(query);
         return new Package(trackingId);
     }
 

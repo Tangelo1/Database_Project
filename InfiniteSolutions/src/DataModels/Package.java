@@ -136,6 +136,7 @@ public class Package extends DataModel {
     public void loadFromDB() throws SQLException {
         String query = String.format("SELECT * FROM public.package WHERE tracking_id=%d;", this.trackingId);
         ResultSet s = DataModel.getStatementFromQuery(query);
+        s.next();
 
         try {
             this.trackingId = s.getInt(1);

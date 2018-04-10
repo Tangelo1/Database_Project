@@ -40,6 +40,7 @@ public class Location extends DataModel {
     public void loadFromDB() throws SQLException {
         String query = String.format("SELECT * FROM public.location WHERE location_id=%d", this.locationId);
         ResultSet s = DataModel.getStatementFromQuery(query);
+        s.next();
 
         try {
             this.locationId = s.getInt(1);
@@ -165,6 +166,7 @@ public class Location extends DataModel {
         try {
             //From super
             ResultSet rs = getStatementFromQuery(query);
+            rs.next();
 
             int rows = 0;
             if (rs.last()) {

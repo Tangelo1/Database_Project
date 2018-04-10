@@ -45,7 +45,7 @@ public class AdminMenu {
         int menuSelection = -1;
         do {
             // display the menu options
-            System.out.print("Administration Menu:\n\t1. Enter the SQL Console\n\t2. Create New Corporate Account\n\t3. Monitor Distribution Network\n\t4. View Package Details\n\t5. View Orders\n\t6. Charge Corporate Customers\n\t7. Log Out\n");
+            System.out.print("\nAdministration Menu:\n\t1. Enter the SQL Console\n\t2. Create New Corporate Account\n\t3. Monitor Distribution Network\n\t4. View Package Details\n\t5. View Orders\n\t6. Charge Corporate Customers\n\t7. Log Out\n");
 
 
             // Make a menu selection
@@ -481,6 +481,7 @@ public class AdminMenu {
 		// Get the orders in the date range.
 		ArrayList<ShippingOrder> orders = null;
 		try {
+			System.out.println("Test: "+ new Timestamp(startDate.getTime()));
 			orders = ShippingOrder.getOrdersForAccount(account, new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()));
 		} catch(SQLException se) {
 			System.out.println("An unexpected error occurred when loading the order information.");

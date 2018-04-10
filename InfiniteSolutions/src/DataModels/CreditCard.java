@@ -47,6 +47,7 @@ public class CreditCard extends DataModel {
     public void loadFromDB() throws SQLException{
         String query = String.format("SELECT * FROM public.creditcard WHERE id=%d", this.id);
         ResultSet s = DataModel.getStatementFromQuery(query);
+        s.next();
 
         try {
             this.id = s.getInt(1);
@@ -82,8 +83,9 @@ public class CreditCard extends DataModel {
 
         if (id == -1) {
             query = "SELECT MAX(ID) from CREDITCARD";
-            ResultSet r = getStatementFromQuery(query);
-            this.id = r.getInt(1);
+            ResultSet rs = getStatementFromQuery(query);
+            rs.next();
+            this.id = rs.getInt(1);
         }
 
     }

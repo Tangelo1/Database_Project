@@ -54,6 +54,7 @@ public class ShippingOrder extends DataModel {
             query = String.format("SELECT * FROM public.shippingorder WHERE order_id=%d", this.orderId);
         }
         ResultSet s = DataModel.getStatementFromQuery(query);
+        s.next();
 
         try {
             this.orderId = s.getInt(1);
@@ -89,8 +90,9 @@ public class ShippingOrder extends DataModel {
 
         if (orderId == -1) {
             query = "SELECT MAX(ID) from SHIPPINGORDER";
-            ResultSet r = super.getStatementFromQuery(query);
-            this.orderId = r.getInt(1);
+            ResultSet rs = getStatementFromQuery(query);
+            rs.next();
+            this.orderId = rs.getInt(1);
         }
     }
 
@@ -157,7 +159,6 @@ public class ShippingOrder extends DataModel {
 
         String query = String.format("SELECT * FROM public.shippingorder WHERE account_id=%d " +
                 "AND shippingorder.date>\'%s\' AND shippingorder.date<\'%s\';", acct.getId(), start, end);
-
 
         ResultSet s = DataModel.getStatementFromQuery(query);
 

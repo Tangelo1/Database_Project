@@ -39,7 +39,6 @@ public abstract class DataModel {
         stmt.execute(query);
 
         ResultSet rs = stmt.getResultSet();
-        rs.next();
 
         return rs;
     }
