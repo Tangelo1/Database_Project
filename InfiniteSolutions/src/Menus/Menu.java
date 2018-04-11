@@ -3,6 +3,10 @@ package Menus;
 import DataModels.*;
 import Driver.DBDriver;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -35,7 +39,20 @@ public class Menu {
      * Prints some welcome message.
      */
     private static void printWelcome() {
-        System.out.println("\n\n\tWelcome to the Infinite Solutions Package Management System\n");
+
+        // Read that sick ascii art
+        InputStream is = Menu.class.getResourceAsStream("box.txt");
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+        String ascii = "";
+        try {
+            String line = "";
+            while ((line = br.readLine()) != null) ascii = ascii + "\n" + line;
+        } catch (IOException ioe) {
+            ascii = "\n\n\tWelcome to the Infinite Solutions Package Management System\n";
+        }
+
+        System.out.println(ascii);
     }
 
     /**
