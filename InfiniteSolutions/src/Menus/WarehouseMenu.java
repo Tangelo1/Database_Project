@@ -1,9 +1,11 @@
 package Menus;
 
 import DataModels.*;
+import DataModels.Package;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class WarehouseMenu {
 
@@ -46,8 +48,15 @@ public class WarehouseMenu {
 
             try {
                 Location l = new Location(locationID);
-                //When fixed might have to print here
-                l.getPackagesWithin();
+                ArrayList<Package> pkgs = l.getPackagesWithin();
+
+                System.out.println("\nPackages contained in " + l.getName() + ": ");
+
+                for (Package p: pkgs) {
+                    System.out.println("\tPackage: " + p.getTrackingId());
+                }
+
+
                 goodID = true;
             }
             catch (Exception e) {
@@ -103,7 +112,7 @@ public class WarehouseMenu {
             try {
                 trackingID = Input.readInt();
             } catch (Input.InputException e) {
-                e.printStackTrace();
+                System.out.println("Invalid ID input");
             }
 
             System.out.println("\nEnter a location ID: ");
@@ -111,8 +120,10 @@ public class WarehouseMenu {
             try {
                 locationID = Input.readInt();
             } catch (Input.InputException e) {
-                e.printStackTrace();
+                System.out.println("Invalid ID input");
             }
+
+            //System.out.println(locationID);
 
             TrackingEvent newLocationEvent = new TrackingEvent(
                     trackingID, locationID, new Timestamp(System.currentTimeMillis()), "Arrived");
@@ -120,6 +131,7 @@ public class WarehouseMenu {
             try {
                 newLocationEvent.saveToDB();
                 goodID = true;
+                System.out.println("\nPackage moved to new location: " + newLocationEvent.getLocation().getName());
             }
             catch (Exception e) {
                 System.out.println("\nTracking ID or Location ID cannot be found.");
@@ -140,7 +152,7 @@ public class WarehouseMenu {
             try {
                 trackingID = Input.readInt();
             } catch (Input.InputException e) {
-                e.printStackTrace();
+                System.out.println("Invalid ID input");
             }
 
             TrackingEvent deliveredEvent = new TrackingEvent(
@@ -150,12 +162,13 @@ public class WarehouseMenu {
             try {
                 deliveredEvent.saveToDB();
                 goodID = true;
-            } catch (SQLException e) {
+                System.out.println("\nPackage marked sucessfully.");
+            } catch (SQLException e)
+            {
                 System.out.println("\nTracking ID cannot be found.");
                 goodID = false;
             }
         } while (!goodID);
-
 
     }
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class TrackingEvent extends DataModel {
 
     private int trackingId;
-    private int locationId;
+    private Integer locationId;
     private Timestamp time;
     private String status;
 
@@ -23,7 +23,9 @@ public class TrackingEvent extends DataModel {
      */
     public TrackingEvent(int trackingId, int locationId,Timestamp time, String status) {
         this.trackingId = trackingId;
-        this.locationId = locationId;
+        if(locationId != -1)
+            this.locationId = locationId;
+
         this.time = time;
         this.status = status;
     }
