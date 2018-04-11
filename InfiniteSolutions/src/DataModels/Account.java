@@ -64,8 +64,7 @@ public class Account extends DataModel {
             this.billingAddressId = s.getInt(6);
         } catch (SQLException e) {
             try {
-                //System.out.println("\nCANNOT EXECUTE QUERY:");
-                System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+                System.out.println("\nCannot find account.");
             } catch (ArrayIndexOutOfBoundsException ex) {}
         }
     }
@@ -161,6 +160,54 @@ public class Account extends DataModel {
 
         return false;
     }
+
+    public void updateName(String name) {
+        String query = String.format("UPDATE account SET name=\'%s\' WHERE id=%d;", name, this.id);
+
+        try {
+            super.executeQuery(query);
+        }
+        catch (SQLException e) {
+            System.out.println("Cannot update this value.");
+        }
+    }
+
+    public void updatePhone(String number) {
+        String query = String.format("UPDATE account SET phone=\'%s\' WHERE id=%d;", number, this.id);
+
+        try {
+            super.executeQuery(query);
+        }
+        catch (SQLException e) {
+            System.out.println("Cannot update this value.");
+        }
+    }
+
+    public void updateCreditCard(CreditCard c) {
+        String query = String.format("UPDATE account SET name=\'%s\', number=\'%s\',  exp_date=\'%s\', cvv=\'%s\' " +
+                "WHERE id=%d;", c.getName(), c.getNumber(), c.getExpDate(), c.getCvv(), c.getId());
+
+        try {
+            super.executeQuery(query);
+        }
+        catch (SQLException e) {
+            System.out.println("Cannot update this value.");
+        }
+    }
+
+    public void updateBillingAddress(Address a) {
+        String query = String.format("UPDATE account SET " +
+                "street=\'%s\', city=\'%s\',  state=\'%s\', postal=\'%s\', country=\'%s\'" +
+                "WHERE id=%d;", a.getStreet(), a.getCity(), a.getState(), a.getPostal(), a.getCountry(), a.getId());
+
+        try {
+            super.executeQuery(query);
+        }
+        catch (SQLException e) {
+            System.out.println("Cannot update this value.");
+        }
+    }
+
 
     public char getType() {
         return type;
