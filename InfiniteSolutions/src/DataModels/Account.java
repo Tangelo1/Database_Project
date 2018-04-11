@@ -184,7 +184,7 @@ public class Account extends DataModel {
     }
 
     public void updateCreditCard(CreditCard c) {
-        String query = String.format("UPDATE account SET name=\'%s\', number=\'%s\',  exp_date=\'%s\', cvv=\'%s\' " +
+        String query = String.format("UPDATE creditcard SET name=\'%s\', number=\'%s\',  exp_date=\'%s\', cvv=\'%s\' " +
                 "WHERE id=%d;", c.getName(), c.getNumber(), c.getExpDate(), c.getCvv(), c.getId());
 
         try {
@@ -196,9 +196,9 @@ public class Account extends DataModel {
     }
 
     public void updateBillingAddress(Address a) {
-        String query = String.format("UPDATE account SET " +
+        String query = String.format("UPDATE address SET " +
                 "street=\'%s\', city=\'%s\',  state=\'%s\', postal=\'%s\', country=\'%s\'" +
-                "WHERE id=%d;", a.getStreet(), a.getCity(), a.getState(), a.getPostal(), a.getCountry(), a.getId());
+                " WHERE id=%d;", a.getStreet(), a.getCity(), a.getState(), a.getPostal(), a.getCountry(), a.getId());
 
         try {
             super.executeQuery(query);

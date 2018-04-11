@@ -2,44 +2,60 @@ package Menus;
 
 import DataModels.Account;
 import DataModels.Address;
+import DataModels.CreditCard;
 
+import javax.print.DocFlavor;
 import java.sql.SQLException;
 
 
 public class CustomerMenu {
 
-    /** Track package menu selection */
+    /**
+     * Track package menu selection
+     */
     private static final int TRACK_PACKAGE = 1;
 
-    /** Ship package menu selection*/
+    /**
+     * Ship package menu selection
+     */
     private static final int SHIP_PACKAGE = 2;
 
-    /** Edit account menu selection */
+    /**
+     * Edit account menu selection
+     */
     private static final int EDIT_ACCOUNT = 3;
 
-    /** Menu option for logging out. */
+    /**
+     * Menu option for logging out.
+     */
     private static final int LOG_OUT = 4;
 
-    /** Current account that is logged in. */
+    /**
+     * Current account that is logged in.
+     */
     private static Account account;
 
-    public static void setAccount(Account account){
+    public static void setAccount(Account account) {
         CustomerMenu.account = account;
-    };
+    }
 
-    public static void enterCustomerMenu(){
+    ;
 
-        // display the menu options
-        System.out.print("Customer Menu:\n\t1. Track Package\n\t2. Ship New Package\n\t3. " +
-                "Edit Account Details\n\t4. Log out\n");
+    public static void enterCustomerMenu() {
 
-        // Stay in the admin menu until the user chooses to exit the admin menu.
         int menuSelection = -1;
         do {
+            // display the menu options
+            System.out.println("Customer Menu:\n\t1. Track Package\n\t2. Ship New Package\n\t3. " +
+                    "Edit Account Details\n\t4. Log out\n");
+
+            // Stay in the admin menu until the user chooses to exit the admin menu.
+
+
             // Make a menu selection
             menuSelection = Input.makeSelectionInRange(TRACK_PACKAGE, LOG_OUT);
 
-            switch(menuSelection) {
+            switch (menuSelection) {
                 case TRACK_PACKAGE:
                     trackPackage();
                     break;
@@ -51,7 +67,6 @@ public class CustomerMenu {
                     break;
                 case LOG_OUT:
                     System.out.println("Goodbye.");
-                    System.exit(0);
                     break;
             }
 
@@ -75,18 +90,18 @@ public class CustomerMenu {
         System.out.println("Starting up steps to ship new package");
         System.out.println("Enter the street of where it is being shipped from");
 
-        srcStreet = Input.readStrWhileNotEmpty("Enter the street of where it is being shipped from",50);
+        srcStreet = Input.readStrWhileNotEmpty("Enter the street of where it is being shipped from", 50);
 
-        srcCity = Input.readStrWhileNotEmpty("Enter the city of where it is being shipped from",50);
+        srcCity = Input.readStrWhileNotEmpty("Enter the city of where it is being shipped from", 50);
 
-        srcState = Input.readStrWhileNotEmpty("Enter the state of where it is being shipped from",50);
+        srcState = Input.readStrWhileNotEmpty("Enter the state of where it is being shipped from", 50);
 
-        srcPostal = Input.readStrWhileNotEmpty("Enter the postal of where it is being shipped from",8);
+        srcPostal = Input.readStrWhileNotEmpty("Enter the postal of where it is being shipped from", 8);
 
-        srcCountry = Input.readStrWhileNotEmpty("Enter the country of where it is being shipped from",50);
+        srcCountry = Input.readStrWhileNotEmpty("Enter the country of where it is being shipped from", 50);
 
 
-        srcAddress = new Address(-1,srcStreet,srcCity,srcState,srcPostal,srcCountry);
+        srcAddress = new Address(-1, srcStreet, srcCity, srcState, srcPostal, srcCountry);
 
         try {
             srcAddress.saveToDB();
@@ -103,13 +118,13 @@ public class CustomerMenu {
 
         System.out.println("Enter the street of where it is being shipped to");
 
-        dscStreet = Input.readStrWhileNotEmpty("Enter the street of where it is being shipped to",50);
-        dscCity = Input.readStrWhileNotEmpty("Enter the city of where it is being shipped to",50);
-        dscState = Input.readStrWhileNotEmpty("Enter the state of where it is being shipped to",50);
-        dscPostal = Input.readStrWhileNotEmpty("Enter the postal of where it is being shipped to",8);
-        dscCountry = Input.readStrWhileNotEmpty("Enter the country of where it is being shipped to",50);
+        dscStreet = Input.readStrWhileNotEmpty("Enter the street of where it is being shipped to", 50);
+        dscCity = Input.readStrWhileNotEmpty("Enter the city of where it is being shipped to", 50);
+        dscState = Input.readStrWhileNotEmpty("Enter the state of where it is being shipped to", 50);
+        dscPostal = Input.readStrWhileNotEmpty("Enter the postal of where it is being shipped to", 8);
+        dscCountry = Input.readStrWhileNotEmpty("Enter the country of where it is being shipped to", 50);
 
-        dscAddress = new Address(-1,dscStreet,dscCity,dscState,dscPostal,dscCountry);
+        dscAddress = new Address(-1, dscStreet, dscCity, dscState, dscPostal, dscCountry);
         try {
             dscAddress.saveToDB();
         } catch (SQLException e) {
@@ -119,16 +134,16 @@ public class CustomerMenu {
         double weight = Double.parseDouble(Input.readStrWhileNotEmpty("What's the weight of the package"));
 
         System.out.println("What's the type of the package? 1 - letter, 2 - small, 3 - medium, 4 - large");
-        int type = Input.makeSelectionInRange(1,4);
+        int type = Input.makeSelectionInRange(1, 4);
 
         System.out.println("What's the speed of the package? 1 - no rush, 2 - standard, 3 - expedited, 4 - overnight");
 
 
     }
 
-    private static void editAccountDetails(){
+    private static void editAccountDetails() {
         System.out.println("Which detail do you want to change: ");
-        System.out.println("\n\t1. Name\n\t2. Phone Number\n\t3.Credit Card\n\t4. Address\n\t5. Exit");
+        System.out.println("\n\t1. Name\n\t2. Phone Number\n\t3. Credit Card\n\t4. Address\n\t5. Exit");
 
         int choice = -1;
         do {
@@ -150,24 +165,110 @@ public class CustomerMenu {
                 case 5:
                     return;
             }
-        } while(choice != 5);
+        } while (choice != 5);
 
     }
 
     private static void editAddress() {
 
+        System.out.println("\nEnter your new information: ");
+
+        // Get address line 1, ex: 123 Main Street
+        String street = Input.readStrWhileNotEmpty("\tNumber and Street", 50);
+
+        // Read city
+        String city = Input.readStrWhileNotEmpty("\tCity", 50);
+
+        // Read state
+        String state = Input.readStrWhileNotEmpty("\tState/Province", 50);
+
+        // Read postal code
+        String postalCode = Input.readStrWhileNotEmpty("\tPostal Code", 8);
+
+        // Read country
+        String country = Input.readStrWhileNotEmpty("\tCountry", 50);
+
+        account.updateBillingAddress(new Address(account.getBillingAddressId(), street, city, state, postalCode, country));
+
+        System.out.println("\nUpdate sucessful.\n");
     }
 
     private static void editCreditCard() {
+        System.out.println("\nEnter your new information: ");
 
+        String nameOnCard = Input.readStrWhileNotEmpty("\tName on Card", 50);
+
+        // Validate the card number
+        String number;
+        boolean numberValid;
+        do {
+            numberValid = true;
+            number = Input.readStrWhileNotEmpty("\tCard Number");
+            number = number.replaceAll("\\s+", "");
+            if (number.length() > 16 || !Input.isNumeric(number)) {
+                numberValid = false;
+                System.out.println("Error: invalid credit card number.");
+            }
+        } while (!numberValid);
+
+        // Read the expiration date. Ensure that it is the proper MM/YY format.
+        String date;
+        boolean dateValid;
+        do {
+            dateValid = true;
+            date = Input.readStrWhileNotEmpty("\tExpiration Date (MM/YY)");
+            if (!Input.isDate(date, "MM/YY")) {
+                dateValid = false;
+                System.out.println("\tError: Please enter the date in the MM/YY format.");
+            }
+        } while (!dateValid);
+
+        // Read and validate the cvv.
+        int cvv = 0;
+        boolean cvvValid;
+        do {
+            cvvValid = true;
+            String cvvStr = Input.readStrWhileNotEmpty("\tCVV");
+            if (cvvStr.length() > 4 || !Input.isNumeric(cvvStr)) {
+                cvvValid = false;
+                System.out.println("Error: CVV Must be a number with no more than 4 digits.");
+            } else {
+                // Won't need to catch exception because it is at this point guaranteed to be an integer
+                cvv = Integer.parseInt(cvvStr);
+            }
+        } while (!cvvValid);
+
+        account.updateCreditCard(new CreditCard(account.getCreditCardId(), nameOnCard, number, date, cvv));
+
+        System.out.println("\nUpdate sucessful.\n");
     }
 
     private static void editPhone() {
+        // Get the phone number
+        String phone;
+        boolean phoneValid;
+        do {
+            phoneValid = true;
+            phone = Input.readStrWhileNotEmpty("Account Phone (10 digits)");
+            if (!Input.isPhone(phone)) {
+                phoneValid = false;
+                System.out.println("Error: \'" + phone + "\' is not a valid phone number.");
+            } else {
+                // Format the phone number into a string of 10 digits so that it can be stored in the database.
+                phone = Input.formatPhoneNumber(phone);
+            }
+        } while (!phoneValid);
 
+        account.updatePhone(phone);
+
+        System.out.println("\nUpdated Sucessfully.\n");
     }
 
     private static void editName() {
+        String accountName = Input.readStrWhileNotEmpty("Name on Account", 50);
+        account.updateName(accountName);
 
+        System.out.println("\nUpdated Sucessfully.\n");
     }
 
 }
