@@ -196,6 +196,7 @@ public class Location extends DataModel {
             case "T": return "truck";
             case "W": return "warehouse";
             case "P": return "airplane";
+            case "B": return "cargo ship";
             default: return "";
         }
     }
