@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+/**
+ * Menu class for the warehouse user
+ */
 public class WarehouseMenu {
 
     /**
@@ -20,23 +23,20 @@ public class WarehouseMenu {
     private static final int MARK_PACKAGE_AS_DELIVERED = 2;
 
     /**
-     *
+     * Get all the packages in a location menu selection
      */
-    private static final int GET_PACKAGES_IN_LOCATION=3;
+    private static final int GET_PACKAGES_IN_LOCATION = 3;
 
     /**
      * Exit menu selection
      */
     private static final int EXIT = 4;
-    //private static final DataModels.Location Location = ;
-
 
     /**
      * Gets and prints all the packages in a given location
      */
     private static void getAllPackagesInLocation() {
-        boolean goodID = false;
-
+        boolean goodID;
         do {
 
             System.out.println("\nEnter a location ID: ");
@@ -44,6 +44,7 @@ public class WarehouseMenu {
             try {
                 locationID = Input.readInt();
             } catch (Input.InputException e) {
+                System.out.println("Invalid ID entered.");
             }
 
             try {
@@ -52,14 +53,13 @@ public class WarehouseMenu {
 
                 System.out.println("\nPackages contained in " + l.getName() + ": ");
 
-                for (Package p: pkgs) {
+                for (Package p : pkgs) {
                     System.out.println("\tPackage: " + p.getTrackingId());
                 }
 
 
                 goodID = true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("\nLocation ID cannot be found.");
                 goodID = false;
             }
@@ -70,18 +70,17 @@ public class WarehouseMenu {
     /**
      * Main menu for the warehouse users
      */
-    public static void enterMainWarehouseMenu () {
+    public static void enterMainWarehouseMenu() {
         int menuSelection;
         do {
             // display the menu options
             System.out.print("\nWarehouse Menu:\n\t1. Move A Package To A New Location\n\t2. Mark Package As Delivered\n\t" +
                     "3. Get All Packages In A Locationn\n\t4. Log Out\n");
 
-
             // Make a menu selection
             menuSelection = Input.makeSelectionInRange(MOVE_PACKAGE, EXIT);
 
-            switch(menuSelection) {
+            switch (menuSelection) {
                 case MOVE_PACKAGE:
                     movePackageToLocation();
                     break;
@@ -95,7 +94,6 @@ public class WarehouseMenu {
                     System.out.println("Goodbye.");
                     return;
             }
-
         } while (menuSelection != EXIT);
     }
 
@@ -104,7 +102,7 @@ public class WarehouseMenu {
      */
     private static void movePackageToLocation() {
 
-        boolean goodID = false;
+        boolean goodID;
 
         do {
             System.out.println("\nEnter a tracking ID: ");
@@ -123,8 +121,6 @@ public class WarehouseMenu {
                 System.out.println("Invalid ID input");
             }
 
-            //System.out.println(locationID);
-
             TrackingEvent newLocationEvent = new TrackingEvent(
                     trackingID, locationID, new Timestamp(System.currentTimeMillis()), "Arrived");
 
@@ -132,8 +128,7 @@ public class WarehouseMenu {
                 newLocationEvent.saveToDB();
                 goodID = true;
                 System.out.println("\nPackage moved to new location: " + newLocationEvent.getLocation().getName());
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("\nTracking ID or Location ID cannot be found.");
                 goodID = false;
             }
@@ -144,7 +139,7 @@ public class WarehouseMenu {
      * Mark a package as delivered by tracking number
      */
     private static void markPackageAsDelivered() {
-        boolean goodID = false;
+        boolean goodID;
 
         do {
             System.out.println("\nEnter a tracking ID: ");
@@ -158,13 +153,11 @@ public class WarehouseMenu {
             TrackingEvent deliveredEvent = new TrackingEvent(
                     trackingID, -1, new Timestamp(System.currentTimeMillis()), "Delivered");
 
-
             try {
                 deliveredEvent.saveToDB();
                 goodID = true;
                 System.out.println("\nPackage marked sucessfully.");
-            } catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 System.out.println("\nTracking ID cannot be found.");
                 goodID = false;
             }

@@ -2,6 +2,7 @@ package Menus;
 
 import DataModels.*;
 import Driver.DBDriver;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -14,12 +15,12 @@ public class Menu {
 
     /**
      * Main entry point for the menu system.
+     *
      * @param args unused command line args.
      */
     public static void main(String[] args) {
         //Catch IllegalState Exception
         DBDriver driver = new DBDriver();
-
 
         // Welcome message.
         printWelcome();
@@ -86,19 +87,16 @@ public class Menu {
         // Log into admin menu
         if (ID == -2) {
             AdminMenu.enterMainAdminMenu();
-        }
-        else if (ID == -3){
+        } else if (ID == -3) {
             WarehouseMenu.enterMainWarehouseMenu();
-        }
-        else if (ID == -1) {
+        } else if (ID == -1) {
             return;
-        }
-        else {
+        } else {
             Account userAccount = null;
             try {
                 // Get account
                 userAccount = new Account(ID);
-            } catch(SQLException e) {
+            } catch (SQLException e) {
                 // Don't need to do anything here.
             }
 
@@ -106,8 +104,7 @@ public class Menu {
             if (userAccount == null) {
                 System.out.println("\nError: Unknown Account Number.");
                 return;
-            }
-            else {
+            } else {
                 CustomerMenu.setAccount(userAccount);
                 CustomerMenu.enterCustomerMenu();
             }
@@ -197,8 +194,7 @@ public class Menu {
             if (cvvStr.length() > 4 || !Input.isNumeric(cvvStr)) {
                 cvvValid = false;
                 System.out.println("Error: CVV Must be a number with no more than 4 digits.");
-            }
-            else {
+            } else {
                 // Won't need to catch exception because it is at this point guaranteed to be an integer
                 cvv = Integer.parseInt(cvvStr);
             }
@@ -206,49 +202,10 @@ public class Menu {
 
         System.out.println("\nCreating account...\n");
 
-        boolean success = true; // Set to false if something goes wrong creating the accounts.
-
         try {
             Address address = new Address(-1, street, city, state, postalCode, country);
             CreditCard card = new CreditCard(-1, nameOnCard, number, date, cvv);
-            Account account =  Account.createPersonal(address, card, accountName, phone);
-        } catch(SQLException e) {
-            System.out.println("\nAn unexpected error occurred while creating the account. The account could not be created.\n");
-            System.out.println("Technical information:\n");
-            e.printStackTrace();
-            return;
-        }
-
-        // If we get to this point the account should have been created successfully.
-        System.out.println("=========================================================");
-        System.out.println("====           Account Created Successfully          ====");
-        System.out.println("=========================================================\n");
-
-
-    }
-
-    /**
-     * Displays the package tracking menu to the user.
-     */
-    public static void trackPackage() {
-        boolean packageFound;
-        DataModels.Package p = null;
-        do {
-            String trackingID = Input.readStrWhileNotEmpty("\nEnter your tracking number:\n", 10);
-
-            try {
-                p = new DataModels.Package(Integer.parseInt(trackingID));
-                packageFound = true;
-            } catch (Exception e) {
-                System.out.println("\nPackage not found.\n");
-                packageFound = false;
-            }
-        }while (!packageFound);
-
-        ArrayList<TrackingEvent> history = null;
-
-        try {
-            history = p.getHistory();
+            Account.createPersonal(address, card, accountName, phone);
         } catch (SQLException e) {
             System.out.println("\nAn unexpected error occurred while creating the account. The account could not be created.\n");
             System.out.println("Technical information:\n");
@@ -256,15 +213,48 @@ public class Menu {
             return;
         }
 
-        for (TrackingEvent e: history) {
+        System.out.println("=========================================================");
+        System.out.println("====           Account Created Successfully          ====");
+        System.out.println("=========================================================\n");
+    }
+
+    /**
+     * Displays the package tracking menu to the user.
+     */
+    public static void trackPackage() {
+        DataModels.Package p = null;
+        Integer trackingID;
+
+        System.out.println("\nEnter your tracking number:");
+        try {
+            trackingID = Input.readInt();
+        }
+        catch (Exception e) {
+            System.out.println("\nInvalid tracking number.\n");
+            return;
+        }
+
+        try {
+            p = new DataModels.Package(trackingID);
+        } catch (Exception e) {
+        }
+
+        ArrayList<TrackingEvent> history = null;
+
+        try {
+            history = p.getHistory();
+        } catch (Exception e) {
+            System.out.println("Package doesn't have any tracking history.");
+        }
+
+        for (TrackingEvent e : history) {
             try {
                 System.out.printf("\n%s -- %s, %s", e.getTime(), e.getLocation().getName(), e.getStatus());
-            } catch (SQLException e1) {
-                e1.printStackTrace();
+            } catch (Exception ex) {
+                System.out.println("Could not find tracking history event");
             }
         }
 
         System.out.println("\n");
-
     }
 }

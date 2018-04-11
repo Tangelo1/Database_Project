@@ -149,6 +149,7 @@ public class Package extends DataModel {
             this.isHazard = s.getBoolean(8);
             this.isInternational = s.getBoolean(9);
         } catch (SQLException e) {
+            System.out.print("\nCannot find package.");
         }
     }
 
