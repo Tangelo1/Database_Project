@@ -121,7 +121,7 @@ public class CustomerMenu {
         System.out.println("What's the type of the package? 1 - letter, 2 - small, 3 - medium, 4 - large");
         int type = Input.makeSelectionInRange(1,4);
 
-        System.out.println("What's the speed of the package? 1 - letter, 2 - small, 3 - medium, 4 - large");
+        System.out.println("What's the speed of the package? 1 - no rush, 2 - standard, 3 - expedited, 4 - overnight");
 
 
     }
