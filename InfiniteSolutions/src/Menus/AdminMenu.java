@@ -291,14 +291,16 @@ public class AdminMenu {
 		}
 
 
-		System.out.println("\nLocation " + locId + ": " + location.getName() + " is a " + location.getType());
+		System.out.println("\nLocation " + locId + ": " + location.getName() + " is a " + location.getTypeName());
 		System.out.println(packages.size() + " packages are contained within.");
 
-		System.out.println("\nWould you like to see the list of packages contained within?");
-		if (Input.makeYesNoChoice()) {
-			System.out.println("Tracking No.\tWeight\tType\tSpeed\n");
-			for(Package p : packages) {
-				System.out.printf("%d\t\t\t%.2f\t%s\t%s\n", p.getTrackingId(), p.getWeight(), p.getType(), p.getSpeed());
+		if (packages.size() > 0) {
+			System.out.println("\nWould you like to see the list of packages contained within?");
+			if (Input.makeYesNoChoice()) {
+				System.out.println("Tracking No.\tWeight\tType\tSpeed\n");
+				for (Package p : packages) {
+					System.out.printf("%d\t\t\t%.2f\t%s\t%s\n", p.getTrackingId(), p.getWeight(), p.getType(), p.getSpeed());
+				}
 			}
 		}
     }

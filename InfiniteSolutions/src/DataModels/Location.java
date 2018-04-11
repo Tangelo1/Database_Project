@@ -124,11 +124,10 @@ public class Location extends DataModel {
                 "INNER JOIN TRACKINGEVENTS ON PACKAGE.TRACKING_ID = TRACKINGEVENTS.TRACKING_ID " +
                 "WHERE LOCATION_ID=%d;", this.locationId);*/
 
-		String query = String.format("WITH lastevents AS (SELECT tracking_id, date, max(date) FROM TRACKINGEVENTS group by TRACKING_ID, DATE)" +
-				"SELECT lastevents.TRACKING_ID FROM (lastevents INNER JOIN trackingevents ON lastevents.date = trackingevents.date) WHERE TRACKINGEVENTS.LOCATION_ID=%d", this.locationId);
-        /*String query = String.format("WITH lastevents AS (SELECT location_id, trackingevents.tracking_id, MAX(date) FROM trackingevents GROUP BY trackingevents.tracking_id, trackingevents.location_id) " +
-                "SELECT package.tracking_id FROM (package INNER JOIN lastevents ON package.tracking_id = lastevents.tracking_id) " +
-                "WHERE location_id=%d", this.locationId);*/
+        String query = String.format(
+                "WITH lastevents AS (SELECT tracking_id, MAX(date) AS date FROM trackingevents GROUP BY tracking_id) " +
+                "SELECT * FROM lastevents INNER JOIN trackingevents ON lastevents.tracking_id=trackingevents.tracking_id AND lastevents.date=trackingevents.date WHERE LOCATION_ID=%d",
+                locationId);
 
         ResultSet s = DataModel.getStatementFromQuery(query);
         ArrayList<Package> packages = new ArrayList<>();
@@ -136,14 +135,8 @@ public class Location extends DataModel {
             while (s.next()) {
                 Package p;
                 try {
-                    System.out.println("\t\tResult set contained a package with ID " + s.getInt(1));
                     p = new Package(s.getInt(1));
                     packages.add(p);
-
-                    for(TrackingEvent te : p.getHistory()) {
-                        System.out.println("\t\t\t" + te.getTime() + ";" + te.getLocation().getName() + "; " + te.getStatus());
-                    }
-
                 } catch (SQLException e) {
                     System.out.println("\nCANNOT EXECUTE QUERY:");
                     System.out.println("\t\t" + e.getMessage());
@@ -193,6 +186,18 @@ public class Location extends DataModel {
 
     public String getType() {
         return type;
+    }
+
+    /**
+     * @return a handy string for the type of the warehouse, suitable for printing out and stuff.
+     */
+    public String getTypeName() {
+        switch (type) {
+            case "T": return "truck";
+            case "W": return "warehouse";
+            case "P": return "airplane";
+            default: return "";
+        }
     }
 
     public void setType(String type) {
