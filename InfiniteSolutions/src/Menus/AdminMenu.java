@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Menu System for the administrator.
@@ -505,8 +506,64 @@ public class AdminMenu {
     /**
      * Sub menu for charging all customers.
      */
+    //TODO
     private static void chargeCorporateCustomers() {
-        // TODO
-        System.out.println("Bill Corporate Customers Method Stub");
+        System.out.println("Welcome to the billing interface for corporate customers.");
+
+
+        // Get a time frame from the user to read the dates from.
+        System.out.println("Enter the starting date of the billing period");
+        String dateStr = "";
+        Date startDate = null;
+        boolean dateValid = true;
+        do {
+            dateValid = true;
+            dateStr = Input.readStrWhileNotEmpty("YYYY-MM-DD");
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                startDate = format.parse(dateStr);
+                if (startDate.after(new Date())) {
+                    System.out.println("Start date cannot be in the future.");
+                    dateValid = false;
+                }
+            } catch(ParseException pe) {
+                System.out.println("Invalid format; please enter the date in the format YYYY-MM-DD");
+                dateValid = false;
+            }
+        } while (!dateValid);
+
+        // Get the ending date.
+        System.out.println("Enter the ending date of the billing period");
+        Date endDate = null;
+        do {
+            dateValid = true;
+            dateStr = Input.readStrWhileNotEmpty("YYYY-MM-DD");
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                endDate = format.parse(dateStr);
+                if (endDate.before(startDate)) {
+                    System.out.println("End date cannot be before the starting date.");
+                    dateValid = false;
+                }
+            } catch(ParseException pe) {
+                System.out.println("Invalid format; please enter the date in the format YYYY-MM-DD");
+                dateValid = false;
+            }
+        } while (!dateValid);
+
+        // Get the orders in the date range.
+        List<String> balance = null;
+        try {
+            balance = ShippingOrder.getAllCorporateOrders(new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()));
+        } catch(SQLException se) {
+            System.out.println("An unexpected error occurred when loading the order information.");
+        }
+
+        System.out.println("Account \t\tBalance");
+        for (String accountBal : balance) {
+            System.out.println(accountBal);
+        }
     }
 }

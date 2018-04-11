@@ -4,6 +4,7 @@ import Driver.DBDriver;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShippingOrder extends DataModel {
 
@@ -180,5 +181,33 @@ public class ShippingOrder extends DataModel {
         } catch (SQLException ex) {}
 
         return orders;
+    }
+
+    public static List<String> getAllCorporateOrders(Timestamp start, Timestamp end) throws SQLException{
+        List<String> balance = new ArrayList<>();
+
+        String query = String.format("SELECT account_id, name, SUM(Cost) FROM shippingorder " +
+                "INNER JOIN ACCOUNT on ID = ACCOUNT_ID WHERE TYPE = 'C'" +
+                "AND shippingorder.date>\'%s\' AND shippingorder.date<\'%s\' GROUP BY account_id;", start, end);
+
+        ResultSet s = DataModel.getStatementFromQuery(query);
+
+        try {
+            while (s.next()) {
+                try {
+
+                    String str = s.getInt(1) + " - " + s.getString(2) + "\t$" + s.getDouble(3);
+
+                    balance.add(str);
+
+                } catch (SQLException e) {
+                    System.out.println("\nCANNOT EXECUTE QUERY:");
+                    System.out.println("\t\t" + e.getMessage().split("\n")[1] + "\n\t\t" + e.getMessage().split("\n")[0]);
+                }
+
+            }
+        } catch (SQLException ex) {}
+
+        return balance;
     }
 }
