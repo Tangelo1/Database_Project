@@ -260,11 +260,12 @@ public class CustomerMenu {
     }
 
     private static void editAccountDetails() {
-        System.out.println("Which detail do you want to change: ");
-        System.out.println("\n\t1. Name\n\t2. Phone Number\n\t3. Credit Card\n\t4. Address\n\t5. Exit");
 
         int choice = -1;
         do {
+            System.out.println("Which detail do you want to change: ");
+            System.out.println("\n\t1. Name\n\t2. Phone Number\n\t3. Credit Card\n\t4. Address\n\t5. Exit");
+
             choice = Input.makeSelectionInRange(1, 5);
 
             switch (choice) {
