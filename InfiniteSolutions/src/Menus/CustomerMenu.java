@@ -7,12 +7,13 @@ import javax.print.DocFlavor;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import DataModels.ShippingCostMultiplier;
 
 
 public class CustomerMenu {
-    private static ArrayList<ShippingCostMultiplier> costList;
+    private static HashMap<String, Double> costList;
 
     /**
      * Track package menu selection
@@ -237,27 +238,13 @@ public class CustomerMenu {
             }
         }
 
-        double multValue = 0;
-        double perPound = 0;
-
-        for (ShippingCostMultiplier m: costList) {
-            if (m.getMultiplier().equals(pkgSpeed)) {
-                multValue = m.getValue();
-            }
-            else if (m.getMultiplier().equals("PerPound")) {
-                perPound = m.getValue();
-            }
-        }
-
-        double cost = multValue * perPound * weight;
-
-        ShippingOrder o = new ShippingOrder(-1, p.getTrackingId(), account.getId(), new Timestamp(System.currentTimeMillis()), cost);
-
+        // Create the shipping order
+        double cost = 0.0;
         try {
-            o.saveToDB();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Could not save order.");
+            ShippingOrder order = Package.createPackageOrder(p, account);
+            cost = order.getCost();
+        } catch(SQLException e) {
+            System.out.println("An error occurred while creating the shipping order.");
         }
 
 
