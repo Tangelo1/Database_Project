@@ -4,7 +4,6 @@ import DataModels.*;
 import DataModels.Package;
 import Driver.DBDriver;
 
-import javax.sound.midi.Track;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -658,7 +657,6 @@ public class AdminMenu {
     /**
      * Sub menu for charging all customers.
      */
-    //TODO
     private static void chargeCorporateCustomers() {
         System.out.println("Welcome to the billing interface for corporate customers.");
 
@@ -706,16 +704,18 @@ public class AdminMenu {
         } while (!dateValid);
 
         // Get the orders in the date range.
-        List<String> balance = null;
+        List<String[]> balance = null;
         try {
             balance = ShippingOrder.getAllCorporateOrders(new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()));
         } catch(SQLException se) {
             System.out.println("An unexpected error occurred when loading the order information.");
         }
 
-        System.out.println("Account \t\tBalance");
-        for (String accountBal : balance) {
-            System.out.println(accountBal);
+        System.out.printf("%s\t%s\t\t%s\n", "Acct #", "Acct Name", "Balance");
+        System.out.println("===============================");
+
+        for (String[] bal : balance) {
+            System.out.printf("%s\t\t%s\t$%s\n", bal[0], bal[1], bal[2]);
         }
     }
 }

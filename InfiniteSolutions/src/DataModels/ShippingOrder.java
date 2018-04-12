@@ -183,8 +183,8 @@ public class ShippingOrder extends DataModel {
         return orders;
     }
 
-    public static List<String> getAllCorporateOrders(Timestamp start, Timestamp end) throws SQLException{
-        List<String> balance = new ArrayList<>();
+    public static List<String[]> getAllCorporateOrders(Timestamp start, Timestamp end) throws SQLException{
+        List<String[]> balance = new ArrayList<>();
 
         String query = String.format("SELECT account_id, name, SUM(Cost) FROM shippingorder " +
                 "INNER JOIN ACCOUNT on ID = ACCOUNT_ID WHERE TYPE = 'C'" +
@@ -196,9 +196,13 @@ public class ShippingOrder extends DataModel {
             while (s.next()) {
                 try {
 
-                    String str = s.getInt(1) + " - " + s.getString(2) + "\t$" + s.getDouble(3);
+                    String[] values = new String[3];
 
-                    balance.add(str);
+                    values[0] = Integer.toString(s.getInt(1));
+                    values[1] = s.getString(2);
+                    values[2] = String.format("%.2f", s.getDouble(3));
+
+                    balance.add(values);
 
                 } catch (SQLException e) {
                     System.out.println("\nCANNOT EXECUTE QUERY:");
