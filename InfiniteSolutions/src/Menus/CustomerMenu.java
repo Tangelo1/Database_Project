@@ -74,63 +74,20 @@ public class CustomerMenu {
 
         System.out.println("Starting up steps to ship new package");
         System.out.println("Enter the street of where it is being shipped from");
-        int flag = 0;
-        while(flag == 0) {
-            srcStreet = Input.readStr();
-            if (srcStreet.length() > 50) {
-                System.out.println("Invalid street, please try again");
-            } else {
-                flag = 1;
-            }
-        }
 
-        System.out.println("Enter the city of where it is being shipped from");
-        flag = 0;
-        while(flag == 0) {
-            srcCity = Input.readStr();
-            if (srcCity.length() > 50) {
-                System.out.println("Invalid city, please try again");
-            } else {
-                flag = 1;
-            }
-        }
+        srcStreet = Input.readStrWhileNotEmpty("Enter the street of where it is being shipped from",50);
 
-        System.out.println("Enter the state of where it is being shipped from");
-        flag = 0;
-        while(flag == 0) {
-            srcState = Input.readStr();
-            if (srcState.length() > 50) {
-                System.out.println("Invalid state, please try again");
-            } else {
-                flag = 1;
-            }
-        }
+        srcCity = Input.readStrWhileNotEmpty("Enter the city of where it is being shipped from",50);
 
-        System.out.println("Enter the postal of where it is being shipped from");
-        flag = 0;
-        while(flag == 0) {
-            srcPostal = Input.readStr();
-            if (srcPostal.length() != 8) {
-                System.out.println("Invalid postal, please try again");
-            } else {
-                flag = 1;
-            }
-        }
+        srcState = Input.readStrWhileNotEmpty("Enter the state of where it is being shipped from",50);
 
-        System.out.println("Enter the country of where it is being shipped from");
-        flag = 0;
-        while(flag == 0) {
-            srcCountry = Input.readStr();
-            if (srcCountry.length() > 50) {
-                System.out.println("Invalid country, please try again");
-            } else {
-                flag = 1;
-            }
-        }
-        flag = 0;
-        //TODO create the address
+        srcPostal = Input.readStrWhileNotEmpty("Enter the postal of where it is being shipped from",8);
+
+        srcCountry = Input.readStrWhileNotEmpty("Enter the country of where it is being shipped from",50);
+
+
         srcAddress = new Address(-1,srcStreet,srcCity,srcState,srcPostal,srcCountry);
-        //@not being recognized
+
         try {
             srcAddress.saveToDB();
         } catch (SQLException e) {
@@ -146,71 +103,71 @@ public class CustomerMenu {
 
         System.out.println("Enter the street of where it is being shipped to");
 
-        while(flag == 0) {
-            dscStreet = Input.readStr();
-            if (dscStreet.length() > 50) {
-                System.out.println("Invalid street, please try again");
-            } else {
-                flag = 1;
-            }
-        }
+        dscStreet = Input.readStrWhileNotEmpty("Enter the street of where it is being shipped to",50);
+        dscCity = Input.readStrWhileNotEmpty("Enter the city of where it is being shipped to",50);
+        dscState = Input.readStrWhileNotEmpty("Enter the state of where it is being shipped to",50);
+        dscPostal = Input.readStrWhileNotEmpty("Enter the postal of where it is being shipped to",8);
+        dscCountry = Input.readStrWhileNotEmpty("Enter the country of where it is being shipped to",50);
 
-        System.out.println("Enter the city of where it is being shipped to");
-        flag = 0;
-        while(flag == 0) {
-            dscCity = Input.readStr();
-            if (dscCity.length() > 50) {
-                System.out.println("Invalid city, please try again");
-            } else {
-                flag = 1;
-            }
-        }
-
-        System.out.println("Enter the state of where it is being shipped to");
-        flag = 0;
-        while(flag == 0) {
-            dscState = Input.readStr();
-            if (dscState.length() > 50) {
-                System.out.println("Invalid state, please try again");
-            } else {
-                flag = 1;
-            }
-        }
-
-        System.out.println("Enter the postal of where it is being shipped to");
-        flag = 0;
-        while(flag == 0) {
-            dscPostal = Input.readStr();
-            if (dscPostal.length() != 8) {
-                System.out.println("Invalid postal, please try again");
-            } else {
-                flag = 1;
-            }
-        }
-
-        System.out.println("Enter the country of where it is being shipped to");
-        flag = 0;
-        while(flag == 0) {
-            dscCountry = Input.readStr();
-            if (dscCountry.length() > 50) {
-                System.out.println("Invalid country, please try again");
-            } else {
-                flag = 1;
-            }
-        }
-
-        //TODO create the address
         dscAddress = new Address(-1,dscStreet,dscCity,dscState,dscPostal,dscCountry);
-        //@not being recognized
         try {
             dscAddress.saveToDB();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        double weight = Double.parseDouble(Input.readStrWhileNotEmpty("What's the weight of the package"));
+
+        System.out.println("What's the type of the package? 1 - letter, 2 - small, 3 - medium, 4 - large");
+        int type = Input.makeSelectionInRange(1,4);
+
+        System.out.println("What's the speed of the package? 1 - no rush, 2 - standard, 3 - expedited, 4 - overnight");
+
+
     }
 
     private static void editAccountDetails(){
-        System.out.println("This is a edit account details stub");
+        System.out.println("Which detail do you want to change: ");
+        System.out.println("\n\t1. Name\n\t2. Phone Number\n\t3.Credit Card\n\t4. Address\n\t5. Exit");
+
+        int choice = -1;
+        do {
+            choice = Input.makeSelectionInRange(1, 5);
+
+            switch (choice) {
+                case 1:
+                    editName();
+                    break;
+                case 2:
+                    editPhone();
+                    break;
+                case 3:
+                    editCreditCard();
+                    break;
+                case 4:
+                    editAddress();
+                    break;
+                case 5:
+                    return;
+            }
+        } while(choice != 5);
+
+    }
+
+    private static void editAddress() {
+
+    }
+
+    private static void editCreditCard() {
+
+    }
+
+    private static void editPhone() {
+
+    }
+
+    private static void editName() {
+
     }
 
 }
