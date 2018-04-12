@@ -75,7 +75,7 @@ public class WarehouseMenu {
         do {
             // display the menu options
             System.out.print("\nWarehouse Menu:\n\t1. Move A Package To A New Location\n\t2. Mark Package As Delivered\n\t" +
-                    "3. Get All Packages In A Locationn\n\t4. Log Out\n");
+                    "3. Get All Packages In A Location\n\t4. Log Out\n");
 
             // Make a menu selection
             menuSelection = Input.makeSelectionInRange(MOVE_PACKAGE, EXIT);

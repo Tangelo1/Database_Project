@@ -686,3 +686,6 @@ org.h2.jdbc.JdbcSQLException: Invalid value "3" for parameter "columnIndex" [900
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
 	at java.lang.Thread.run(Thread.java:745)
 >>>>>>> 719186a8ea56cba53910d73987f12353c470c84c
+2018-04-12 08:30:01 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "ADDRESSES" not found; SQL statement:
+select * FROM addresses; [42102-196]
