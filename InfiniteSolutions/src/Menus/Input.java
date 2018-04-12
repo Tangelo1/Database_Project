@@ -55,6 +55,33 @@ public class Input
     }
 
     /**
+     * Reads a real number from the user.
+     * @return The real number as a double.
+     * @throws InputException when the user does not enter a number.
+     */
+    public static double readReal() throws InputException {
+        try {
+            return Double.parseDouble(readStrWhileNotEmpty(""));
+        } catch (NumberFormatException e) {
+            throw new InputException("Error: non numerical input received; expected a real number.");
+        }
+    }
+
+    /**
+     * Reads a real number from the user.
+     * @param prompt the prompt for the value.
+     * @return The real number as a double.
+     * @throws InputException when the user does not enter a number.
+     */
+    public static double readReal(String prompt) throws InputException {
+        try {
+            return Double.parseDouble(readStrWhileNotEmpty(prompt));
+        } catch (NumberFormatException e) {
+            throw new InputException("Error: non numerical input received; expected a real number.");
+        }
+    }
+
+    /**
      * Reads an input string with the given prompt.
      * ensures that the user enters SOMETHING.
      * @param prompt The prompty for input. E.g. "Account Name"

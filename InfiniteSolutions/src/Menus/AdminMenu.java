@@ -10,6 +10,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Menu System for the administrator.
@@ -20,22 +22,25 @@ public class AdminMenu {
     private static final int SQL_CONSOLE = 1;
 
     /** Corporate account menu selection */
-    private static final int CORPORATE_ACCOUNT = 2;
+    private static final int CORPORATE_ACCOUNT = 1 + SQL_CONSOLE;
 
     /** Monitor network locations menu selection */
-    private static final int MONITOR_NETWORK = 3;
+    private static final int MONITOR_NETWORK = 1 + CORPORATE_ACCOUNT;
 
     /** View package details menu selection. */
-    private static final int PACKAGE_DETAILS = 4;
+    private static final int PACKAGE_DETAILS = 1 + MONITOR_NETWORK;
 
     /** The order details menu selection */
-    private static final int ORDER_DETAILS = 5;
+    private static final int ORDER_DETAILS = 1 + PACKAGE_DETAILS;
 
     /** The bill customers menu selection. */
-    private static final int BILL_CUSTOMERS = 6;
+    private static final int BILL_CUSTOMERS = 1 + ORDER_DETAILS;
+
+    /** The alter pricing values menu option */
+    private static final int ALTER_PRICING_VALUES = 1 + BILL_CUSTOMERS;
 
     /** Menu option for loging out. */
-    private static final int LOG_OUT = 7;
+    private static final int LOG_OUT = 1 + ALTER_PRICING_VALUES;
 
     /**
      * Displays and operates over the main admin menu.
@@ -45,7 +50,7 @@ public class AdminMenu {
         int menuSelection = -1;
         do {
             // display the menu options
-            System.out.print("\nAdministration Menu:\n\t1. Enter the SQL Console\n\t2. Create New Corporate Account\n\t3. Monitor Distribution Network\n\t4. View Package Details\n\t5. View Orders\n\t6. Charge Corporate Customers\n\t7. Log Out\n");
+            System.out.print("\nAdministration Menu:\n\t1. Enter the SQL Console\n\t2. Create New Corporate Account\n\t3. Monitor Distribution Network\n\t4. View Package Details\n\t5. View Orders\n\t6. Charge Corporate Customers\n\t7. Enter pricing menu\n\t8. Log Out\n");
 
 
             // Make a menu selection
@@ -70,9 +75,12 @@ public class AdminMenu {
                 case BILL_CUSTOMERS:
                     chargeCorporateCustomers();
                     break;
+				case ALTER_PRICING_VALUES:
+					alterPricing();
+					break;
                 case LOG_OUT:
                     System.out.println("Goodbye.");
-                    return;
+                    break;
             }
 
         } while (menuSelection != LOG_OUT);
@@ -501,6 +509,151 @@ public class AdminMenu {
 		}
     }
 
+	/**
+	 * Shows a menu for altering the pricing values used to determine a customer's bills.
+	 * This is effectively a sub-menu of the admin menu.
+	 */
+	private static void alterPricing() {
+
+		// The selection of the current menu.
+		int menuSelection = -1;
+
+    	// A set of menu options
+		final int VIEW_MODIFIERS = 1;
+		final int NEW_MODIFIER = 2;
+		final int MODIFY_VALUE = 3;
+		final int DELETE_MODIFIER = 4;
+		final int RETURN = 5;
+
+    	do {
+			System.out.println("Pricing Model Menu - Select an option from below:");
+			System.out.println("\t1. View all pricing modifiers");
+			System.out.println("\t2. Create a new pricing modifier");
+			System.out.println("\t3. Modify a pricing value");
+			System.out.println("\t4. Delete a pricing modifier");
+			System.out.println("\t5. Return to the administrator menu");
+
+			menuSelection = Input.makeSelectionInRange(VIEW_MODIFIERS, RETURN);
+
+
+			// Get all current shipping cost modifiers.
+			HashMap<String, Double> modifiers = null;
+
+			try {
+				modifiers = ShippingCostMultiplier.getCostList();
+			} catch (SQLException e) {
+				System.out.println("An unexpected error occurred while loading the pricing values from the database.");
+				return;
+			}
+
+			switch (menuSelection) {
+
+				// Display all the modifier values.
+				case VIEW_MODIFIERS: {
+
+					System.out.println();
+					System.out.println("CURRENT PRICING MODEL TABLE:");
+					System.out.println("----------------------------\n");
+					for (String m : modifiers.keySet()) System.out.printf("%s = $%.2f\n", m, modifiers.get(m));
+					System.out.println("\n----------------------------");
+				} break;
+
+				// Create a new modifier value
+				case NEW_MODIFIER: {
+
+					// Get the name - don't allow duplicates.
+					String name = Input.readStrWhileNotEmpty("Modifier Name", 30);
+					if (modifiers.containsKey(name)) {
+						System.out.printf("Error: Modifier %s already exists with value $%.2f\n", name, modifiers.get(name));
+						break;
+					}
+
+					// Get the value.
+					Double value = null;
+					do {
+						try {
+							value = Input.readReal("Value");
+						} catch (Input.InputException ie) {
+							System.out.println("Error: Enter a real number.");
+						}
+					} while (value == null);
+
+					// Save the value.
+					ShippingCostMultiplier multiplier = new ShippingCostMultiplier(name, value);
+					try {
+						multiplier.saveToDB();
+					} catch (SQLException e) {
+						System.out.println("Error: Unexpected error when saving the shipping cost multiplier to the database.");
+						break;
+					}
+
+					// Add to the modifiers we have stored here in memory.
+					modifiers.put(name, value);
+
+				} break;
+
+				// Alter the value of a modifier.
+				case MODIFY_VALUE: {
+
+					// Get the name, check its existence.
+					String name = Input.readStrWhileNotEmpty("Modifier Name", 30);
+					if (!modifiers.containsKey(name)) {
+						System.out.printf("Error: modifier %s does not exist.\n", name);
+						break;
+					}
+
+					System.out.printf("Current value of %s = $%.2f. Enter new value:\n", name, modifiers.get(name));
+
+					// Get the new modifier value
+					Double value = null;
+					do {
+						try {
+							value = Input.readReal("Value");
+						} catch (Input.InputException ie) {
+							System.out.println("Error: Enter a real number.");
+						}
+					} while (value == null);
+
+					// Set the value in the database.
+					ShippingCostMultiplier multiplier = new ShippingCostMultiplier(name, value);
+					try {
+						multiplier.saveToDB();
+					} catch (SQLException e) {
+						System.out.println("Error: Unexpected error when updating the value of the shipping cost modifier.");
+						break;
+					}
+
+					System.out.printf("Modifier %s updated to new value $%.2f\n", name, value);
+					modifiers.put(name, value);
+
+				} break;
+
+				case DELETE_MODIFIER: {
+
+					// Get the name, check its existence.
+					String name = Input.readStrWhileNotEmpty("Modifier Name", 30);
+					if (!modifiers.containsKey(name)) {
+						System.out.printf("Error: modifier %s does not exist.\n", name);
+						break;
+					}
+
+					// Delete the shipping cost modifier. Value doesn't matter as delete() will query by name alone.
+					ShippingCostMultiplier multiplier = new ShippingCostMultiplier(name, 0);
+					try {
+						multiplier.delete();
+					} catch (SQLException e) {
+						System.out.println("Error: An unexpected error occurred while deleting the shipping cost modifier.");
+						System.out.println(e.getMessage());
+						break;
+					}
+
+					System.out.println("Modifier \'" + name + "\' deleted successfully.");
+					modifiers.remove(name);
+				} break;
+			}
+
+		} while (menuSelection != RETURN);
+	}
 
     /**
      * Sub menu for charging all customers.

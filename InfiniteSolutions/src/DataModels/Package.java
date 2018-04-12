@@ -110,13 +110,15 @@ public class Package extends DataModel {
     public static ShippingOrder createPackageOrder(Package pkg, Account acct) throws SQLException {
         double speedMult = 0.0;
         double weightMult = 0.0;
-        ArrayList<ShippingCostMultiplier> costList = ShippingCostMultiplier.getCostList();
-        for (ShippingCostMultiplier s : costList) {
-            if (pkg.speed.equals(s.getMultiplier()))
-                speedMult = s.getValue();
-            if ("PerPound".equals(s.getMultiplier()))
-                weightMult = s.getValue();
-        }
+
+        // TODO: Evaluate how we will charge for a given package and come up with a meaningful way of billing with the set of multipliers
+//        ArrayList<ShippingCostMultiplier> costList = ShippingCostMultiplier.getCostList();
+//        for (ShippingCostMultiplier s : costList) {
+//            if (pkg.speed.equals(s.getMultiplier()))
+//                speedMult = s.getValue();
+//            if ("PerPound".equals(s.getMultiplier()))
+//                weightMult = s.getValue();
+//        }
 
         Double cost = speedMult * weightMult * pkg.weight;
         ShippingOrder s = new ShippingOrder(-1, pkg.trackingId, acct.getId(), Timestamp.valueOf(new Date().toString()), cost);
