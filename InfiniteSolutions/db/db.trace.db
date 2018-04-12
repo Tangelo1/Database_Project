@@ -686,6 +686,22 @@ org.h2.jdbc.JdbcSQLException: Invalid value "3" for parameter "columnIndex" [900
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
 	at java.lang.Thread.run(Thread.java:745)
 >>>>>>> 719186a8ea56cba53910d73987f12353c470c84c
-2018-04-12 08:30:01 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLException: Table "ADDRESSES" not found; SQL statement:
-select * FROM addresses; [42102-196]
+2018-04-12 08:16:29 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "EXP_DATE VARCHAR(8)": "'12121212/123123124' (18)"; SQL statement:
+INSERT INTO public.creditcard VALUES (null, '1231313', '12312312313', '12121212/123123124', 1231); [22001-196]
+2018-04-12 08:22:23 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The result set is not scrollable and can not be reset. You may need to use conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ..). [90128-196]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.message.DbException.get(DbException.java:144)
+	at org.h2.jdbc.JdbcResultSet.resetResult(JdbcResultSet.java:3281)
+	at org.h2.jdbc.JdbcResultSet.last(JdbcResultSet.java:2816)
+	at DataModels.Location.exists(Location.java:130)
+	at Menus.AdminMenu.viewLocation(AdminMenu.java:278)
+	at Menus.AdminMenu.enterMainAdminMenu(AdminMenu.java:66)
+	at Menus.Menu.login(Menu.java:106)
+	at Menus.Menu.enterMainMenu(Menu.java:75)
+	at Menus.Menu.main(Menu.java:33)
+2018-04-12 08:23:27 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: No data is available [2000-196]

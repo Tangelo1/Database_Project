@@ -121,6 +121,8 @@ public class WarehouseMenu {
                 System.out.println("Invalid ID input");
             }
 
+
+
             TrackingEvent newLocationEvent = new TrackingEvent(
                     trackingID, locationID, new Timestamp(System.currentTimeMillis()), "Arrived");
 
