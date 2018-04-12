@@ -9,6 +9,7 @@ import Driver.DBDriver;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class Package extends DataModel {
 
@@ -108,23 +109,17 @@ public class Package extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public static ShippingOrder createPackageOrder(Package pkg, Account acct) throws SQLException {
-        double speedMult = 0.0;
-        double weightMult = 0.0;
 
-        // TODO: Evaluate how we will charge for a given package and come up with a meaningful way of billing with the set of multipliers
-//        ArrayList<ShippingCostMultiplier> costList = ShippingCostMultiplier.getCostList();
-//        for (ShippingCostMultiplier s : costList) {
-//            if (pkg.speed.equals(s.getMultiplier()))
-//                speedMult = s.getValue();
-//            if ("PerPound".equals(s.getMultiplier()))
-//                weightMult = s.getValue();
-//        }
+        HashMap<String, Double> multipliers = ShippingCostMultiplier.getCostList();
+        double speedMult = multipliers.get(pkg.getSpeed());
+        double weightMult = multipliers.get("PerPound");
+
+        // Save package first so that there is a valid tracking id to assign to the shipping order.
+        pkg.saveToDB();
 
         Double cost = speedMult * weightMult * pkg.weight;
-        ShippingOrder s = new ShippingOrder(-1, pkg.trackingId, acct.getId(), Timestamp.valueOf(new Date().toString()), cost);
-
+        ShippingOrder s = new ShippingOrder(-1, pkg.trackingId, acct.getId(), new Timestamp(System.currentTimeMillis()), cost);
         s.saveToDB();
-        pkg.saveToDB();
 
         return s;
     }

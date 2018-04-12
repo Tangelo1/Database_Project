@@ -143,7 +143,7 @@ public class CustomerMenu {
         do {
             try {
                 System.out.println("\nWeight");
-                weight = Input.readInt();
+                weight = Input.readReal();
                 isDouble = true;
             } catch (Exception e) {
                 System.out.println("Must be a number.");
@@ -191,7 +191,7 @@ public class CustomerMenu {
                 break;
         }
 
-        int value = 0;
+        double value = 0;
         boolean isInternational = false;
         String items = null;
 
@@ -203,7 +203,7 @@ public class CustomerMenu {
             do {
                 try {
                     System.out.println("\nDeclared Value");
-                    value = Input.readInt();
+                    value = Input.readReal();
                     isInt = true;
                 } catch (Exception e) {
                     System.out.println("Must be a number.");
@@ -221,10 +221,15 @@ public class CustomerMenu {
         Package p = new Package(-1, weight, pkgType, pkgSpeed, value,
                 dscAddress.getId(), srcAddress.getId(), isHazardous, isInternational);
 
+        // Create the shipping order first. This will save the package to the database
+        // so that it has a valid tracking ID for creating the manifest items.
+        double cost = 0.0;
         try {
-            p.saveToDB();
-        } catch (SQLException e) {
-            System.out.println("Could not save package.");
+            ShippingOrder order = Package.createPackageOrder(p, account);
+            cost = order.getCost();
+        } catch(SQLException e) {
+            System.out.println("An error occurred while creating the shipping order.");
+            System.out.println(e.getMessage());
             return;
         }
 
@@ -234,17 +239,9 @@ public class CustomerMenu {
                 m.saveToDB();
             } catch (SQLException e) {
                 System.out.println("Could not save manifest item.");
+                System.out.println(e.getMessage());
                 return;
             }
-        }
-
-        // Create the shipping order
-        double cost = 0.0;
-        try {
-            ShippingOrder order = Package.createPackageOrder(p, account);
-            cost = order.getCost();
-        } catch(SQLException e) {
-            System.out.println("An error occurred while creating the shipping order.");
         }
 
 

@@ -14,7 +14,6 @@ public class ShippingOrder extends DataModel {
     private double cost;
     private Timestamp dateCreated;
 
-    //May need to chang4e dateCreated to a timestamp object
     /**
      * Constructor to create a new Shipping Order
      * @param orderId Database ID
