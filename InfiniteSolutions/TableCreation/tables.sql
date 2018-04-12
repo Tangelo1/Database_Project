@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS account (
 );
 
 CREATE TABLE IF NOT EXISTS package (
-  tracking_id INT PRIMARY KEY,
+  tracking_id INT AUTO_INCREMENT PRIMARY KEY,
   weight DOUBLE,
   type VARCHAR(10),
   speed VARCHAR(10),

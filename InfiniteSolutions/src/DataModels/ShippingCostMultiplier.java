@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ShippingCostMultiplier extends DataModel{
     private String multiplier;
@@ -38,9 +39,11 @@ public class ShippingCostMultiplier extends DataModel{
         this.value = value;
     }
 
+    /**
+     * Stub method; required from datamodel, not used for loading.
+     */
     @Override
     public void loadFromDB() {
-
     }
 
     /**
@@ -50,23 +53,46 @@ public class ShippingCostMultiplier extends DataModel{
     @Override
     public void saveToDB() throws SQLException{
 
-        Connection conn = DBDriver.getConnection();
-        String query = String.format("INSERT INTO public.shippingcostmultiplier " +
-                        "VALUES (\'%s\', %f);",
-                multiplier, value);
+        // Determine if the modifier exists in the database. If so, update, if not, insert.
 
+        Connection conn = DBDriver.getConnection();
+        String countQuery = String.format("SELECT count(multiplier) FROM public.shippingCostMultipliers WHERE multiplier = \'%s\'", multiplier);
+        Statement stmt = conn.createStatement();
+        stmt.execute(countQuery);
+
+        ResultSet results = stmt.getResultSet();
+        results.first();
+        int count = results.getInt(1);
+
+        if (count == 0) {
+            String query = String.format("INSERT INTO public.shippingCostMultipliers " +
+                            "VALUES (\'%s\', %f);",
+                    multiplier, value);
+            super.executeQuery(query);
+        }
+        else {
+            String query = String.format("UPDATE public.shippingCostMultipliers SET value = %f WHERE multiplier = \'%s\'", value, multiplier);
+            super.executeQuery(query);
+        }
+    }
+
+    /**
+     * Deletes the modifier from the database. Only deletes by modifier name.
+     * @throws SQLException if something goes wrong.
+     */
+    public void delete() throws SQLException {
+        String query = String.format("DELETE FROM public.shippingCostMultipliers WHERE multiplier = \'%s\'", multiplier);
         super.executeQuery(query);
     }
 
     /**
      * Get all the current shipping cost multipliers in the database
-     * @return Array list of all the shipping cost multipliers
+     * @return A map mapping all the multipliers to their values.
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
-    public static ArrayList<ShippingCostMultiplier> getCostList() throws SQLException{
-        ArrayList<ShippingCostMultiplier> costList = new ArrayList<>();
+    public static HashMap<String, Double> getCostList() throws SQLException{
+        HashMap<String, Double> valueMap = new HashMap<>();
         Connection conn = DBDriver.getConnection();
-        costList = new ArrayList<>();
 
         String query =
                 "SELECT * FROM shippingcostmultipliers;";
@@ -75,46 +101,7 @@ public class ShippingCostMultiplier extends DataModel{
         stmt.execute(query);
 
         ResultSet results = stmt.getResultSet();
-        while (results.next())
-            costList.add(new ShippingCostMultiplier(
-                    results.getString(1), results.getInt(2)));
-        return costList;
-    }
-
-    /**
-     * Get a cost multiplier value.
-     * @param multiplier the name of the value to get.
-     */
-    public double get(String multiplier) {
-        //TODO
-        return 0;
-    }
-
-    /**
-     * Sets the value of a multiplier in the databaes
-     * @param multiplier the name of the multiplier
-     * @param value The value of the multipler
-     */
-    public void set(String multiplier, double value) {
-        // TODO
-    }
-
-    /**
-     * Creates a new multiplier in the table and saves the
-     * @param multiplier the name of the multiplier
-     * @param value the value of the multiplier
-     */
-    public void add(String multiplier, double value) {
-        // TODO
-    }
-
-    /**
-     * The name of the multiplier to remove from the database.
-     * @param multiplier The multiplier to remove.
-     * @return true if removed, false if not.
-     */
-    public boolean remove(String multiplier) {
-        // TODO
-        return false;
+        while (results.next()) valueMap.put(results.getString(1), results.getDouble(2));
+        return valueMap;
     }
 }

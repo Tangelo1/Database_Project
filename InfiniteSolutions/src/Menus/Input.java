@@ -29,6 +29,21 @@ public class Input
     }
 
     /**
+     * Reads a double from stdin
+     * @return the double read
+     * @throws InputException If the user did not input something we were expecting.
+     */
+    public static double readDouble() throws InputException {
+        System.out.print("> ");
+        String line = stdin.nextLine().trim();
+        try {
+            return Double.parseDouble(line);
+        } catch (NumberFormatException nfe) {
+            throw new InputException("Unexpected Input \'" + line + "\' received when expecting a number.");
+        }
+    }
+
+    /**
      * Reads an string from stdin. Trims the string. Does not perform any error checking on the string.
      * @return the string read
      */
@@ -37,6 +52,33 @@ public class Input
         String line = stdin.nextLine().trim();
 
         return line;
+    }
+
+    /**
+     * Reads a real number from the user.
+     * @return The real number as a double.
+     * @throws InputException when the user does not enter a number.
+     */
+    public static double readReal() throws InputException {
+        try {
+            return Double.parseDouble(readStrWhileNotEmpty(""));
+        } catch (NumberFormatException e) {
+            throw new InputException("Error: non numerical input received; expected a real number.");
+        }
+    }
+
+    /**
+     * Reads a real number from the user.
+     * @param prompt the prompt for the value.
+     * @return The real number as a double.
+     * @throws InputException when the user does not enter a number.
+     */
+    public static double readReal(String prompt) throws InputException {
+        try {
+            return Double.parseDouble(readStrWhileNotEmpty(prompt));
+        } catch (NumberFormatException e) {
+            throw new InputException("Error: non numerical input received; expected a real number.");
+        }
     }
 
     /**

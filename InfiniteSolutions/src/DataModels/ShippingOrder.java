@@ -90,7 +90,7 @@ public class ShippingOrder extends DataModel {
         super.executeQuery(query);
 
         if (orderId == -1) {
-            query = "SELECT MAX(ID) from SHIPPINGORDER";
+            query = "SELECT MAX(ORDER_ID) from SHIPPINGORDER";
             ResultSet rs = getStatementFromQuery(query);
             rs.next();
             this.orderId = rs.getInt(1);

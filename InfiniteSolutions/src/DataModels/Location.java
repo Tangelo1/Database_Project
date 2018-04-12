@@ -47,8 +47,6 @@ public class Location extends DataModel {
             this.name = s.getString(2);
             this.type = s.getString(3);
         }catch (SQLException e) {
-            System.out.println("\nCANNOT EXECUTE QUERY:");
-            System.out.println("\t\t" + e.getMessage());
         }
     }
 
@@ -78,39 +76,6 @@ public class Location extends DataModel {
             this.locationId = r.getInt(1);
         }
     }
-
-
-
-
-    /**
-     *
-     * Find and return all the packages last delivered from this vehicle
-     * @return An Package object
-     * @throws SQLException Throws this on the event that the query cannot be executed
-     */
-    /*
-    public Package getLastDelivered() throws SQLException {
-        String query = String.format("SELECT * " +
-                "FROM (PACKAGE INNER JOIN TRACKINGEVENTS ON PACKAGE.TRACKING_ID=TRACKINGEVENTS.TRACKING_ID) " +
-                "WHERE LOCATION_ID=%d " +
-                "AND TRACKINGEVENTS.STATUS='Delivered' " +
-                "AND DATE=(SELECT MAX(DATE)FROM TRACKINGEVENTS WHERE LOCATION_ID=%d);", this.locationId, this.locationId);
-
-        ResultSet s = DataModel.getStatementFromQuery(query);
-        Package p = null;
-        try {
-            p = new Package(s.getInt(1));
-            p.loadFromDB();
-
-        } catch (SQLException e) {
-            System.out.println("\nCANNOT EXECUTE QUERY:");
-            System.out.println("\t\t" + e.getMessage());
-        }
-
-
-        return p;
-    }
-    */
 
     /**
      * Find and return all the packages within this location
