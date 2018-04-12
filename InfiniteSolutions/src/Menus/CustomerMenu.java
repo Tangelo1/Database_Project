@@ -1,14 +1,18 @@
 package Menus;
 
-import DataModels.Account;
-import DataModels.Address;
-import DataModels.CreditCard;
+import DataModels.*;
+import DataModels.Package;
 
 import javax.print.DocFlavor;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
+import DataModels.ShippingCostMultiplier;
 
 
 public class CustomerMenu {
+    private static ArrayList<ShippingCostMultiplier> costList;
 
     /**
      * Track package menu selection
@@ -42,6 +46,14 @@ public class CustomerMenu {
     ;
 
     public static void enterCustomerMenu() {
+
+        try {
+            costList = ShippingCostMultiplier.getCostList();
+        } catch (SQLException e) {
+            System.out.println("Cannot get cost list");
+        }
+
+        System.out.println("\n~~ Welcome " + account.getName() + "! ~~\n");
 
         int menuSelection = -1;
         do {
@@ -87,26 +99,20 @@ public class CustomerMenu {
         String srcPostal = "";
         String srcCountry = "";
 
-        System.out.println("Starting up steps to ship new package");
-        System.out.println("Enter the street of where it is being shipped from");
+        System.out.println("\nSource Address: ");
 
-        srcStreet = Input.readStrWhileNotEmpty("Enter the street of where it is being shipped from", 50);
-
-        srcCity = Input.readStrWhileNotEmpty("Enter the city of where it is being shipped from", 50);
-
-        srcState = Input.readStrWhileNotEmpty("Enter the state of where it is being shipped from", 50);
-
-        srcPostal = Input.readStrWhileNotEmpty("Enter the postal of where it is being shipped from", 8);
-
-        srcCountry = Input.readStrWhileNotEmpty("Enter the country of where it is being shipped from", 50);
-
+        srcStreet = Input.readStrWhileNotEmpty("\tStreet", 50);
+        srcCity = Input.readStrWhileNotEmpty("\tCity", 50);
+        srcState = Input.readStrWhileNotEmpty("\tState", 50);
+        srcPostal = Input.readStrWhileNotEmpty("\tPostal Code", 8);
+        srcCountry = Input.readStrWhileNotEmpty("\tCountry", 50);
 
         srcAddress = new Address(-1, srcStreet, srcCity, srcState, srcPostal, srcCountry);
 
         try {
             srcAddress.saveToDB();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Source Address could not be saved.");
         }
 
         Address dscAddress;
@@ -116,28 +122,153 @@ public class CustomerMenu {
         String dscPostal = "";
         String dscCountry = "";
 
-        System.out.println("Enter the street of where it is being shipped to");
+        System.out.println("\nDestination Address: ");
 
-        dscStreet = Input.readStrWhileNotEmpty("Enter the street of where it is being shipped to", 50);
-        dscCity = Input.readStrWhileNotEmpty("Enter the city of where it is being shipped to", 50);
-        dscState = Input.readStrWhileNotEmpty("Enter the state of where it is being shipped to", 50);
-        dscPostal = Input.readStrWhileNotEmpty("Enter the postal of where it is being shipped to", 8);
-        dscCountry = Input.readStrWhileNotEmpty("Enter the country of where it is being shipped to", 50);
+        dscStreet = Input.readStrWhileNotEmpty("\tStreet", 50);
+        dscCity = Input.readStrWhileNotEmpty("\tCity", 50);
+        dscState = Input.readStrWhileNotEmpty("\tState", 50);
+        dscPostal = Input.readStrWhileNotEmpty("\tPostal Code", 8);
+        dscCountry = Input.readStrWhileNotEmpty("\tCountry", 50);
 
         dscAddress = new Address(-1, dscStreet, dscCity, dscState, dscPostal, dscCountry);
         try {
             dscAddress.saveToDB();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Destination Address could not be saved.");
         }
 
-        double weight = Double.parseDouble(Input.readStrWhileNotEmpty("What's the weight of the package"));
+        boolean isDouble;
+        double weight = 0;
+        do {
+            try {
+                System.out.println("\nWeight");
+                weight = Input.readInt();
+                isDouble = true;
+            } catch (Exception e) {
+                System.out.println("Must be a number.");
+                isDouble = false;
+            }
+        }
+        while (!isDouble);
 
-        System.out.println("What's the type of the package? 1 - letter, 2 - small, 3 - medium, 4 - large");
+
+        System.out.println("\nType? (1 - Letter, 2 - Small, 3 - Medium, 4 - Large)");
         int type = Input.makeSelectionInRange(1, 4);
 
-        System.out.println("What's the speed of the package? 1 - no rush, 2 - standard, 3 - expedited, 4 - overnight");
+        String pkgType = null;
+        switch (type) {
+            case 1:
+                pkgType = "Letter";
+                break;
+            case 2:
+                pkgType = "Small";
+                break;
+            case 3:
+                pkgType = "Medium";
+                break;
+            case 4:
+                pkgType = "Large";
+                break;
+        }
 
+        System.out.println("\nSpeed? (1 - No Rush, 2 - Standard, 3 - Expedited, 4 - Overnight)");
+        int speed = Input.makeSelectionInRange(1, 4);
+
+        String pkgSpeed = null;
+        switch (speed) {
+            case 1:
+                pkgSpeed = "NoRush";
+                break;
+            case 2:
+                pkgSpeed = "Standard";
+                break;
+            case 3:
+                pkgSpeed = "Expedited";
+                break;
+            case 4:
+                pkgSpeed = "Overnight";
+                break;
+        }
+
+        int value = 0;
+        boolean isInternational = false;
+        String items = null;
+
+        // If the package is international
+        if (!dscCountry.toUpperCase().equals(srcCountry.toUpperCase())) {
+            isInternational = true;
+
+            boolean isInt;
+            do {
+                try {
+                    System.out.println("\nDeclared Value");
+                    value = Input.readInt();
+                    isInt = true;
+                } catch (Exception e) {
+                    System.out.println("Must be a number.");
+                    isInt = false;
+                }
+            }
+            while (!isInt);
+
+            items = Input.readStrWhileNotEmpty("\nDescription of Items", 75);
+        }
+
+        System.out.println("\nContains Hazardous Materials?");
+        boolean isHazardous = Input.makeYesNoChoice();
+
+        Package p = new Package(-1, weight, pkgType, pkgSpeed, value,
+                dscAddress.getId(), srcAddress.getId(), isHazardous, isInternational);
+
+        try {
+            p.saveToDB();
+        } catch (SQLException e) {
+            System.out.println("Could not save package.");
+            return;
+        }
+
+        if (isInternational) {
+            ManifestItem m = new ManifestItem(p.getTrackingId(), items);
+            try {
+                m.saveToDB();
+            } catch (SQLException e) {
+                System.out.println("Could not save manifest item.");
+                return;
+            }
+        }
+
+        double multValue = 0;
+        double perPound = 0;
+
+        for (ShippingCostMultiplier m: costList) {
+            if (m.getMultiplier().equals(pkgSpeed)) {
+                multValue = m.getValue();
+            }
+            else if (m.getMultiplier().equals("PerPound")) {
+                perPound = m.getValue();
+            }
+        }
+
+        double cost = multValue * perPound * weight;
+
+        ShippingOrder o = new ShippingOrder(-1, p.getTrackingId(), account.getId(), new Timestamp(System.currentTimeMillis()), cost);
+
+        try {
+            o.saveToDB();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Could not save order.");
+        }
+
+
+        System.out.println("\nTracking No.\tWeight\tType\tSpeed");
+        System.out.printf("%d\t\t\t%.2f\t%s\t%s\n", p.getTrackingId(), p.getWeight(), p.getType(), p.getSpeed());
+        System.out.println("\nShipping from: \n" + srcAddress);
+        System.out.println("\nShipping to: \n" + dscAddress);
+        System.out.println("\nHazardous: " + isHazardous);
+        System.out.println("\nYour total is $" + cost);
+
+        System.out.println("\nPackage order created successfully!\n");
 
     }
 

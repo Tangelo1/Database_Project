@@ -98,7 +98,7 @@ public class Menu {
         try {
             ID = Input.readInt();
         } catch (Input.InputException e) {
-            e.printStackTrace();
+            System.out.println("\nInvalid input.");
         }
 
         // Log into admin menu
@@ -118,8 +118,7 @@ public class Menu {
             }
 
             // If the user account doesn't exist, return to the previous menu.
-            if (userAccount == null) {
-                System.out.println("\nError: Unknown Account Number.");
+            if (userAccount.getName() == null) {
                 return;
             } else {
                 CustomerMenu.setAccount(userAccount);
