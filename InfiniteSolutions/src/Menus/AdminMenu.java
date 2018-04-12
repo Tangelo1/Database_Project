@@ -140,7 +140,6 @@ public class AdminMenu {
      * The sub menu procedure for creating corporate accounts.
      */
     private static void createCorporateAccount() {
-        // TODO
         System.out.println("----- Basic Account Info -----");
 
         // Read the name string, ensuring they don't just enter nothing.
@@ -227,7 +226,6 @@ public class AdminMenu {
 
         System.out.println("\nCreating account...\n");
 
-        // TODO Actualy create the account tuples & stuff etc. here.
         boolean success = true; // Set to false if something goes wrong creating the accounts.
 
         try {
@@ -711,11 +709,11 @@ public class AdminMenu {
             System.out.println("An unexpected error occurred when loading the order information.");
         }
 
-        System.out.printf("%s\t%s\t\t%s\n", "Acct #", "Acct Name", "Balance");
-        System.out.println("===============================");
+        System.out.printf("%-5s%-20s%-5s\n", "Acct #", "Acct Name", "Balance");
+        System.out.println("=======================================");
 
         for (String[] bal : balance) {
-            System.out.printf("%s\t\t%s\t$%s\n", bal[0], bal[1], bal[2]);
+            System.out.printf("%-5s%-20s$%-5s\n", bal[0], bal[1], bal[2]);
         }
     }
 }

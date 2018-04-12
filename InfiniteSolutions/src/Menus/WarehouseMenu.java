@@ -36,34 +36,35 @@ public class WarehouseMenu {
      * Gets and prints all the packages in a given location
      */
     private static void getAllPackagesInLocation() {
-        boolean goodID;
+        int locationID = -1;
         do {
-
             System.out.println("\nEnter a location ID: ");
-            int locationID = 0;
+
             try {
                 locationID = Input.readInt();
             } catch (Input.InputException e) {
-                System.out.println("Invalid ID entered.");
+                System.out.println("Invalid ID input");
             }
 
-            try {
-                Location l = new Location(locationID);
-                ArrayList<Package> pkgs = l.getPackagesWithin();
+            if (!Package.exists(locationID))
+                System.out.println("\nLocation not found.");
+        }
+        while (!Location.exists(locationID));
 
-                System.out.println("\nPackages contained in " + l.getName() + ": ");
+        try {
+            Location l = new Location(locationID);
+            ArrayList<Package> pkgs = l.getPackagesWithin();
 
-                for (Package p : pkgs) {
-                    System.out.println("\tPackage: " + p.getTrackingId());
-                }
+            System.out.println("\nPackages contained in " + l.getName() + ": ");
 
-
-                goodID = true;
-            } catch (Exception e) {
-                System.out.println("\nLocation ID cannot be found.");
-                goodID = false;
+            for (Package p : pkgs) {
+                System.out.println("\tPackage: " + p.getTrackingId());
             }
-        } while (!goodID);
+
+
+        } catch (Exception e) {
+            System.out.println("\nCould not load packages");
+        }
     }
 
 
@@ -102,68 +103,100 @@ public class WarehouseMenu {
      */
     private static void movePackageToLocation() {
 
-        boolean goodID;
 
+        int trackingID = -1;
         do {
             System.out.println("\nEnter a tracking ID: ");
-            int trackingID = 0;
+
             try {
                 trackingID = Input.readInt();
             } catch (Input.InputException e) {
                 System.out.println("Invalid ID input");
             }
 
+            if (!Package.exists(trackingID))
+                System.out.println("\nPackage not found.");
+        }
+        while (!Package.exists(trackingID));
+
+        try {
+            TrackingEvent lastEvent = TrackingEvent.getLastEventForPackage(trackingID);
+            if(lastEvent.getStatus().equals("Delivered")) {
+                System.out.println("\nThis package has already been delivered.");
+                return;
+            }
+        } catch (SQLException e) {
+            System.out.println("Cannot load last event for package.");
+        }
+
+
+        int locationID = -1;
+        do {
             System.out.println("\nEnter a location ID: ");
-            int locationID = 0;
+
             try {
                 locationID = Input.readInt();
             } catch (Input.InputException e) {
                 System.out.println("Invalid ID input");
             }
 
+            if (!Package.exists(locationID))
+                System.out.println("\nLocation not found.");
+        }
+        while (!Location.exists(locationID));
 
 
-            TrackingEvent newLocationEvent = new TrackingEvent(
-                    trackingID, locationID, new Timestamp(System.currentTimeMillis()), "Arrived");
+        TrackingEvent newLocationEvent = new TrackingEvent(
+                trackingID, locationID, new Timestamp(System.currentTimeMillis()), "Arrived");
 
-            try {
-                newLocationEvent.saveToDB();
-                goodID = true;
-                System.out.println("\nPackage moved to new location: " + newLocationEvent.getLocation().getName());
-            } catch (Exception e) {
-                System.out.println("\nTracking ID or Location ID cannot be found.");
-                goodID = false;
-            }
-        } while (!goodID);
+        try {
+            newLocationEvent.saveToDB();
+            System.out.println("\nPackage moved to new location: " + newLocationEvent.getLocation().getName());
+        } catch (Exception e) {
+            System.out.println("\nCould not move package.");
+        }
     }
 
     /**
      * Mark a package as delivered by tracking number
      */
     private static void markPackageAsDelivered() {
-        boolean goodID;
 
+        int trackingID = -1;
         do {
             System.out.println("\nEnter a tracking ID: ");
-            int trackingID = 0;
+
             try {
                 trackingID = Input.readInt();
             } catch (Input.InputException e) {
                 System.out.println("Invalid ID input");
             }
 
-            TrackingEvent deliveredEvent = new TrackingEvent(
-                    trackingID, -1, new Timestamp(System.currentTimeMillis()), "Delivered");
+            if (!Package.exists(trackingID))
+                System.out.println("\nPackage not found.");
+        }
+        while (!Package.exists(trackingID));
 
-            try {
-                deliveredEvent.saveToDB();
-                goodID = true;
-                System.out.println("\nPackage marked sucessfully.");
-            } catch (SQLException e) {
-                System.out.println("\nTracking ID cannot be found.");
-                goodID = false;
+        try {
+            TrackingEvent lastEvent = TrackingEvent.getLastEventForPackage(trackingID);
+            if(lastEvent.getStatus().equals("Delivered")) {
+                System.out.println("\nThis package has already been delivered.");
+                return;
             }
-        } while (!goodID);
+        } catch (SQLException e) {
+            System.out.println("Cannot load last event for package.");
+        }
+
+
+        TrackingEvent deliveredEvent = new TrackingEvent(
+                trackingID, -1, new Timestamp(System.currentTimeMillis()), "Delivered");
+
+        try {
+            deliveredEvent.saveToDB();
+            System.out.println("\nPackage marked sucessfully.");
+        } catch (SQLException e) {
+            System.out.println("\nCould not mark package.");
+        }
 
     }
 

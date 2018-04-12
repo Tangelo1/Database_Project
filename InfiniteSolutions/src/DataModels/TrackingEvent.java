@@ -41,6 +41,21 @@ public class TrackingEvent extends DataModel {
     }
 
     /**
+     *
+     * @param trackingId
+     * @return
+     */
+    public static TrackingEvent getLastEventForPackage(int trackingId) throws SQLException {
+       String query = String.format(
+               "SELECT * FROM public.trackingevents WHERE tracking_id=%d ORDER BY date DESC LIMIT 1;", trackingId);
+
+        ResultSet s = DataModel.getStatementFromQuery(query);
+        s.next();
+        return new TrackingEvent(s.getInt(1), s.getInt(2),
+                s.getTimestamp(3), s.getString(4));
+    }
+
+    /**
      * Queries the database to find all tracking events for a given tracking ID
      * @param trackingId Tracking ID for a package
      * @return A list of matching tracking event objects

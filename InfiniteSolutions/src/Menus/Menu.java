@@ -264,10 +264,16 @@ public class Menu {
         }
 
         for (TrackingEvent e : history) {
-            try {
-                System.out.printf("\n%s -- %s, %s", e.getTime(), e.getLocation().getName(), e.getStatus());
-            } catch (Exception ex) {
-                System.out.println("Could not find tracking history event");
+            if(e != null) {
+                try {
+                    if (e.getLocation().getName() != null)
+                        System.out.printf("\n%s -- %s, %s", e.getTime(), e.getLocation().getName(), e.getStatus());
+                    else
+                        System.out.printf("\n%s -- %s, %s", e.getTime(), "N/A", e.getStatus());
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    System.out.println("Could not find tracking history event");
+                }
             }
         }
 

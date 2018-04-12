@@ -165,6 +165,9 @@ public class Input
      * @return true if date is a valid date, false otherwise.
      */
     public static boolean isDate(String date, String format) {
+        if(date.length() != 5)
+            return false;
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         try {
             simpleDateFormat.parse(date);
