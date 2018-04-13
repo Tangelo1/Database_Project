@@ -67,13 +67,13 @@ public class DBDriver {
      * DBDrive constructor to create the database and establish a connection
      */
     public DBDriver() {
-        String location = "./InfiniteSolutions/db/db";
+        String location = "./db/db";
         String user = "";
         String password = "";
 
         File f = null;
 
-        f = new File("./InfiniteSolutions/db/db.mv.db");
+        f = new File("./db/db.mv.db");
 
         if (!f.isFile()) {
             createConnection(location, user, password);
@@ -90,7 +90,7 @@ public class DBDriver {
      */
     private void loadTables() {
         try {
-            RunScript.execute(conn, new FileReader("./InfiniteSolutions/TableCreation/tables.sql"));
+            RunScript.execute(conn, new FileReader("./TableCreation/tables.sql"));
         }
         catch (FileNotFoundException | SQLException e) {
             System.out.println("\nCANNOT EXECUTE QUERY:");
@@ -105,21 +105,21 @@ public class DBDriver {
      * Load the CSV files into the database
      */
     public static void loadDB() {
-        loadCSV("./InfiniteSolutions/db/data/Address.csv", "address");
+        loadCSV("./db/data/Address.csv", "address");
 
-        loadCSV("./InfiniteSolutions/db/data/CreditCard.csv","creditcard");
+        loadCSV("./db/data/CreditCard.csv","creditcard");
 
-        loadCSV("./InfiniteSolutions/db/data/Location.csv","location");
+        loadCSV("./db/data/Location.csv","location");
 
-        loadCSV("./InfiniteSolutions/db/data/Account.csv","account");
+        loadCSV("./db/data/Account.csv","account");
 
-        loadCSV("./InfiniteSolutions/db/data/Package.csv","package");
+        loadCSV("./db/data/Package.csv","package");
 
-        loadCSV("./InfiniteSolutions/db/data/ManifestItem.csv", "manifestitem");
+        loadCSV("./db/data/ManifestItem.csv", "manifestitem");
 
-        loadCSV("./InfiniteSolutions/db/data/ShippingOrder.csv", "shippingorder");
+        loadCSV("./db/data/ShippingOrder.csv", "shippingorder");
 
-        loadCSV("./InfiniteSolutions/db/data/TrackingEvents.csv", "trackingevents");
+        loadCSV("./db/data/TrackingEvents.csv", "trackingevents");
 
     }
 
