@@ -393,13 +393,19 @@ public class AdminMenu {
 		System.out.println("Date\tLocation\tEvent");
 		System.out.println("-----------------------------");
 
-		try {
-			for (TrackingEvent event : history) {
-				System.out.println(event.getTime() + "\t" + event.getLocation().getName() + "\t" + event.getStatus());
-			}
-		} catch (SQLException e) {
-			System.out.println("An unexpected error occurred while getting the tracking history of the package.");
-		}
+        for (TrackingEvent e : history) {
+            if(e != null) {
+                try {
+                    if (e.getLocation().getName() != null)
+                        System.out.printf("\n%s -- %s, %s", e.getTime(), e.getLocation().getName(), e.getStatus());
+                    else
+                        System.out.printf("\n%s -- %s, %s", e.getTime(), "N/A", e.getStatus());
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    System.out.println("Could not find tracking history event");
+                }
+            }
+        }
 
 		System.out.println();
 	}
