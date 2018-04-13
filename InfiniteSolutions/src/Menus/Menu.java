@@ -218,10 +218,11 @@ public class Menu {
 
         System.out.println("\nCreating account...\n");
 
+        Account acc;
         try {
             Address address = new Address(-1, street, city, state, postalCode, country);
             CreditCard card = new CreditCard(-1, nameOnCard, number, date, cvv);
-            Account.createPersonal(address, card, accountName, phone);
+            acc = Account.createPersonal(address, card, accountName, phone);
         } catch (SQLException e) {
             System.out.println("\nAn unexpected error occurred while creating the account. The account could not be created.\n");
             System.out.println("Technical information:\n");
@@ -231,6 +232,7 @@ public class Menu {
 
         System.out.println("=========================================================");
         System.out.println("====           Account Created Successfully          ====");
+        System.out.println("====           Your Account Number is: "+acc.getId()+"           ====");
         System.out.println("=========================================================\n");
     }
 
