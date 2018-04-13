@@ -82,6 +82,7 @@ public class DBDriver {
         }
         else {
             createConnection(location, user, password);
+
         }
     }
 
