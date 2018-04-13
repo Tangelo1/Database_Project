@@ -144,7 +144,12 @@ public class CustomerMenu {
             try {
                 System.out.println("\nWeight");
                 weight = Input.readReal();
-                isDouble = true;
+                if(weight > 0){
+                    isDouble = true;
+                }else{
+                    System.out.println("Invalid weight");
+                    isDouble = false;
+                }
             } catch (Exception e) {
                 System.out.println("Must be a number.");
                 isDouble = false;
