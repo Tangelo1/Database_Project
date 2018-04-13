@@ -505,9 +505,9 @@ public class AdminMenu {
 			startDate.toString() + " to " + endDate.toString() + "\n");
 
 		// Print and format the details of each order
-		System.out.println("Order\tPackage\tAccount\tDate\tTotal\n");
+		System.out.printf("Order   Package   Account   Date                    Total\n");
 		for(ShippingOrder order : orders) {
-			System.out.printf("%d\t%d\t%d\t%s\t$%.2f\n",
+			System.out.printf("%-8d%-10d%-10d%-24s$%-7.2f\n",
 					order.getOrderId(), order.getTrackingId(), order.getAccountId(), order.getDateCreated(), order.getCost());
 		}
     }
