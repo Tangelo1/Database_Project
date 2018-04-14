@@ -46,7 +46,7 @@ public class WarehouseMenu {
                 System.out.println("Invalid ID input");
             }
 
-            if (!Package.exists(locationID))
+            if (!Location.exists(locationID))
                 System.out.println("\nLocation not found.");
         }
         while (!Location.exists(locationID));
