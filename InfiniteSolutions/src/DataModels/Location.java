@@ -83,11 +83,6 @@ public class Location extends DataModel {
      * @throws SQLException Throws this on the event that the query cannot be executed
      */
     public ArrayList<Package> getPackagesWithin() throws SQLException {
-        // TODO Rewrite such that this filters by packages that are currently in the location, not all packages that have
-        // at one point flown through this location.
-        /*String query = String.format("SELECT PACKAGE.TRACKING_ID FROM PACKAGE " +
-                "INNER JOIN TRACKINGEVENTS ON PACKAGE.TRACKING_ID = TRACKINGEVENTS.TRACKING_ID " +
-                "WHERE LOCATION_ID=%d;", this.locationId);*/
 
         String query = String.format(
                 "WITH lastevents AS (SELECT tracking_id, MAX(date) AS date FROM trackingevents GROUP BY tracking_id) " +
