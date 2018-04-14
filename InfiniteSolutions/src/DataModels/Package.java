@@ -121,6 +121,9 @@ public class Package extends DataModel {
         ShippingOrder s = new ShippingOrder(-1, pkg.trackingId, acct.getId(), new Timestamp(System.currentTimeMillis()), cost);
         s.saveToDB();
 
+        TrackingEvent e = new TrackingEvent(pkg.trackingId, -1, new Timestamp(System.currentTimeMillis()), "Created");
+        e.saveToDB();
+
         return s;
     }
 
